@@ -1,0 +1,10 @@
+{
+    "features": {
+        "audit": true,
+        "multiTenant": true
+    },
+    "branding": {
+        "logo": "/branding/logo.svg",
+        "primaryColor": "#2563eb"
+    }
+}
