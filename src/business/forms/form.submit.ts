@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/forms/form.submit.ts
 
-import { httpPost, httpPut } from "@/core/http/http.client";
+import { httpPost, httpPut, httpPatch } from "@/core/http/http.client";
 
 interface SubmitOptions {
     submit_to: string;
@@ -19,8 +19,10 @@ export async function submitForm(
             return httpPost(options.submit_to, values);
 
         case "PUT":
-        case "PATCH":
             return httpPut(options.submit_to, values);
+
+        case "PATCH":
+            return httpPatch(options.submit_to, values);
 
         default:
             throw new Error(`Unsupported method: ${method}`);

@@ -22,6 +22,7 @@ function buildCacheKey(entity: string, query: EntityQuery) {
  * API PLATFORM — BACKWARD COMPATIBLE
  */
 export async function fetchEntityList(
+    domain: string,
     entity: string,
     query: EntityQuery,
 ): Promise<EntityListResponse> {
@@ -35,7 +36,7 @@ export async function fetchEntityList(
 
     // 🔁 FETCH BACKEND
     const result = await httpPost<EntityListResponse>(
-        `/entities/${entity}/query/`,
+        `/entities/${domain}/${entity}/query/`,
         query,
     );
 
@@ -50,4 +51,11 @@ export async function fetchEntityList(
  */
 export async function fetchEntityDetail(submitUrl: string) {
     return httpGet(submitUrl);
+}
+
+export async function fetchTableData(
+    dataSource: string,
+    query: EntityQuery,
+): Promise<EntityListResponse> {
+    return httpPost<EntityListResponse>(dataSource, query);
 }

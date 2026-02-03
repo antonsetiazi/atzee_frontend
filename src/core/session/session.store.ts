@@ -36,12 +36,14 @@ export const useSessionStore = create<SessionState & SessionActions>((set) => ({
         if (token) {
             set({
                 token,
+                user: null,
                 isAuthenticated: true,
                 isHydrated: true,
             });
         } else {
             set({
                 token: null,
+                user: null,
                 isAuthenticated: false,
                 isHydrated: true,
             });

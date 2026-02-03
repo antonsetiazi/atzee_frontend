@@ -20,4 +20,5 @@ export interface EntityQuery {
     sort?: EntitySort[];
     filters?: EntityFilter[];
     search?: string;
+    id?: string;
 }

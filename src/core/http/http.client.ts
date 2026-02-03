@@ -141,6 +141,13 @@ export function httpPost<T = any>(
     });
 }
 
+export function httpPatch<T = any>(url: string, body?: any): Promise<T> {
+    return request<T>(url, {
+        method: "PATCH",
+        body: body ? JSON.stringify(body) : undefined,
+    });
+}
+
 export function httpPut<T = any>(url: string, body?: any): Promise<T> {
     return request<T>(url, {
         method: "PUT",

@@ -7,12 +7,15 @@ export type TableColumnType = "text" | "number" | "date" | "badge";
 export interface TableColumnSchema {
     key: string; // field dari backend
     label: string; // header
+
     type?: TableColumnType;
     sortable?: boolean;
     width?: number | string;
 }
 
 export interface EntityTableSchema {
+    title?: string;
+    description?: string;
     columns: TableColumnSchema[];
     actions?: EntityAction[];
 }

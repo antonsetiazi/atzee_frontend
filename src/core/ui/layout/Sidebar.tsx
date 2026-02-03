@@ -25,7 +25,7 @@ export default function Sidebar() {
 
             {/* Menu */}
             <nav className="flex-1 overflow-y-auto px-2 py-4">
-                <MenuRenderer items={visibleMenu} />
+                <MenuRenderer items={visibleMenu} collapseMode={true} />
             </nav>
 
             {/* Footer (optional, tapi enak) */}

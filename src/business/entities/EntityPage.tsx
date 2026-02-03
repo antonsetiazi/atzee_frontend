@@ -7,5 +7,5 @@ interface Props {
 }
 
 export default function EntityPage({ entityKey }: Props) {
-    return <CoreEntityPage entityKey={entityKey} />;
+    return <CoreEntityPage key={entityKey} entityKey={entityKey} />;
 }

@@ -8,6 +8,7 @@ import { httpDelete } from "@/core/http/http.client";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { clearEntityCacheByPrefix } from "../entities/entity.cache";
 import { useConfirmStore } from "@/core/confirm/confirm.store";
+import { actionIcons } from "@/core/ui/icons/action.icons";
 
 interface Props<T> {
     actions: EntityAction<T>[];
@@ -22,7 +23,7 @@ export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
     const confirm = useConfirmStore((s) => s.confirm);
 
     const resolvePath = (template: string, row: any) => {
-        return template.replace(/\{(\w+)\}/g, (_, field) => {
+        return template.replace(/\{([^}]+)\}/g, (_, field) => {
             const val = row?.[field];
             if (val === undefined) {
                 console.warn(`ActionRenderer: row.${field} is undefined`);
@@ -36,7 +37,7 @@ export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
         <div className="flex items-center gap-1">
             {actions.map((action, idx) => {
                 if (action.permission && !has(action.permission)) return null;
-                if (action.visible && !action.visible(row)) return null;
+                if (!matchWhen(action.when, row)) return null;
 
                 const onClick = async () => {
                     if (action.confirm) {
@@ -54,7 +55,11 @@ export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
                         const path = row
                             ? resolvePath(action.to, row)
                             : action.to;
-                        navigate(path);
+                        navigate(path, {
+                            state: {
+                                initialValues: row,
+                            },
+                        });
                         return;
                     }
 
@@ -104,6 +109,9 @@ export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
 
                 const isDanger = action.type === "delete";
 
+                const Icon = action.icon ? actionIcons[action.icon] : null;
+                // console.log(action.icon);
+
                 return (
                     <button
                         key={uniqueKey}
@@ -115,16 +123,32 @@ export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
                             transition
                             ${
                                 isDanger
-                                    ? "text-red-600 hover:bg-red-50"
+                                    ? "text-red-500 hover:bg-red-50"
                                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                             }
                         `}
                         title={action.label}
                     >
-                        {action.label}
+                        {Icon ? <Icon className="h-5 w-5" /> : action.label}
                     </button>
                 );
             })}
         </div>
     );
+}
+
+function matchWhen(when: Record<string, any> | undefined, row: any) {
+    if (!when) return true;
+    if (!row) return false;
+
+    return Object.entries(when).every(([key, expected]) => {
+        const actual = row[key];
+
+        // support IN condition
+        if (Array.isArray(expected)) {
+            return expected.includes(actual);
+        }
+
+        return actual === expected;
+    });
 }

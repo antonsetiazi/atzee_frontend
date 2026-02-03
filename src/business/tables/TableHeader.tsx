@@ -44,9 +44,7 @@ export default function TableHeader({ columns, sortState, onSort }: Props) {
                         </span>
                     </th>
                 ))}
-                <th className="px-4 py-3 text-xs font-semibold text-gray-600">
-                    Action
-                </th>
+                <th className="px-4 py-3 text-xs font-semibold text-gray-600"></th>
             </tr>
         </thead>
     );

@@ -1,3 +1,4 @@
+// src/business/workflows/workflow.types.ts
 export interface WorkflowStatus {
     key: string;
     label: string;

@@ -5,7 +5,7 @@ import type { EntityTableSchema } from "./table.types";
 import TableHeader from "./TableHeader";
 import TablePagination from "./TablePagination";
 import TableRow from "./TableRow";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { TableContext } from "./table.context";
 
 interface Props {
@@ -64,10 +64,27 @@ export default function TableRenderer({
         onSortChange(next);
     }
 
+    // 🔥 Filter data berdasarkan search input
+    const filteredData = useMemo(() => {
+        if (!searchValue) return data;
+
+        return data.filter((row) =>
+            schema.columns.some((col) => {
+                const value = row[col.key];
+                return value
+                    ? String(value)
+                          .toLowerCase()
+                          .includes(searchValue.toLowerCase())
+                    : false;
+            }),
+        );
+    }, [searchValue, data, schema.columns]);
+
     if (loading) {
-        return <div className="p-4">Loading...</div>;
+        return <div className="p-6 text-sm text-gray-500">Loading...</div>;
     }
 
+    // console.log(filteredData);
     return (
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
             {/* Search */}
@@ -89,9 +106,7 @@ export default function TableRenderer({
             </div>
 
             {/* Table */}
-            {loading ? (
-                <div className="p-6 text-sm text-gray-500">Loading data…</div>
-            ) : !data.length ? (
+            {!filteredData.length ? (
                 <div className="p-6 text-sm text-gray-500">
                     No data available
                 </div>

@@ -1,6 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/forms/fields/field.types.ts
 
-export type FieldType = "text" | "number" | "select" | "textarea" | "email";
+export type FieldType =
+    | "text"
+    | "number"
+    | "select"
+    | "textarea"
+    | "email"
+    | "boolean"
+    | "date";
 
 export interface BaseFieldSchema {
     key: string; // 🔑 PRIMARY ID
@@ -24,13 +32,26 @@ export interface NumberFieldSchema extends BaseFieldSchema {
     type: "number";
 }
 
+export interface DateFieldSchema extends BaseFieldSchema {
+    type: "date";
+}
+
 export interface SelectFieldSchema extends BaseFieldSchema {
     type: "select";
-    options: { label: string; value: string | number }[];
+
+    // ✅ static options
+    options?: SelectOption[];
+
+    // ✅ dynamic options
+    data_source?: FieldDataSource;
 }
 
 export interface TextareaFieldSchema extends BaseFieldSchema {
     type: "textarea";
+}
+
+export interface BooleanFieldSchema extends BaseFieldSchema {
+    type: "boolean";
 }
 
 export type FormFieldSchema =
@@ -38,4 +59,27 @@ export type FormFieldSchema =
     | EmailFieldSchema
     | NumberFieldSchema
     | SelectFieldSchema
-    | TextareaFieldSchema;
+    | TextareaFieldSchema
+    | BooleanFieldSchema
+    | DateFieldSchema;
+
+export type FieldDataSource =
+    | {
+          type: "lookup";
+          endpoint: string;
+      }
+    | {
+          type: "entity";
+          domain: string;
+          entity: string;
+          query?: any;
+          map: {
+              value: string;
+              label: string; // template: "{code} - {name}"
+          };
+      };
+
+export interface SelectOption {
+    label: string;
+    value: string | number;
+}

@@ -7,15 +7,26 @@ import SelectField from "./SelectField";
 import type { FormFieldSchema } from "./field.types";
 import TextareaField from "./TextareaField";
 import EmailField from "./EmailField";
+import BooleanField from "./BooleanField";
+import DateField from "./DateField";
+import ViewField from "./ViewField";
 
 interface Props {
     field: FormFieldSchema;
     value?: any;
+    mode?: "create" | "edit" | "view";
     onChange?: (name: string, value: any) => void;
 }
 
-export default function FieldRenderer({ field, value, onChange }: Props) {
+export default function FieldRenderer({ field, value, mode, onChange }: Props) {
     if (field.hidden) return null;
+
+    const readOnly = mode === "view";
+
+    // 🔒 VIEW MODE → render display only
+    if (readOnly) {
+        return <ViewField field={field} value={value} />;
+    }
 
     switch (field.type) {
         case "text":
@@ -33,6 +44,11 @@ export default function FieldRenderer({ field, value, onChange }: Props) {
                 <NumberField field={field} value={value} onChange={onChange} />
             );
 
+        case "date":
+            return (
+                <DateField field={field} value={value} onChange={onChange} />
+            );
+
         case "select":
             return (
                 <SelectField field={field} value={value} onChange={onChange} />
@@ -45,6 +61,11 @@ export default function FieldRenderer({ field, value, onChange }: Props) {
                     value={value}
                     onChange={onChange}
                 />
+            );
+
+        case "boolean":
+            return (
+                <BooleanField field={field} value={value} onChange={onChange} />
             );
 
         default:

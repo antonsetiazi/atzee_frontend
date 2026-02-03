@@ -1,3 +1,5 @@
+// src/core/ui/branding/branding.store.ts
+
 import { create } from "zustand";
 import type { BrandingConfig } from "./branding.types";
 

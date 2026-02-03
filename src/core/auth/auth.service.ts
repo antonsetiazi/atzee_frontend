@@ -1,3 +1,5 @@
+// src/core/auth/auth.service.ts
+
 import { loginApi } from "./auth.api";
 import type { LoginPayload } from "./auth.types";
 import { useSessionStore } from "@/core/session/session.store";

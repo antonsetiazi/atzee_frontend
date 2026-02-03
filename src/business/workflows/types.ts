@@ -1,3 +1,4 @@
+// src/business/workflows/types.ts
 export interface WorkflowAction {
     key: string;
     label: string;

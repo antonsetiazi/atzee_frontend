@@ -4,11 +4,22 @@ import type { FormFieldSchema } from "./fields/field.types";
 
 export type FormMode = "create" | "edit" | "view";
 
+/**
+ * User-driven actions (buttons)
+ */
 export interface FormAction {
     type: "submit" | "redirect";
     label?: string;
     to?: string;
     permission?: string;
+}
+
+/**
+ * System-driven redirect after submit success
+ */
+export interface FormRedirect {
+    page: string; // page key, contoh: sales.direct.detail
+    param: string; // default: "id"
 }
 
 export interface FormSubmitConfig {
@@ -34,5 +45,6 @@ export interface FormSchema {
 
     submit_to?: string; // shortcut
     method?: "POST" | "PUT" | "PATCH";
+    redirect_to?: FormRedirect;
     actions?: FormAction[];
 }

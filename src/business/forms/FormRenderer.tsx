@@ -10,11 +10,14 @@ import type { TableContext } from "../tables/table.context";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { button } from "@/core/ui/ui.class";
 import { clearEntityCacheByPrefix } from "../entities/entity.cache";
+import { usePageStore } from "@/core/ui/page/page.store";
+import { pageKeyToPath } from "@/core/routing/page.utils";
+import type { FormContext } from "./form.context";
 
 interface Props {
     schema: FormSchema;
     initialValues?: Record<string, any>;
-    context: TableContext;
+    context: TableContext | FormContext;
 }
 
 export default function FormRenderer({
@@ -26,6 +29,8 @@ export default function FormRenderer({
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const feedback = useFeedbackStore();
+    const pages = usePageStore.getState().pages;
+    const isViewMode = schema.mode === "view";
 
     // 🔁 Update values ketika initialValues berubah (misal async fetch)
     useEffect(() => {
@@ -49,7 +54,7 @@ export default function FormRenderer({
         setLoading(true);
 
         try {
-            await submitForm(values, {
+            const response = await submitForm(values, {
                 submit_to: schema.submit_to,
                 method: schema.method,
             });
@@ -67,14 +72,28 @@ export default function FormRenderer({
             }
 
             // refresh table
-            context.refresh();
+            context.refresh?.();
+            // console.log("pages", pages);
 
             // 🔁 post-submit actions
-            schema.actions?.forEach((action) => {
-                if (action.type === "redirect" && action.to) {
-                    navigate(action.to);
-                }
-            });
+            if (schema.redirect_to && response) {
+                const { page: pageKey, param } = schema.redirect_to;
+                const pageInfo = pages[pageKey];
+                if (!pageInfo) return;
+
+                const pathTemplate = pageKeyToPath(
+                    pageInfo.key,
+                    pageInfo.domain,
+                    pageInfo.entity,
+                );
+                // Replace param placeholder (:id) jika ada
+                const path =
+                    param && values !== undefined
+                        ? pathTemplate.replace(":id", String(response[param]))
+                        : pathTemplate;
+
+                navigate(path);
+            }
         } finally {
             setLoading(false);
         }
@@ -82,7 +101,7 @@ export default function FormRenderer({
 
     return (
         <form
-            onSubmit={handleSubmit}
+            onSubmit={isViewMode ? undefined : handleSubmit}
             className="bg-white border border-gray-200 rounded-lg shadow-sm"
         >
             {/* HEADER */}
@@ -104,20 +123,23 @@ export default function FormRenderer({
                         key={`${schema.id}:${field.key}:${idx}`}
                         field={field}
                         value={values[field.key]}
-                        onChange={handleChange}
+                        mode={schema.mode}
+                        onChange={isViewMode ? undefined : handleChange}
                     />
-                ))}
+                )) ?? null}
             </div>
 
             {/* FOOTER ACTIONS */}
             <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-2">
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className={`${button.base} ${button.primary}`}
-                >
-                    {loading ? "Saving..." : "Submit"}
-                </button>
+                {!isViewMode && (
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className={`${button.base} ${button.primary}`}
+                    >
+                        {loading ? "Saving..." : "Submit"}
+                    </button>
+                )}
             </div>
         </form>
     );

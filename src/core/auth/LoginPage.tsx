@@ -1,8 +1,11 @@
 // src/core/auth/LoginPage.tsx
 
+import { useDocumentTitle } from "../ui/document/useDocumentTitle";
 import { LoginForm } from "./LoginForm";
 
 export default function LoginPage() {
+    useDocumentTitle("Login");
+
     return (
         <div className="relative flex min-h-screen items-center justify-center bg-linier-to-br from-slate-100 via-gray-100 to-slate-200">
             {/* Background decoration */}

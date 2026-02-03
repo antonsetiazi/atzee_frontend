@@ -19,6 +19,8 @@ import { generateDynamicRoutes } from "@/core/routing/DynamicRoutes";
 import { useMenuStore } from "./core/ui/menu/menu.store";
 import PageRoutes from "@/core/routing/PageRoutes";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
+import DashboardPage from "@/core/dashboard/DashboardPage";
+import { BrandingProvider } from "./core/ui/branding/BrandingProvider";
 
 function App() {
     // Ambil menu yang sudah filter permission
@@ -27,42 +29,44 @@ function App() {
     return (
         <ErrorBoundary>
             <AuthBootstrap>
-                <BrowserRouter>
-                    {/* GLOBAL FEEDBACK UI */}
-                    <ToastRenderer />
-                    <Routes>
-                        {/* PUBLIC */}
-                        <Route path="/login" element={<LoginPage />} />
+                <BrandingProvider>
+                    <BrowserRouter>
+                        {/* GLOBAL FEEDBACK UI */}
+                        <ToastRenderer />
+                        <Routes>
+                            {/* PUBLIC */}
+                            <Route path="/login" element={<LoginPage />} />
 
-                        {/* PROTECTED AREA */}
-                        <Route element={<AuthGuard />}>
-                            <Route
-                                path="/"
-                                element={
-                                    <AppBootstrap>
-                                        <AppLayout />
-                                    </AppBootstrap>
-                                }
-                            >
-                                {/* ROOT ONLY */}
-                                <Route index element={<EntryRedirect />} />
+                            {/* PROTECTED AREA */}
+                            <Route element={<AuthGuard />}>
                                 <Route
-                                    path="dashboard"
-                                    element={<div>Dashboard</div>}
-                                />
-                                {usersRoutes.map(renderRoute)}
-                                {/* {productRoutes.map(renderRoute)} */}
+                                    path="/"
+                                    element={
+                                        <AppBootstrap>
+                                            <AppLayout />
+                                        </AppBootstrap>
+                                    }
+                                >
+                                    {/* ROOT ONLY */}
+                                    <Route index element={<EntryRedirect />} />
+                                    <Route
+                                        path="dashboard"
+                                        element={<DashboardPage />}
+                                    />
+                                    {usersRoutes.map(renderRoute)}
+                                    {/* {productRoutes.map(renderRoute)} */}
 
-                                {/* Dynamic menu-driven routes (backend UIMenu) */}
-                                {generateDynamicRoutes(visibleMenus)}
+                                    {/* Dynamic menu-driven routes (backend UIMenu) */}
+                                    {generateDynamicRoutes(visibleMenus)}
 
-                                {/* UIPage-driven routes */}
-                                {PageRoutes()}
+                                    {/* UIPage-driven routes */}
+                                    {PageRoutes()}
+                                </Route>
                             </Route>
-                        </Route>
-                    </Routes>
-                    <ConfirmDialog />
-                </BrowserRouter>
+                        </Routes>
+                        <ConfirmDialog />
+                    </BrowserRouter>
+                </BrandingProvider>
             </AuthBootstrap>
         </ErrorBoundary>
     );

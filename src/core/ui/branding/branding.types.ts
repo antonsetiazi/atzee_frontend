@@ -1,3 +1,5 @@
+// src/core/ui/branding/branding.types.ts
+
 export type BrandingConfig = {
     appName: string;
     logoUrl: string;

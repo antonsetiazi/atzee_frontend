@@ -5,7 +5,6 @@ import { useSessionStore } from "@/core/session/session.store";
 
 export default function AuthGuard() {
     const { isAuthenticated, isHydrated } = useSessionStore();
-
     if (!isHydrated) return null;
 
     if (!isAuthenticated) {

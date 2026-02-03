@@ -1,3 +1,5 @@
+// src/core/ui/branding/applyBranding.ts
+
 import type { BrandingConfig } from "./branding.types";
 
 export function applyBranding(branding: BrandingConfig) {

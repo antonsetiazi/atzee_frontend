@@ -1,3 +1,5 @@
+// src/business/workflows/useWorkflowAction.ts
+
 export function useWorkflowAction() {
     async function execute(entity: string, id: string, action: string) {
         console.log(`[WORKFLOW] ${entity}#${id} → ${action}`);

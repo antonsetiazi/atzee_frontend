@@ -1,3 +1,5 @@
+// src/core/ui/branding/BrandingProvider.tsx
+
 import { useEffect } from "react";
 import { useBrandingStore } from "./branding.store";
 import { applyBranding } from "./applyBranding";

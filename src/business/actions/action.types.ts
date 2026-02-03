@@ -20,12 +20,13 @@ export interface EntityAction<T = any> {
     key: string;
     label: string;
     type: EntityActionType;
-
+    icon?: string;
     permission?: string;
 
     confirm?: ActionConfirm;
 
-    visible?: (row?: T) => boolean;
+    // visible?: (row?: T) => boolean;
+    when?: Record<string, any>; // ⬅️ dari backend
 
     to?: string;
     endpoint?: string; // untuk delete / custom API

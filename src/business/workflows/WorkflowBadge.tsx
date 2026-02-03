@@ -1,3 +1,5 @@
+// src/business/workflows/WorkflowBadge.tsx
+
 import type { WorkflowStatus } from "./workflow.types";
 
 interface Props {

@@ -1,3 +1,5 @@
+// src/core/tenant/tenant.types.ts
+
 export interface Tenant {
     id: string;
     name: string;

@@ -6,6 +6,7 @@ import type { WorkflowSchema } from "../workflows/workflow.types";
 
 export interface UISchema {
     entity: string; // identifier backend
+    domain: string;
     label: string; // label UI
 
     table?: EntityTableSchema;
