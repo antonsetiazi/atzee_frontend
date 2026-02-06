@@ -9,6 +9,7 @@ import { useMemo, useState } from "react";
 import type { TableContext } from "./table.context";
 
 interface Props {
+    entity: string;
     schema: EntityTableSchema;
     data: any[];
     loading?: boolean;
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export default function TableRenderer({
+    entity,
     schema,
     data,
     loading,
@@ -121,6 +123,7 @@ export default function TableRenderer({
                         <tbody>
                             {data.map((row, idx) => (
                                 <TableRow
+                                    entity={entity}
                                     key={idx}
                                     row={row}
                                     schema={schema}

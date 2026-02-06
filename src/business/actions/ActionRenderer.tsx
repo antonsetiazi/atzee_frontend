@@ -6,11 +6,12 @@ import { usePermission } from "@/core/permissions/usePermission";
 import { useNavigate } from "react-router-dom";
 import { httpDelete } from "@/core/http/http.client";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
-import { clearEntityCacheByPrefix } from "../entities/entity.cache";
 import { useConfirmStore } from "@/core/confirm/confirm.store";
 import { actionIcons } from "@/core/ui/icons/action.icons";
+import { clearEntityCacheByPrefix } from "../entities/entity.cache";
 
 interface Props<T> {
+    entity: string;
     actions: EntityAction<T>[];
     row?: T;
     context: any;
@@ -18,6 +19,7 @@ interface Props<T> {
 }
 
 export function ActionRenderer<T>({
+    entity,
     actions,
     row,
     context,
@@ -87,12 +89,7 @@ export function ActionRenderer<T>({
                                 message: `Data berhasil dihapus`,
                             });
 
-                            const entityPrefix =
-                                context.entityKey?.split(".")[0];
-
-                            if (entityPrefix) {
-                                clearEntityCacheByPrefix(entityPrefix);
-                            }
+                            clearEntityCacheByPrefix(`table:${entity}`);
 
                             // refresh table
                             context.refresh();

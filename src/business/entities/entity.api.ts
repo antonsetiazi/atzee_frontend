@@ -22,8 +22,8 @@ function buildCacheKey(entity: string, query: EntityQuery) {
  * Cache key untuk table block
  * dataSource + query = unik
  */
-function buildTableCacheKey(dataSource: string, query: EntityQuery) {
-    return `table:${dataSource}:${JSON.stringify(query)}`;
+function buildTableCacheKey(entity: string, query: EntityQuery) {
+    return `table:${entity}:${JSON.stringify(query)}`;
 }
 
 /**
@@ -62,10 +62,11 @@ export async function fetchEntityDetail(submitUrl: string) {
 }
 
 export async function fetchTableData(
+    entity: string,
     dataSource: string,
     query: EntityQuery,
 ): Promise<EntityListResponse> {
-    const cacheKey = buildTableCacheKey(dataSource, query);
+    const cacheKey = buildTableCacheKey(entity, query);
 
     // ✅ CACHE HIT
     const cached = getCache<EntityListResponse>(cacheKey);

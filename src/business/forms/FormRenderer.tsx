@@ -16,12 +16,14 @@ import type { FormContext } from "./form.context";
 import { expandDotNotation, flattenObject } from "./form.utils";
 
 interface Props {
+    entity: string;
     schema: FormSchema;
     initialValues?: Record<string, any>;
     context: TableContext | FormContext;
 }
 
 export default function FormRenderer({
+    entity,
     schema,
     initialValues,
     context,
@@ -70,13 +72,8 @@ export default function FormRenderer({
                 message: `Data berhasil disubmit`,
             });
 
-            const entityPrefix = context.entityKey?.split(".")[0];
-
-            if (entityPrefix) {
-                clearEntityCacheByPrefix(entityPrefix);
-            }
-
             // refresh table
+            clearEntityCacheByPrefix(`table:${entity}`);
             context.refresh?.();
 
             // 🔁 post-submit actions
@@ -84,6 +81,7 @@ export default function FormRenderer({
                 const { page: pageKey, param } = schema.redirect_to;
 
                 const pathRedirectTo = pageKey;
+
                 // Replace param placeholder (:id) jika ada
                 const path =
                     param && values !== undefined
@@ -96,7 +94,7 @@ export default function FormRenderer({
             setLoading(false);
         }
     }
-
+    // console.log(initialValues);
     return (
         <form
             onSubmit={isViewMode ? undefined : handleSubmit}

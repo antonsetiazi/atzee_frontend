@@ -5,6 +5,7 @@ import type { EntityTableSchema } from "./table.types";
 import { ActionRenderer } from "@/business/actions/ActionRenderer";
 
 interface Props {
+    entity: string;
     row: any;
     schema: EntityTableSchema;
     context: {
@@ -13,7 +14,7 @@ interface Props {
     };
 }
 
-export default function TableRow({ row, schema, context }: Props) {
+export default function TableRow({ entity, row, schema, context }: Props) {
     // console.log(schema);
     return (
         <tr className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
@@ -27,6 +28,7 @@ export default function TableRow({ row, schema, context }: Props) {
                 <td className="px-4 py-3 text-center">
                     <div className="flex justify-center">
                         <ActionRenderer
+                            entity={entity}
                             actions={schema.actions}
                             row={row}
                             context={context}

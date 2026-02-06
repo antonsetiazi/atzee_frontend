@@ -48,7 +48,7 @@ export default function BlockTable({
 
         setLoadingData(true);
         try {
-            const res = await fetchTableData(url, query);
+            const res = await fetchTableData(schema.entity, url, query);
             // console.log("res: ", res);
             setData(res.items);
             setTotal(res.total);
@@ -59,7 +59,7 @@ export default function BlockTable({
         } finally {
             setLoadingData(false);
         }
-    }, [query, block, id]);
+    }, [schema.entity, query, block, id]);
 
     useEffect(() => {
         if (!entityKey) return;
@@ -90,6 +90,7 @@ export default function BlockTable({
         [navigate, refreshTable, entityKey],
     );
 
+    // console.log(schema);
     // console.log(data);
     // className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
     return (
@@ -147,6 +148,7 @@ export default function BlockTable({
             <div className="p-4">
                 {data?.length > 0 ? (
                     <TableRenderer
+                        entity={schema.entity}
                         schema={block}
                         data={data}
                         loading={loadingData}

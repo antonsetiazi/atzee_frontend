@@ -103,6 +103,7 @@ export default function BlockForm({
         <div key={idx}>
             <FormRenderer
                 key={idx}
+                entity={schema.entity}
                 schema={{ ...block, submit_to: submitUrl }}
                 initialValues={initialValues}
                 context={formContext}
