@@ -10,9 +10,10 @@ import type { TableContext } from "../tables/table.context";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { button } from "@/core/ui/ui.class";
 import { clearEntityCacheByPrefix } from "../entities/entity.cache";
-import { usePageStore } from "@/core/ui/page/page.store";
-import { pageKeyToPath } from "@/core/routing/page.utils";
+// import { usePageStore } from "@/core/ui/page/page.store";
+// import { pageKeyToPath } from "@/core/routing/page.utils";
 import type { FormContext } from "./form.context";
+import { expandDotNotation, flattenObject } from "./form.utils";
 
 interface Props {
     schema: FormSchema;
@@ -29,13 +30,14 @@ export default function FormRenderer({
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const feedback = useFeedbackStore();
-    const pages = usePageStore.getState().pages;
+    // const pages = usePageStore.getState().pages;
     const isViewMode = schema.mode === "view";
 
     // 🔁 Update values ketika initialValues berubah (misal async fetch)
     useEffect(() => {
         if (initialValues) {
-            setValues(initialValues);
+            const flatValues = flattenObject(initialValues);
+            setValues(flatValues);
         }
     }, [initialValues]);
 
@@ -54,7 +56,10 @@ export default function FormRenderer({
         setLoading(true);
 
         try {
-            const response = await submitForm(values, {
+            // ✅ normalize flat form values → nested payload
+            const payload = expandDotNotation(values);
+            // console.log(payload);
+            const response = await submitForm(payload, {
                 submit_to: schema.submit_to,
                 method: schema.method,
             });
@@ -73,24 +78,17 @@ export default function FormRenderer({
 
             // refresh table
             context.refresh?.();
-            // console.log("pages", pages);
 
             // 🔁 post-submit actions
             if (schema.redirect_to && response) {
                 const { page: pageKey, param } = schema.redirect_to;
-                const pageInfo = pages[pageKey];
-                if (!pageInfo) return;
 
-                const pathTemplate = pageKeyToPath(
-                    pageInfo.key,
-                    pageInfo.domain,
-                    pageInfo.entity,
-                );
+                const pathRedirectTo = pageKey;
                 // Replace param placeholder (:id) jika ada
                 const path =
                     param && values !== undefined
-                        ? pathTemplate.replace(":id", String(response[param]))
-                        : pathTemplate;
+                        ? pathRedirectTo.replace(":id", String(response[param]))
+                        : pathRedirectTo;
 
                 navigate(path);
             }

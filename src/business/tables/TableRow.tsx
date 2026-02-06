@@ -14,6 +14,7 @@ interface Props {
 }
 
 export default function TableRow({ row, schema, context }: Props) {
+    // console.log(schema);
     return (
         <tr className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
             {schema.columns.map((col) => (
@@ -29,6 +30,7 @@ export default function TableRow({ row, schema, context }: Props) {
                             actions={schema.actions}
                             row={row}
                             context={context}
+                            detail_as_state={schema.detail_as_state}
                         />
                     </div>
                 </td>

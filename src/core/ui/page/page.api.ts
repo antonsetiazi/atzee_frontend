@@ -5,7 +5,9 @@ import type { UIPage } from "./page.types";
  * Ambil semua page yang user boleh akses
  */
 export async function fetchPages(): Promise<UIPage[]> {
-    return httpGet<UIPage[]>("/ui/pages/");
+    const resp = httpGet<UIPage[]>("/ui/pages/");
+    // console.log(resp);
+    return resp;
 }
 
 /**

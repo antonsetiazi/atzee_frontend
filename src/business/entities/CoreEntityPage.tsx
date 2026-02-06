@@ -15,32 +15,48 @@ interface Props {
 
 export default function CoreEntityPage({ entityKey }: Props) {
     const { id } = useParams<{ id: string }>();
+
     const [schema, setSchema] = useState<any>(null);
     const [loadingSchema, setLoadingSchema] = useState(true);
-
-    // const isListPage = entityKey.endsWith(".list");
 
     useEffect(() => {
         if (!entityKey) return;
 
+        let alive = true;
+
         async function load(entity: string) {
-            setSchema(null);
+            // ⛔ JANGAN reset schema → cache-first visual
             setLoadingSchema(true);
 
-            const uiSchema = await useUISchemaStore
-                .getState()
-                .getSchema(entity);
+            try {
+                const uiSchema = await useUISchemaStore
+                    .getState()
+                    .getSchema(entity);
 
-            setSchema(uiSchema);
-            setLoadingSchema(false);
+                if (!alive) return;
+                setSchema(uiSchema);
+            } finally {
+                if (alive) {
+                    setLoadingSchema(false);
+                }
+            }
         }
 
         load(entityKey);
+
+        return () => {
+            alive = false;
+        };
     }, [entityKey]);
 
-    if (!entityKey) return <Navigate to="/dashboard" replace />;
+    if (!entityKey) {
+        return <Navigate to="/dashboard" replace />;
+    }
 
-    if (loadingSchema) return <LoadingState />;
+    // ⛔ Loading hanya jika schema benar-benar belum ada
+    if (!schema && loadingSchema) {
+        return <LoadingState />;
+    }
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">

@@ -10,12 +10,10 @@ import { renderRoute } from "@/core/routing/RouteRenderer";
 import { ErrorBoundary } from "@/core/feedback/ErrorBoundary";
 import ToastRenderer from "@/core/feedback/ToastRenderer";
 
-// sementara
-// import { productRoutes } from "./business/products/product.routes";
 import { usersRoutes } from "@/core/users/users.routes";
 import { AuthBootstrap } from "./core/auth/AuthBootstrap";
 import AuthGuard from "./core/auth/AuthGuard";
-import { generateDynamicRoutes } from "@/core/routing/DynamicRoutes";
+import { MenuRoutes } from "@/core/routing/MenuRoutes";
 import { useMenuStore } from "./core/ui/menu/menu.store";
 import PageRoutes from "@/core/routing/PageRoutes";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
@@ -57,7 +55,7 @@ function App() {
                                     {/* {productRoutes.map(renderRoute)} */}
 
                                     {/* Dynamic menu-driven routes (backend UIMenu) */}
-                                    {generateDynamicRoutes(visibleMenus)}
+                                    {MenuRoutes(visibleMenus)}
 
                                     {/* UIPage-driven routes */}
                                     {PageRoutes()}

@@ -5,7 +5,7 @@ import MenuRenderer from "../menu/MenuRenderer";
 
 export default function Sidebar() {
     const visibleMenu = useMenuStore((s) => s.visibleItems);
-
+    // console.log(visibleMenu);
     return (
         <aside className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
             {/* Brand */}

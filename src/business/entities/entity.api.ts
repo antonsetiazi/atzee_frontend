@@ -19,6 +19,14 @@ function buildCacheKey(entity: string, query: EntityQuery) {
 }
 
 /**
+ * Cache key untuk table block
+ * dataSource + query = unik
+ */
+function buildTableCacheKey(dataSource: string, query: EntityQuery) {
+    return `table:${dataSource}:${JSON.stringify(query)}`;
+}
+
+/**
  * API PLATFORM — BACKWARD COMPATIBLE
  */
 export async function fetchEntityList(
@@ -57,5 +65,19 @@ export async function fetchTableData(
     dataSource: string,
     query: EntityQuery,
 ): Promise<EntityListResponse> {
-    return httpPost<EntityListResponse>(dataSource, query);
+    const cacheKey = buildTableCacheKey(dataSource, query);
+
+    // ✅ CACHE HIT
+    const cached = getCache<EntityListResponse>(cacheKey);
+    if (cached) {
+        return cached;
+    }
+
+    // 🔁 FETCH BACKEND
+    const result = await httpPost<EntityListResponse>(dataSource, query);
+
+    // 💾 CACHE RESULT
+    setCache(cacheKey, result);
+
+    return result;
 }

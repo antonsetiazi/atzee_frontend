@@ -10,9 +10,12 @@ export interface UIBlock {
 
 export interface UIPage {
     key: string;
+    // page_key: string;
     title: string;
+    description: string;
     domain: string;
     entity: string;
+    path: string;
     permissions: string[];
     blocks: UIBlock[];
 }

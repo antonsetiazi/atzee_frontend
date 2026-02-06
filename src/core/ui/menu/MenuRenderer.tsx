@@ -18,17 +18,19 @@ export default function MenuRenderer({ items, collapseMode = false }: Props) {
 
     return (
         <ul className="space-y-1">
-            {items.map((item) => (
-                <MenuItemRenderer
-                    key={item.key}
-                    item={item}
-                    collapseMode={collapseMode}
-                    isOpen={!!openMap[item.key]}
-                    toggleOpen={() => toggleOpen(item.key)}
-                    // openMap={openMap}
-                    // setOpenMap={setOpenMap}
-                />
-            ))}
+            {items.map((item) => {
+                return (
+                    <MenuItemRenderer
+                        key={item.key}
+                        item={item}
+                        collapseMode={collapseMode}
+                        isOpen={!!openMap[item.key]}
+                        toggleOpen={() => toggleOpen(item.key)}
+                        // openMap={openMap}
+                        // setOpenMap={setOpenMap}
+                    />
+                );
+            })}
         </ul>
     );
 }

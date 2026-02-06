@@ -12,13 +12,14 @@ const EntityPage = lazy(() => import("@/business/entities/EntityPage"));
  * Generate JSX Routes dari menu backend.
  * Recursive untuk children.
  */
-export function generateDynamicRoutes(menus: MenuItem[]): ReactNode[] {
+export function MenuRoutes(menus: MenuItem[]): ReactNode[] {
     const routes: ReactNode[] = [];
     // console.log("1. DynamicRoutes | menus", menus);
     const traverse = (items: MenuItem[]) => {
         // console.log("2. DynamicRoutes | items", items);
         items.forEach((menu) => {
             if (menu.route) {
+                // console.log("menu.route:", menu.route);
                 routes.push(
                     <Route
                         key={menu.key}

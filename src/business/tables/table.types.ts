@@ -18,4 +18,5 @@ export interface EntityTableSchema {
     description?: string;
     columns: TableColumnSchema[];
     actions?: EntityAction[];
+    detail_as_state: boolean;
 }

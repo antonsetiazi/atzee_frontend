@@ -6,7 +6,7 @@ type CacheEntry<T> = {
     timestamp: number;
 };
 
-const CACHE_TTL = 30_000; // 30 detik (platform-level)
+const CACHE_TTL = 60_000; // 60 detik (platform-level)
 
 const cache = new Map<string, CacheEntry<any>>();
 

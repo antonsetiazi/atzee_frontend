@@ -98,7 +98,7 @@ export default function BlockForm({
     // console.log(submitUrl);
 
     if (loadingData) return <LoadingState />;
-
+    // console.log(initialValues);
     return (
         <div key={idx}>
             <FormRenderer

@@ -14,9 +14,15 @@ interface Props<T> {
     actions: EntityAction<T>[];
     row?: T;
     context: any;
+    detail_as_state: boolean;
 }
 
-export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
+export function ActionRenderer<T>({
+    actions,
+    row,
+    context,
+    detail_as_state,
+}: Props<T>) {
     const { has } = usePermission();
     const navigate = useNavigate();
     const feedback = useFeedbackStore();
@@ -38,7 +44,7 @@ export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
             {actions.map((action, idx) => {
                 if (action.permission && !has(action.permission)) return null;
                 if (!matchWhen(action.when, row)) return null;
-
+                // console.log(action);
                 const onClick = async () => {
                     if (action.confirm) {
                         const ok = await confirm({
@@ -55,11 +61,17 @@ export function ActionRenderer<T>({ actions, row, context }: Props<T>) {
                         const path = row
                             ? resolvePath(action.to, row)
                             : action.to;
-                        navigate(path, {
-                            state: {
-                                initialValues: row,
-                            },
-                        });
+
+                        if (detail_as_state == true) {
+                            navigate(path, {
+                                state: {
+                                    initialValues: row,
+                                },
+                            });
+                        } else {
+                            navigate(path);
+                        }
+
                         return;
                     }
 
