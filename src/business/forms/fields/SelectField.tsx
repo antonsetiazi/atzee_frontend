@@ -2,7 +2,7 @@
 // src/business/forms/fields/SelectField.tsx
 
 import { useEffect, useState } from "react";
-import type { FieldDataSource, SelectFieldSchema } from "./field.types";
+import type { SelectFieldSchema } from "./field.types";
 import { inputBase } from "./field.ui";
 import { fetchFieldOptions } from "./field.api";
 
@@ -30,13 +30,13 @@ export default function SelectField({ field, value, onChange }: Props) {
         }
 
         // ✅ 2. DYNAMIC OPTIONS
-        const dataSource = field.data_source;
-        if (!dataSource) return;
+        if (!field.data_source) return;
 
-        async function load(ds: FieldDataSource) {
+        const dataSource: string = field.data_source;
+        async function load() {
             setLoading(true);
             try {
-                const opts = await fetchFieldOptions(ds);
+                const opts = await fetchFieldOptions(dataSource);
                 // console.log(opts);
                 if (alive) setOptions(opts);
             } catch (err) {
@@ -50,7 +50,7 @@ export default function SelectField({ field, value, onChange }: Props) {
             }
         }
 
-        load(dataSource);
+        load();
 
         return () => {
             alive = false;

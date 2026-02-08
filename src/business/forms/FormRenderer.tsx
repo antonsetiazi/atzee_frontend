@@ -14,6 +14,7 @@ import { clearEntityCacheByPrefix } from "../entities/entity.cache";
 // import { pageKeyToPath } from "@/core/routing/page.utils";
 import type { FormContext } from "./form.context";
 import { expandDotNotation, flattenObject } from "./form.utils";
+import { buildDefaultValues } from "./form.defaults";
 
 interface Props {
     entity: string;
@@ -28,7 +29,9 @@ export default function FormRenderer({
     initialValues,
     context,
 }: Props) {
-    const [values, setValues] = useState<Record<string, any>>({});
+    const [values, setValues] = useState<Record<string, any>>(() =>
+        buildDefaultValues(schema),
+    );
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const feedback = useFeedbackStore();
@@ -39,7 +42,10 @@ export default function FormRenderer({
     useEffect(() => {
         if (initialValues) {
             const flatValues = flattenObject(initialValues);
-            setValues(flatValues);
+            setValues((prev) => ({
+                ...prev, // ← default tetap ada
+                ...flatValues, // ← edit override default
+            }));
         }
     }, [initialValues]);
 
@@ -114,15 +120,17 @@ export default function FormRenderer({
 
             {/* FIELDS */}
             <div className="px-6 py-6 space-y-4">
-                {schema.fields.map((field, idx) => (
-                    <FieldRenderer
-                        key={`${schema.id}:${field.key}:${idx}`}
-                        field={field}
-                        value={values[field.key]}
-                        mode={schema.mode}
-                        onChange={isViewMode ? undefined : handleChange}
-                    />
-                )) ?? null}
+                {schema.fields.map((field, idx) => {
+                    return (
+                        <FieldRenderer
+                            key={`${schema.id}:${field.key}:${idx}`}
+                            field={field}
+                            value={values[field.key]}
+                            mode={schema.mode}
+                            onChange={isViewMode ? undefined : handleChange}
+                        />
+                    );
+                }) ?? null}
             </div>
 
             {/* FOOTER ACTIONS */}

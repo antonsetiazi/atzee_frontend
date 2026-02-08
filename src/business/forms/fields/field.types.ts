@@ -14,6 +14,7 @@ export interface BaseFieldSchema {
     key: string; // 🔑 PRIMARY ID
     label: string;
 
+    default?: any;
     required?: boolean;
     readonly?: boolean;
     hidden?: boolean;
@@ -43,7 +44,7 @@ export interface SelectFieldSchema extends BaseFieldSchema {
     options?: SelectOption[];
 
     // ✅ dynamic options
-    data_source?: FieldDataSource;
+    data_source?: string;
 }
 
 export interface TextareaFieldSchema extends BaseFieldSchema {
