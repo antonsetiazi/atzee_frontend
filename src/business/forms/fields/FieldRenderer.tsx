@@ -14,11 +14,18 @@ import ViewField from "./ViewField";
 interface Props {
     field: FormFieldSchema;
     value?: any;
+    error?: string;
     mode?: "create" | "edit" | "view";
     onChange?: (name: string, value: any) => void;
 }
 
-export default function FieldRenderer({ field, value, mode, onChange }: Props) {
+export default function FieldRenderer({
+    field,
+    value,
+    error,
+    mode,
+    onChange,
+}: Props) {
     if (field.hidden) return null;
 
     const readOnly = mode === "view";
@@ -31,27 +38,52 @@ export default function FieldRenderer({ field, value, mode, onChange }: Props) {
     switch (field.type) {
         case "text":
             return (
-                <TextField field={field} value={value} onChange={onChange} />
+                <TextField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
             );
 
         case "email":
             return (
-                <EmailField field={field} value={value} onChange={onChange} />
+                <EmailField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
             );
 
         case "number":
             return (
-                <NumberField field={field} value={value} onChange={onChange} />
+                <NumberField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
             );
 
         case "date":
             return (
-                <DateField field={field} value={value} onChange={onChange} />
+                <DateField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
             );
 
         case "select":
             return (
-                <SelectField field={field} value={value} onChange={onChange} />
+                <SelectField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
             );
 
         case "textarea":
@@ -59,13 +91,19 @@ export default function FieldRenderer({ field, value, mode, onChange }: Props) {
                 <TextareaField
                     field={field}
                     value={value}
+                    error={error}
                     onChange={onChange}
                 />
             );
 
         case "boolean":
             return (
-                <BooleanField field={field} value={value} onChange={onChange} />
+                <BooleanField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
             );
 
         default:

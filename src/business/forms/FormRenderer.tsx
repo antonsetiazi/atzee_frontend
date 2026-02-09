@@ -33,6 +33,8 @@ export default function FormRenderer({
         buildDefaultValues(schema),
     );
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
     const navigate = useNavigate();
     const feedback = useFeedbackStore();
     // const pages = usePageStore.getState().pages;
@@ -56,12 +58,10 @@ export default function FormRenderer({
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
-        if (!schema.submit_to) {
-            console.warn("Form has no submit_to");
-            return;
-        }
+        if (!schema.submit_to) return;
 
         setLoading(true);
+        setErrors({}); // reset error lama
 
         try {
             // ✅ normalize flat form values → nested payload
@@ -96,6 +96,17 @@ export default function FormRenderer({
 
                 navigate(path);
             }
+        } catch (err: any) {
+            if (err?.fieldErrors) {
+                const fieldErrors: Record<string, string> = {};
+
+                Object.entries(err.fieldErrors).forEach(([field, messages]) => {
+                    fieldErrors[field] = (messages as string[])[0];
+                });
+
+                setErrors(fieldErrors);
+                return;
+            }
         } finally {
             setLoading(false);
         }
@@ -126,6 +137,7 @@ export default function FormRenderer({
                             key={`${schema.id}:${field.key}:${idx}`}
                             field={field}
                             value={values[field.key]}
+                            error={errors[field.key]}
                             mode={schema.mode}
                             onChange={isViewMode ? undefined : handleChange}
                         />

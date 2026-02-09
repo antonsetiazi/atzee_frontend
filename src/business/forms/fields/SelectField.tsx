@@ -13,10 +13,11 @@ interface Option {
 interface Props {
     field: SelectFieldSchema;
     value?: string | number;
+    error?: string;
     onChange?: (name: string, value: any) => void;
 }
 
-export default function SelectField({ field, value, onChange }: Props) {
+export default function SelectField({ field, value, error, onChange }: Props) {
     const [options, setOptions] = useState<Option[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -81,6 +82,8 @@ export default function SelectField({ field, value, onChange }: Props) {
                     </option>
                 ))}
             </select>
+
+            {error && <p className="text-sm text-red-600">{error}</p>}
         </div>
     );
 }

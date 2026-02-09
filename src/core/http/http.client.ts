@@ -20,9 +20,11 @@ interface InternalRequestInit extends RequestInit {
    =========================== */
 
 export interface HttpErrorPayload {
-    code?: string;
-    message?: string;
-    errors?: Record<string, string>;
+    error?: {
+        code?: string;
+        message?: string;
+        details?: Record<string, string[]>;
+    };
 }
 
 /* ===========================
@@ -95,7 +97,7 @@ async function request<T>(
         return (await res.json()) as T;
     }
 
-    // ❌ ERROR PATH (INI INTI SESSION 12)
+    // ❌ ERROR PATH
     let errorPayload: HttpErrorPayload = {};
 
     try {
@@ -104,20 +106,24 @@ async function request<T>(
         // backend tidak kirim json
     }
 
+    const backendError = errorPayload.error;
+
     const message =
-        errorPayload.message || `Request failed with status ${res.status}`;
+        backendError?.message || `Request failed with status ${res.status}`;
 
     // 🔥 PUSH KE GLOBAL FEEDBACK
     useFeedbackStore.getState().push({
         type: "error",
-        title: errorPayload.code || "Request Error",
+        title: backendError?.code || "Request Error",
         message,
     });
 
-    // ❗ TETAP THROW agar business logic tahu gagal
+    // ❗ THROW ERROR TERSTRUKTUR
     throw {
         status: res.status,
-        ...errorPayload,
+        code: backendError?.code,
+        message,
+        fieldErrors: backendError?.details || {},
     };
 }
 
