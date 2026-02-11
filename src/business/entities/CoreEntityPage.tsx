@@ -9,6 +9,7 @@ import LoadingState from "@/shared/ui/LoadingState";
 import BlockForm from "./blocks/BlockForm";
 import BlockTable from "./blocks/BlockTable";
 import BlockFiles from "./blocks/BlockFiles";
+import BlockTags from "./blocks/BlockTags";
 
 interface Props {
     entityKey: string;
@@ -136,6 +137,22 @@ export default function CoreEntityPage({ entityKey }: Props) {
                                 className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
                             >
                                 <BlockFiles
+                                    block={block}
+                                    entityKey={entityKey}
+                                    id={id}
+                                />
+                            </div>
+                        );
+                    }
+
+                    // 🔥 TAG BLOCK
+                    if (block.type === "tags") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
+                            >
+                                <BlockTags
                                     block={block}
                                     entityKey={entityKey}
                                     id={id}
