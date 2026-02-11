@@ -86,13 +86,12 @@ export default function BlockTable({
             navigate: (path: string) => navigate(path),
             refresh: refreshTable,
             entityKey,
+            parent_id: id,
         }),
-        [navigate, refreshTable, entityKey],
+        [navigate, refreshTable, entityKey, id],
     );
 
     // console.log(schema);
-    // console.log(data);
-    // className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
@@ -128,6 +127,7 @@ export default function BlockTable({
                                                 ) {
                                                     navigate(
                                                         interpolate(action.to, {
+                                                            ...tableContext,
                                                             id,
                                                         }),
                                                     );

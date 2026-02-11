@@ -85,7 +85,7 @@ export default function TableRenderer({
     if (loading) {
         return <div className="p-6 text-sm text-gray-500">Loading...</div>;
     }
-
+    // console.log(schema);
     // console.log(filteredData);
     return (
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">

@@ -10,6 +10,7 @@ import EmailField from "./EmailField";
 import BooleanField from "./BooleanField";
 import DateField from "./DateField";
 import ViewField from "./ViewField";
+import FileField from "./FileField";
 
 interface Props {
     field: FormFieldSchema;
@@ -99,6 +100,16 @@ export default function FieldRenderer({
         case "boolean":
             return (
                 <BooleanField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
+            );
+
+        case "file":
+            return (
+                <FileField
                     field={field}
                     value={value}
                     error={error}

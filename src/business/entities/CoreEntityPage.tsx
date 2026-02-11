@@ -8,6 +8,7 @@ import WorkflowContainer from "../workflows/WorkflowContainer";
 import LoadingState from "@/shared/ui/LoadingState";
 import BlockForm from "./blocks/BlockForm";
 import BlockTable from "./blocks/BlockTable";
+import BlockFiles from "./blocks/BlockFiles";
 
 interface Props {
     entityKey: string;
@@ -122,6 +123,22 @@ export default function CoreEntityPage({ entityKey }: Props) {
                                     onAction={(action) =>
                                         console.log("Workflow action:", action)
                                     }
+                                />
+                            </div>
+                        );
+                    }
+
+                    // 🔥 FILE BLOCK
+                    if (block.type === "files") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
+                            >
+                                <BlockFiles
+                                    block={block}
+                                    entityKey={entityKey}
+                                    id={id}
                                 />
                             </div>
                         );

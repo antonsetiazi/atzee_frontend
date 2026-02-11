@@ -64,7 +64,11 @@ async function request<T>(
     }
 
     // console.log("http request | tenant:", tenant);
-    headers.set("Content-Type", "application/json");
+    // Jangan set Content-Type kalau body adalah FormData
+    if (!(init.body instanceof FormData)) {
+        headers.set("Content-Type", "application/json");
+    }
+    // headers.set("Content-Type", "application/json");
     // console.log({
     //     url: buildUrl(input),
     //     method: init.method,
@@ -163,4 +167,14 @@ export function httpPut<T = any>(url: string, body?: any): Promise<T> {
 
 export function httpDelete<T = any>(url: string): Promise<T> {
     return request<T>(url, { method: "DELETE" });
+}
+
+export function httpPostForm<T = any>(
+    url: string,
+    formData: FormData,
+): Promise<T> {
+    return request<T>(url, {
+        method: "POST",
+        body: formData,
+    });
 }

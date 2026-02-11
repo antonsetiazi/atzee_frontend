@@ -30,13 +30,21 @@ export function ActionRenderer<T>({
     const feedback = useFeedbackStore();
     const confirm = useConfirmStore((s) => s.confirm);
 
-    const resolvePath = (template: string, row: any) => {
+    const resolvePath = (template: string, row: any, context: any) => {
         return template.replace(/\{([^}]+)\}/g, (_, field) => {
-            const val = row?.[field];
+            let val;
+
+            if (field === "parent_id") {
+                val = context?.parent_id;
+            } else {
+                val = row?.[field] ?? context?.[field];
+            }
+
             if (val === undefined) {
-                console.warn(`ActionRenderer: row.${field} is undefined`);
+                console.warn(`ActionRenderer: unresolved field "${field}"`);
                 return "";
             }
+
             return String(val);
         });
     };
@@ -60,10 +68,11 @@ export function ActionRenderer<T>({
 
                     // Navigasi dengan support template {field}
                     if (action.type === "navigate" && action.to) {
+                        // console.log("action.to", action.to);
                         const path = row
-                            ? resolvePath(action.to, row)
+                            ? resolvePath(action.to, row, context)
                             : action.to;
-
+                        // console.log(path);
                         if (detail_as_state == true) {
                             navigate(path, {
                                 state: {
@@ -79,7 +88,7 @@ export function ActionRenderer<T>({
 
                     // Delete
                     if (action.type === "delete" && action.endpoint) {
-                        const url = resolvePath(action.endpoint, row);
+                        const url = resolvePath(action.endpoint, row, context);
                         try {
                             await httpDelete(url);
 

@@ -8,7 +8,8 @@ export type FieldType =
     | "textarea"
     | "email"
     | "boolean"
-    | "date";
+    | "date"
+    | "file";
 
 export interface BaseFieldSchema {
     key: string; // 🔑 PRIMARY ID
@@ -55,6 +56,14 @@ export interface BooleanFieldSchema extends BaseFieldSchema {
     type: "boolean";
 }
 
+export interface FileFieldSchema extends BaseFieldSchema {
+    type: "file";
+
+    accept?: string; // "image/*", ".pdf,.docx"
+    multiple?: boolean; // default false
+    maxSizeMb?: number; // optional validation
+}
+
 export type FormFieldSchema =
     | TextFieldSchema
     | EmailFieldSchema
@@ -62,7 +71,8 @@ export type FormFieldSchema =
     | SelectFieldSchema
     | TextareaFieldSchema
     | BooleanFieldSchema
-    | DateFieldSchema;
+    | DateFieldSchema
+    | FileFieldSchema;
 
 export type FieldDataSource =
     | {

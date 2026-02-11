@@ -35,6 +35,7 @@ export default function BlockForm({
     const isCreatePage = entityKey.endsWith(".create");
 
     useEffect(() => {
+        // console.log(entityKey);
         if (!entityKey) return;
 
         async function load() {
@@ -95,10 +96,10 @@ export default function BlockForm({
         ?.replace("{id}", id ?? "")
         ?.replace("{parent_id}", parentId ?? "");
 
-    // console.log(submitUrl);
-
     if (loadingData) return <LoadingState />;
     // console.log(initialValues);
+    // console.log("id: ", id);
+    // console.log("parentId: ", parentId);
     return (
         <div key={idx}>
             <FormRenderer
@@ -107,6 +108,7 @@ export default function BlockForm({
                 schema={{ ...block, submit_to: submitUrl }}
                 initialValues={initialValues}
                 context={formContext}
+                parentId={String(parentId)}
             />
         </div>
     );

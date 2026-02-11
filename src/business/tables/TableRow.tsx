@@ -11,11 +11,11 @@ interface Props {
     context: {
         navigate: (path: string) => void;
         refresh: () => void;
+        [key: string]: any;
     };
 }
 
 export default function TableRow({ entity, row, schema, context }: Props) {
-    // console.log(schema);
     return (
         <tr className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
             {schema.columns.map((col) => (

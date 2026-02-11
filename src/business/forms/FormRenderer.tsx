@@ -21,6 +21,7 @@ interface Props {
     schema: FormSchema;
     initialValues?: Record<string, any>;
     context: TableContext | FormContext;
+    parentId?: string;
 }
 
 export default function FormRenderer({
@@ -28,6 +29,7 @@ export default function FormRenderer({
     schema,
     initialValues,
     context,
+    parentId,
 }: Props) {
     const [values, setValues] = useState<Record<string, any>>(() =>
         buildDefaultValues(schema),
@@ -77,7 +79,7 @@ export default function FormRenderer({
                 title: "Submit",
                 message: `Data berhasil disubmit`,
             });
-
+            // console.log(`table:${entity}`);
             // refresh table
             clearEntityCacheByPrefix(`table:${entity}`);
             context.refresh?.();
@@ -88,11 +90,9 @@ export default function FormRenderer({
 
                 const pathRedirectTo = pageKey;
 
-                // Replace param placeholder (:id) jika ada
-                const path =
-                    param && values !== undefined
-                        ? pathRedirectTo.replace(":id", String(response[param]))
-                        : pathRedirectTo;
+                const path = pathRedirectTo
+                    .replace(":id", String(response[param]))
+                    .replace(":parent_id", String(parentId));
 
                 navigate(path);
             }
@@ -111,7 +111,8 @@ export default function FormRenderer({
             setLoading(false);
         }
     }
-    // console.log(initialValues);
+    // console.log(schema.redirect_to);
+
     return (
         <form
             onSubmit={isViewMode ? undefined : handleSubmit}
