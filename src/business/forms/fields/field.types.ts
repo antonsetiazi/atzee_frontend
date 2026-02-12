@@ -11,7 +11,8 @@ export type FieldType =
     | "date"
     | "datetime"
     | "file"
-    | "json";
+    | "json"
+    | "duration";
 
 export interface BaseFieldSchema {
     key: string; // 🔑 PRIMARY ID
@@ -82,6 +83,10 @@ export interface JsonFieldSchema extends BaseFieldSchema {
     mode?: "object" | "array";
 }
 
+export interface DurationFieldSchema extends BaseFieldSchema {
+    type: "duration";
+}
+
 export type FormFieldSchema =
     | TextFieldSchema
     | EmailFieldSchema
@@ -92,7 +97,8 @@ export type FormFieldSchema =
     | DateFieldSchema
     | DateTimeFieldSchema
     | FileFieldSchema
-    | JsonFieldSchema;
+    | JsonFieldSchema
+    | DurationFieldSchema;
 
 export type FieldDataSource =
     | {

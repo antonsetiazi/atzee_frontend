@@ -13,6 +13,7 @@ import DateTimeField from "./DateTimeField";
 import ViewField from "./ViewField";
 import FileField from "./FileField";
 import JsonField from "./JsonField";
+import DurationField from "./DurationField";
 
 interface Props {
     field: FormFieldSchema;
@@ -138,6 +139,17 @@ export default function FieldRenderer({
                     onChange={onChange}
                 />
             );
+
+        case "duration":
+            return (
+                <DurationField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
+            );
+
         default:
             return null;
     }
