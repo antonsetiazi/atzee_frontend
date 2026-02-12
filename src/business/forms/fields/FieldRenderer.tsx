@@ -9,8 +9,10 @@ import TextareaField from "./TextareaField";
 import EmailField from "./EmailField";
 import BooleanField from "./BooleanField";
 import DateField from "./DateField";
+import DateTimeField from "./DateTimeField";
 import ViewField from "./ViewField";
 import FileField from "./FileField";
+import JsonField from "./JsonField";
 
 interface Props {
     field: FormFieldSchema;
@@ -77,6 +79,16 @@ export default function FieldRenderer({
                 />
             );
 
+        case "datetime":
+            return (
+                <DateTimeField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
+            );
+
         case "select":
             return (
                 <SelectField
@@ -117,6 +129,15 @@ export default function FieldRenderer({
                 />
             );
 
+        case "json":
+            return (
+                <JsonField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
+            );
         default:
             return null;
     }

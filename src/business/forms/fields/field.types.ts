@@ -9,7 +9,9 @@ export type FieldType =
     | "email"
     | "boolean"
     | "date"
-    | "file";
+    | "datetime"
+    | "file"
+    | "json";
 
 export interface BaseFieldSchema {
     key: string; // 🔑 PRIMARY ID
@@ -38,6 +40,10 @@ export interface DateFieldSchema extends BaseFieldSchema {
     type: "date";
 }
 
+export interface DateTimeFieldSchema extends BaseFieldSchema {
+    type: "datetime";
+}
+
 export interface SelectFieldSchema extends BaseFieldSchema {
     type: "select";
 
@@ -64,6 +70,18 @@ export interface FileFieldSchema extends BaseFieldSchema {
     maxSizeMb?: number; // optional validation
 }
 
+export interface JsonFieldSchema extends BaseFieldSchema {
+    type: "json";
+
+    /**
+     * optional hint for UI
+     * example:
+     * "object"
+     * "array"
+     */
+    mode?: "object" | "array";
+}
+
 export type FormFieldSchema =
     | TextFieldSchema
     | EmailFieldSchema
@@ -72,7 +90,9 @@ export type FormFieldSchema =
     | TextareaFieldSchema
     | BooleanFieldSchema
     | DateFieldSchema
-    | FileFieldSchema;
+    | DateTimeFieldSchema
+    | FileFieldSchema
+    | JsonFieldSchema;
 
 export type FieldDataSource =
     | {
