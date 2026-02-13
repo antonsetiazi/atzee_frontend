@@ -17,7 +17,7 @@ import { MenuRoutes } from "@/core/routing/MenuRoutes";
 import { useMenuStore } from "./core/ui/menu/menu.store";
 import PageRoutes from "@/core/routing/PageRoutes";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
-import DashboardPage from "@/core/dashboard/DashboardPage";
+// import DashboardPage from "@/core/dashboard/DashboardPage";
 import { BrandingProvider } from "./core/ui/branding/BrandingProvider";
 import RegisterPage from "./core/auth/RegisterPage";
 
@@ -52,10 +52,10 @@ function App() {
                                 >
                                     {/* ROOT ONLY */}
                                     <Route index element={<EntryRedirect />} />
-                                    <Route
+                                    {/* <Route
                                         path="dashboard"
                                         element={<DashboardPage />}
-                                    />
+                                    /> */}
                                     {usersRoutes.map(renderRoute)}
                                     {/* {productRoutes.map(renderRoute)} */}
 

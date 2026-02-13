@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// src/core/ui/icons/icon.registry.ts
+
 import {
     PencilSquareIcon,
     XCircleIcon,
@@ -7,6 +9,9 @@ import {
     HomeIcon,
     // UserIcon,
     UserCircleIcon,
+    ChartBarIcon,
+    CubeIcon,
+    ShoppingCartIcon,
 } from "@heroicons/react/20/solid";
 
 export const iconRegistry: Record<string, any> = {
@@ -20,4 +25,7 @@ export const iconRegistry: Record<string, any> = {
     home: HomeIcon,
     "user-check": UserCircleIcon,
     plus: PlusIcon,
+    "chart-line": ChartBarIcon,
+    "shopping-cart": ShoppingCartIcon,
+    box: CubeIcon,
 };

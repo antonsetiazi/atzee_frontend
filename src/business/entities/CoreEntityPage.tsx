@@ -10,6 +10,12 @@ import BlockForm from "./blocks/BlockForm";
 import BlockTable from "./blocks/BlockTable";
 import BlockFiles from "./blocks/BlockFiles";
 import BlockTags from "./blocks/BlockTags";
+import BlockText from "./blocks/BlockText";
+import BlockChart from "./blocks/BlockChart";
+import BlockStat from "./blocks/BlockStat";
+import BlockShortcut from "./blocks/BlockShortcut";
+import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
+import Topbar from "@/core/ui/layout/Topbar";
 
 interface Props {
     entityKey: string;
@@ -17,6 +23,7 @@ interface Props {
 
 export default function CoreEntityPage({ entityKey }: Props) {
     const { id } = useParams<{ id: string }>();
+    const { isMobile } = useBreakpoint();
 
     const [schema, setSchema] = useState<any>(null);
     const [loadingSchema, setLoadingSchema] = useState(true);
@@ -61,24 +68,40 @@ export default function CoreEntityPage({ entityKey }: Props) {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
-            {/* Page Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-lg font-semibold text-gray-900">
-                        {schema.title || "Entity"}
-                    </h1>
-                    {schema.description && (
-                        <p className="text-sm text-gray-500">
-                            {schema.description}
-                        </p>
-                    )}
+        <div className="max-w-7xl mx-auto space-y-6">
+            {/* Topbar for mobile */}
+            {isMobile && <Topbar title={schema.title} />}
+
+            {/* Page Header only for desktop */}
+            {!isMobile && (
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-lg font-semibold text-gray-900">
+                            {schema.title || "Entity"}
+                        </h1>
+                        {schema.description && (
+                            <p className="text-sm text-gray-500">
+                                {schema.description}
+                            </p>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Page Content */}
-            <div className="space-y-6">
+            <div className="space-y-2 px-4 py-6 ">
                 {schema.blocks?.map((block: any, idx: number) => {
+                    if (block.type === "shortcut") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white border border-gray-200 rounded-lg shadow-sm p-4"
+                            >
+                                <BlockShortcut block={block} />
+                            </div>
+                        );
+                    }
+
                     if (block.type === "table") {
                         return (
                             <div
@@ -157,6 +180,39 @@ export default function CoreEntityPage({ entityKey }: Props) {
                                     entityKey={entityKey}
                                     id={id}
                                 />
+                            </div>
+                        );
+                    }
+
+                    if (block.type === "stat") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
+                            >
+                                <BlockStat block={block} />
+                            </div>
+                        );
+                    }
+
+                    if (block.type === "chart") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
+                            >
+                                <BlockChart block={block} />
+                            </div>
+                        );
+                    }
+
+                    if (block.type === "text") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
+                            >
+                                <BlockText block={block} />
                             </div>
                         );
                     }

@@ -1,7 +1,6 @@
 // src/core/ui/layout/shell/MobileShell.tsx
 
 import Sidebar from "../Sidebar";
-import Topbar from "../Topbar";
 import { useShell } from "./ShellContext";
 import BottomNavigation from "@/core/ui/navigation/components/BottomNavigation";
 
@@ -11,6 +10,8 @@ export default function MobileShell({
     children: React.ReactNode;
 }) {
     const { drawerOpen, closeDrawer } = useShell();
+
+    const bottomNavHeight = 64; // px
 
     return (
         <div className="relative flex h-screen flex-col bg-gray-100">
@@ -34,12 +35,20 @@ export default function MobileShell({
 
             {/* Main */}
             <div className="flex flex-1 flex-col">
-                <Topbar />
-
-                <main className="flex-1 overflow-y-auto p-3">
+                <main
+                    className="flex-1 overflow-y-auto"
+                    style={{ paddingBottom: bottomNavHeight }}
+                >
                     {children}
-                    <BottomNavigation />
                 </main>
+
+                {/* Fixed Bottom Navigation */}
+                <div
+                    className="fixed bottom-0 left-0 w-full z-30"
+                    style={{ height: bottomNavHeight }}
+                >
+                    <BottomNavigation />
+                </div>
             </div>
         </div>
     );

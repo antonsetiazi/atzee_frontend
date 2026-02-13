@@ -4,7 +4,11 @@ import { useAuthService } from "@/core/auth/auth.service";
 import { useShell } from "./shell/ShellContext";
 // import TenantSwitcher from "@/core/tenant/TenantSwitcher";
 
-export default function Topbar() {
+interface TopbarProps {
+    title?: string;
+}
+
+export default function Topbar({ title }: TopbarProps) {
     const { logout } = useAuthService();
     const { isMobile, toggleDrawer } = useShell();
 
@@ -34,7 +38,7 @@ export default function Topbar() {
                 )}
 
                 <span className="text-sm font-medium text-gray-700 leading-none">
-                    Dashboard
+                    {title || "Dashboard"}
                 </span>
             </div>
 
