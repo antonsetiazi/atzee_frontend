@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/core/ui/icons/action.icons.ts
 import {
     PencilSquareIcon,
     XCircleIcon,
     EyeIcon,
     PlusIcon,
+    HomeIcon,
+    // UserIcon,
+    UserCircleIcon,
 } from "@heroicons/react/20/solid";
 
-export const actionIcons: Record<string, any> = {
+export const iconRegistry: Record<string, any> = {
+    // Action Icons
     edit: PencilSquareIcon,
     delete: XCircleIcon,
     view: EyeIcon,
     create: PlusIcon,
+
+    // Navigation Icons
+    home: HomeIcon,
+    "user-check": UserCircleIcon,
+    plus: PlusIcon,
 };

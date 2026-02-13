@@ -1,5 +1,7 @@
+// src/core/auth/auth.types.ts
+
 export interface LoginPayload {
-    username: string;
+    email: string;
     password: string;
     tenant_code: string;
 }

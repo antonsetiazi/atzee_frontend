@@ -4,6 +4,8 @@ import type { EntityAction } from "@/business/actions/action.types";
 
 export type TableColumnType = "text" | "number" | "date" | "badge";
 
+export type ColumnPriority = 1 | 2 | 3;
+
 export interface TableColumnSchema {
     key: string; // field dari backend
     label: string; // header
@@ -11,6 +13,8 @@ export interface TableColumnSchema {
     type?: TableColumnType;
     sortable?: boolean;
     width?: number | string;
+
+    priority?: ColumnPriority;
 }
 
 export interface EntityTableSchema {

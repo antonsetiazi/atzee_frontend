@@ -1,45 +1,54 @@
 // src/core/ui/layout/AppLayout.tsx
 
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
-
-import Sidebar from "./Sidebar";
-import Topbar from "./Topbar";
 import { fetchMenu } from "@/core/ui/menu/menu.api";
+import { fetchNavigation } from "@/core/ui/navigation/navigation.api";
+
 import { useMenuStore } from "@/core/ui/menu/menu.store";
+import { useNavigationStore } from "@/core/ui/navigation/navigation.store";
 import { useSessionStore } from "@/core/session/session.store";
+import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
+import ShellProvider from "./shell/ShellProvider";
 
 export default function AppLayout() {
     const token = useSessionStore((s) => s.token);
+    const { isMobile } = useBreakpoint();
+
     const setMenu = useMenuStore((state) => state.setMenu);
+    const setBottom = useNavigationStore((state) => state.setBottom);
+    const setTopbar = useNavigationStore((state) => state.setTopbar);
 
     useEffect(() => {
         if (!token) return;
         async function bootstrap() {
-            const menu = await fetchMenu();
-            setMenu(menu);
+            try {
+                // 🔹 Existing menu (JANGAN DIGANGGU)
+                const menu = await fetchMenu();
+                setMenu(menu);
+
+                const device = isMobile ? "mobile" : "desktop";
+
+                // 🔹 Mobile → bottom nav
+                if (device === "mobile") {
+                    const bottomNav = await fetchNavigation("bottom", "mobile");
+                    setBottom(bottomNav?.items || []);
+                }
+
+                // 🔹 Desktop → sidebar/topbar
+                if (device === "desktop") {
+                    const sidebarNav = await fetchNavigation(
+                        "sidebar",
+                        "desktop",
+                    );
+                    setTopbar(sidebarNav?.items || []);
+                }
+            } catch (error) {
+                console.error("App bootstrap failed:", error);
+            }
         }
 
         bootstrap();
-    }, [token, setMenu]);
+    }, [token, isMobile, setMenu, setBottom, setTopbar]);
 
-    return (
-        <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
-            <Sidebar />
-
-            {/* Main area */}
-            <div className="flex flex-1 flex-col overflow-hidden">
-                {/* Topbar */}
-                <Topbar />
-
-                {/* Content */}
-                <main className="flex-1 overflow-y-auto p-6">
-                    <div className="mx-auto w-full max-w-400">
-                        <Outlet />
-                    </div>
-                </main>
-            </div>
-        </div>
-    );
+    return <ShellProvider />;
 }

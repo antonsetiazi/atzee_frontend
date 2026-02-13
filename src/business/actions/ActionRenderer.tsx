@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { httpDelete } from "@/core/http/http.client";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { useConfirmStore } from "@/core/confirm/confirm.store";
-import { actionIcons } from "@/core/ui/icons/action.icons";
+import { iconRegistry } from "@/core/ui/icons/icon.registry";
 import { clearEntityCacheByPrefix } from "../entities/entity.cache";
 
 interface Props<T> {
@@ -127,7 +127,7 @@ export function ActionRenderer<T>({
 
                 const isDanger = action.type === "delete";
 
-                const Icon = action.icon ? actionIcons[action.icon] : null;
+                const Icon = action.icon ? iconRegistry[action.icon] : null;
                 // console.log(action.icon);
 
                 return (

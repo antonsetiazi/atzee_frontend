@@ -3,7 +3,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TableRenderer from "../../tables/TableRenderer";
+// import TableDesktop from "../../tables/renderers/TableDesktop";
+import AdaptiveTableRenderer from "../../tables/AdaptiveTableRenderer";
 import { fetchTableData } from "./../entity.api";
 import type { EntityQuery } from "./../entity.query.types";
 import EmptyState from "@/shared/ui/EmptyState";
@@ -147,7 +148,7 @@ export default function BlockTable({
             {/* Table */}
             <div className="p-4">
                 {data?.length > 0 ? (
-                    <TableRenderer
+                    <AdaptiveTableRenderer
                         entity={schema.entity}
                         schema={block}
                         data={data}
@@ -156,26 +157,31 @@ export default function BlockTable({
                         page={query.page}
                         pageSize={query.pageSize}
                         context={tableContext}
-                        onPageChange={(page) =>
+                        onPageChange={(page: number) =>
                             setQuery((q) => ({
                                 ...q,
                                 page,
                             }))
                         }
-                        onPageSizeChange={(pageSize) =>
+                        onPageSizeChange={(pageSize: number) =>
                             setQuery((q) => ({
                                 ...q,
                                 pageSize,
                                 page: 1,
                             }))
                         }
-                        onSortChange={(sort) =>
+                        onSortChange={(
+                            sort: {
+                                field: string;
+                                direction: "asc" | "desc";
+                            }[],
+                        ) =>
                             setQuery((q) => ({
                                 ...q,
                                 sort,
                             }))
                         }
-                        onSearch={(search) => {
+                        onSearch={(search: string) => {
                             if (searchMode === "server") {
                                 // server-side → tetap trigger backend
                                 setQuery((q) => ({

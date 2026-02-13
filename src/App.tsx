@@ -19,6 +19,7 @@ import PageRoutes from "@/core/routing/PageRoutes";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
 import DashboardPage from "@/core/dashboard/DashboardPage";
 import { BrandingProvider } from "./core/ui/branding/BrandingProvider";
+import RegisterPage from "./core/auth/RegisterPage";
 
 function App() {
     // Ambil menu yang sudah filter permission
@@ -34,6 +35,10 @@ function App() {
                         <Routes>
                             {/* PUBLIC */}
                             <Route path="/login" element={<LoginPage />} />
+                            <Route
+                                path="/register"
+                                element={<RegisterPage />}
+                            />
 
                             {/* PROTECTED AREA */}
                             <Route element={<AuthGuard />}>

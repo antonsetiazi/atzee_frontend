@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/business/tables/TableRenderer.tsx
+// src/business/tables/renderers/TableDesktop.tsx
 
-import type { EntityTableSchema } from "./table.types";
-import TableHeader from "./TableHeader";
-import TablePagination from "./TablePagination";
-import TableRow from "./TableRow";
+import type { EntityTableSchema } from "./../table.types";
+import TableHeader from "./../TableHeader";
+import TablePagination from "./../TablePagination";
+import TableRow from "./../TableRow";
 import { useMemo, useState } from "react";
-import type { TableContext } from "./table.context";
+import type { TableContext } from "./../table.context";
 
 interface Props {
     entity: string;
@@ -28,7 +28,7 @@ interface Props {
     context: TableContext;
 }
 
-export default function TableRenderer({
+export default function TableDesktop({
     entity,
     schema,
     data,

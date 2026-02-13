@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthService } from "@/core/auth/auth.service";
 
+const TENANT_CODE = import.meta.env.VITE_TENANT;
+
 export function LoginForm() {
     const navigate = useNavigate();
-    const [username, setUsername] = useState("admin");
-    const [tenantCode, setTenantCode] = useState("demo");
+    const [email, setEmail] = useState("admin@example.com"); // default untuk dev
     const [password, setPassword] = useState("admin123");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -21,9 +22,9 @@ export function LoginForm() {
 
         try {
             await auth.login({
-                username,
+                email,
                 password,
-                tenant_code: tenantCode,
+                tenant_code: TENANT_CODE,
             });
 
             navigate("/dashboard", { replace: true });
@@ -39,33 +40,14 @@ export function LoginForm() {
         <form onSubmit={handleSubmit} className="w-full space-y-5">
             <div>
                 <label className="block text-sm font-medium text-gray-700">
-                    Tenant
+                    Email
                 </label>
                 <input
-                    type="text"
+                    type="email"
                     required
-                    value={tenantCode}
-                    onChange={(e) => setTenantCode(e.target.value)}
-                    className="
-                        mt-1 w-full rounded-lg border border-gray-300
-                        px-3 py-2 text-sm text-gray-900
-                        placeholder:text-gray-400
-                        focus:border-indigo-600 focus:outline-none
-                        focus:ring-2 focus:ring-indigo-600/20
-                    "
-                    placeholder="tenant-code"
-                />
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium text-gray-700">
-                    Username
-                </label>
-                <input
-                    type="text"
-                    required
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
                     className="
                         mt-1 w-full rounded-lg border border-gray-300
                         px-3 py-2 text-sm text-gray-900
