@@ -57,7 +57,7 @@ export default function BlockBanner({ schema, block }: Props) {
 
     if (loadingData) {
         return (
-            <div className="bg-white rounded-xl shadow p-6">
+            <div className="bg-white rounded shadow p-6">
                 <div className="text-sm text-gray-500">Loading banners...</div>
             </div>
         );
@@ -68,7 +68,7 @@ export default function BlockBanner({ schema, block }: Props) {
     }
 
     return (
-        <div className="relative w-full overflow-hidden rounded-xl shadow-lg">
+        <div className="relative w-full overflow-hidden rounded shadow-lg">
             {/* Slides */}
             <div
                 className="flex transition-transform duration-700 ease-in-out"
