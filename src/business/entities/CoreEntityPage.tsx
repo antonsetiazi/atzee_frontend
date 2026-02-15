@@ -17,6 +17,7 @@ import BlockShortcut from "./blocks/BlockShortcut";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import Topbar from "@/core/ui/layout/Topbar";
 import BlockBanner from "./blocks/BlockBanner";
+import BlockMap from "./blocks/BlockMap";
 
 interface Props {
     entityKey: string;
@@ -225,6 +226,21 @@ export default function CoreEntityPage({ entityKey }: Props) {
                                 className="bg-white rounded-lg shadow-sm w-full"
                             >
                                 <BlockBanner block={block} schema={schema} />
+                            </div>
+                        );
+                    }
+
+                    if (block.type === "map") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
+                            >
+                                <BlockMap
+                                    block={block}
+                                    entityKey={entityKey}
+                                    id={id}
+                                />
                             </div>
                         );
                     }
