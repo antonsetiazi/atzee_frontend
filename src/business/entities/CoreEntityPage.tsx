@@ -16,6 +16,7 @@ import BlockStat from "./blocks/BlockStat";
 import BlockShortcut from "./blocks/BlockShortcut";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import Topbar from "@/core/ui/layout/Topbar";
+import BlockBanner from "./blocks/BlockBanner";
 
 interface Props {
     entityKey: string;
@@ -67,8 +68,9 @@ export default function CoreEntityPage({ entityKey }: Props) {
         return <LoadingState />;
     }
 
+    // console.log(schema);
     return (
-        <div className="max-w-7xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto">
             {/* Topbar for mobile */}
             {isMobile && <Topbar title={schema.title} />}
 
@@ -87,9 +89,8 @@ export default function CoreEntityPage({ entityKey }: Props) {
                     </div>
                 </div>
             )}
-
             {/* Page Content */}
-            <div className="space-y-2 px-4 py-6 ">
+            <div className="space-y-2 px-2 py-2 ">
                 {schema.blocks?.map((block: any, idx: number) => {
                     if (block.type === "shortcut") {
                         return (
@@ -188,7 +189,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
                         return (
                             <div
                                 key={idx}
-                                className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
+                                className="bg-white rounded-lg shadow-sm p-6 w-full"
                             >
                                 <BlockStat block={block} />
                             </div>
@@ -199,7 +200,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
                         return (
                             <div
                                 key={idx}
-                                className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
+                                className="bg-white rounded-lg shadow-sm p-6 w-full"
                             >
                                 <BlockChart block={block} />
                             </div>
@@ -213,6 +214,17 @@ export default function CoreEntityPage({ entityKey }: Props) {
                                 className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
                             >
                                 <BlockText block={block} />
+                            </div>
+                        );
+                    }
+
+                    if (block.type === "banner") {
+                        return (
+                            <div
+                                key={idx}
+                                className="bg-white rounded-lg shadow-sm w-full"
+                            >
+                                <BlockBanner block={block} schema={schema} />
                             </div>
                         );
                     }

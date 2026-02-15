@@ -64,11 +64,12 @@ export default function FormRenderer({
 
         setLoading(true);
         setErrors({}); // reset error lama
+        // console.log("values:", values);
 
         try {
             // ✅ normalize flat form values → nested payload
             const payload = expandDotNotation(values);
-            // console.log(payload);
+            // console.log("payload: ", payload);
             const response = await submitForm(payload, {
                 submit_to: schema.submit_to,
                 method: schema.method,

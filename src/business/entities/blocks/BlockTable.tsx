@@ -46,10 +46,13 @@ export default function BlockTable({
 
     const refreshTable = useCallback(async () => {
         const url = interpolate(block.data_source, { id });
-
+        // console.log(block);
         setLoadingData(true);
         try {
-            const res = await fetchTableData(schema.entity, url, query);
+            const res = await fetchTableData(schema.entity, url, {
+                ...(block.query || {}),
+                ...query,
+            });
             // console.log("res: ", res);
             setData(res.items);
             setTotal(res.total);
