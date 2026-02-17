@@ -47,4 +47,5 @@ export interface FormSchema {
     method?: "POST" | "PUT" | "PATCH";
     redirect_to?: FormRedirect;
     actions?: FormAction[];
+    affects?: "session_user" | "session_settings" | "permissions" | "config";
 }

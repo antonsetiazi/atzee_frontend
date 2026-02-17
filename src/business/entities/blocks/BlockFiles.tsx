@@ -8,6 +8,7 @@ import EmptyState from "@/shared/ui/EmptyState";
 import { button } from "@/core/ui/ui.class";
 import { deleteFile, fetchFiles, uploadFile } from "@/business/files/file.api";
 import { useSessionStore } from "@/core/session/session.store";
+import { handleCoreAffects } from "@/core/utils/coreAffects";
 
 interface Props {
     block: any;
@@ -99,12 +100,12 @@ export default function BlockFiles({ block, id }: Props) {
             entity_id: entityId,
         });
 
+        if (block.affects) {
+            await handleCoreAffects(block.affects);
+        }
+
         if (block.multiple === false && uploaded) {
             await loadFiles();
-
-            if (block.onAfterUpload) {
-                await block.onAfterUpload(uploaded);
-            }
         } else {
             await loadFiles();
         }

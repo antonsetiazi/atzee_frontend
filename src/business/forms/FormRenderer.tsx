@@ -15,6 +15,7 @@ import { clearEntityCacheByPrefix } from "../entities/entity.cache";
 import type { FormContext } from "./form.context";
 import { expandDotNotation, flattenObject } from "./form.utils";
 import { buildDefaultValues } from "./form.defaults";
+import { handleCoreAffects } from "@/core/utils/coreAffects";
 
 interface Props {
     entity: string;
@@ -84,6 +85,10 @@ export default function FormRenderer({
             // refresh table
             clearEntityCacheByPrefix(`table:${entity}`);
             context.refresh?.();
+
+            if (schema.affects) {
+                await handleCoreAffects(schema.affects);
+            }
 
             // 🔁 post-submit actions
             if (schema.redirect_to && response) {

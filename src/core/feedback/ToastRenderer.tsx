@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/feedback/ToastRenderer.tsx
 
 import { useEffect } from "react";
 import { useFeedbackStore } from "./feedback.store";
+import type { FeedbackMessage } from "./feedback.types";
 
 const AUTO_DISMISS_MS = 4000; // 4 detik
 
@@ -24,11 +24,16 @@ export default function ToastRenderer() {
     );
 }
 
+interface ToastItemProps {
+    msg: FeedbackMessage;
+    onClose: () => void;
+}
+
 /**
  * Komponen individual toast
  * Bertanggung jawab atas auto-dismiss
  */
-function ToastItem({ msg, onClose }: { msg: any; onClose: () => void }) {
+function ToastItem({ msg, onClose }: ToastItemProps) {
     useEffect(() => {
         const timer = setTimeout(() => {
             onClose();
@@ -37,23 +42,28 @@ function ToastItem({ msg, onClose }: { msg: any; onClose: () => void }) {
         return () => clearTimeout(timer);
     }, [onClose]);
 
+    const variantClasses = {
+        success: "bg-green-50 border-green-200 text-green-800",
+        error: "bg-red-50 border-red-200 text-red-800",
+        warning: "bg-yellow-50 border-yellow-200 text-yellow-800",
+        info: "bg-blue-50 border-blue-200 text-blue-800",
+    };
+
     return (
         <div
             onClick={onClose}
             className={`
-                cursor-pointer rounded-lg px-4 py-3 shadow-lg text-white
-                transition-all duration-300 ease-out
-                hover:opacity-90 hover:scale-[0.98]
-                ${msg.type === "success" && "bg-green-600"}
-                ${msg.type === "error" && "bg-red-600"}
-                ${msg.type === "warning" && "bg-yellow-500 text-black"}
-                ${msg.type === "info" && "bg-blue-600"}
+                cursor-pointer rounded-xl border px-4 py-3 shadow-md
+                backdrop-blur-sm
+                transition-all duration-200 ease-out
+                hover:shadow-lg hover:-translate-y-px]
+                ${variantClasses[msg.type] || variantClasses.info}
             `}
         >
             {msg.title && (
                 <div className="font-semibold mb-0.5">{msg.title}</div>
             )}
-            <div className="text-sm leading-snug">{msg.message}</div>
+            <div className="text-sm leading-snug opacity-90">{msg.message}</div>
         </div>
     );
 }
