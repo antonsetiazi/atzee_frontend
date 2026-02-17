@@ -12,6 +12,9 @@ import {
     ChartBarIcon,
     CubeIcon,
     ShoppingCartIcon,
+    ArrowRightStartOnRectangleIcon,
+    ChevronDownIcon,
+    Cog6ToothIcon,
 } from "@heroicons/react/20/solid";
 
 export const iconRegistry: Record<string, any> = {
@@ -28,4 +31,9 @@ export const iconRegistry: Record<string, any> = {
     "chart-line": ChartBarIcon,
     "shopping-cart": ShoppingCartIcon,
     box: CubeIcon,
+
+    // System Icons
+    "log-out": ArrowRightStartOnRectangleIcon,
+    "chevron-down": ChevronDownIcon,
+    cog: Cog6ToothIcon,
 };

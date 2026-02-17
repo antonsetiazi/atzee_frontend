@@ -21,6 +21,7 @@ export interface BaseFieldSchema {
     default?: any;
     required?: boolean;
     readonly?: boolean;
+    disabled?: boolean;
     hidden?: boolean;
     permission?: string;
 }

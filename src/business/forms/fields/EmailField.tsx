@@ -20,7 +20,7 @@ export default function EmailField({ field, value, error, onChange }: Props) {
                 type="email"
                 name={field.key}
                 value={value ?? ""}
-                disabled={field.readonly}
+                disabled={field.disabled}
                 required={field.required}
                 onChange={(e) => onChange?.(field.key, e.target.value)}
                 className={inputBase}

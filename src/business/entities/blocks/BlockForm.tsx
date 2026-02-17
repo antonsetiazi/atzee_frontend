@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import FormRenderer from "../../forms/FormRenderer";
 import { fetchEntityDetail } from "./../entity.api";
+import { httpPost } from "@/core/http/http.client";
 import LoadingState from "@/shared/ui/LoadingState";
 import type { FormContext } from "@/business/forms/form.context";
 
@@ -44,9 +45,25 @@ export default function BlockForm({
             /**
              * CREATE PAGE
              */
-            if (!id || isCreatePage) {
+            if (isCreatePage) {
                 setInitialValues({});
                 setLoadingData(false);
+                return;
+            }
+
+            if (!id) {
+                try {
+                    const res = await httpPost(
+                        `/entities/${schema.domain}/${schema.entity}/query/`,
+                        {}, // 👈 query kosong
+                    );
+
+                    setInitialValues(res);
+                } catch (err) {
+                    console.error("Failed to fetch self entity:", err);
+                } finally {
+                    setLoadingData(false);
+                }
                 return;
             }
 
@@ -100,6 +117,7 @@ export default function BlockForm({
     // console.log(initialValues);
     // console.log("id: ", id);
     // console.log("parentId: ", parentId);
+    // console.log(schema.entity);
     return (
         <div key={idx}>
             <FormRenderer

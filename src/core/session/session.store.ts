@@ -4,9 +4,10 @@ import { create } from "zustand";
 import type { SessionState, SessionUser } from "./session.types";
 
 interface SessionActions {
-    setSession: (token: string, user: SessionUser) => void;
+    setSession: (token: string, user: SessionUser | null) => void;
     clearSession: () => void;
     hydrate: () => void;
+    updateUser: (user: Partial<SessionUser>) => void;
 }
 
 export const useSessionStore = create<SessionState & SessionActions>((set) => ({
@@ -16,27 +17,29 @@ export const useSessionStore = create<SessionState & SessionActions>((set) => ({
     vertical: null,
     isHydrated: false,
 
-    setSession: (token, user) =>
+    setSession: (token, user) => {
+        localStorage.setItem("token", token);
         set({
             token,
             user,
             isAuthenticated: true,
-        }),
+        });
+    },
 
-    clearSession: () =>
+    clearSession: () => {
+        localStorage.removeItem("token");
         set({
             token: null,
             user: null,
             isAuthenticated: false,
-        }),
+        });
+    },
 
     hydrate: () => {
         const token = localStorage.getItem("token");
-
         if (token) {
             set({
                 token,
-                user: null,
                 isAuthenticated: true,
                 isHydrated: true,
             });
@@ -48,5 +51,11 @@ export const useSessionStore = create<SessionState & SessionActions>((set) => ({
                 isHydrated: true,
             });
         }
+    },
+
+    updateUser: (userData) => {
+        set((state) => ({
+            user: state.user ? { ...state.user, ...userData } : state.user,
+        }));
     },
 }));

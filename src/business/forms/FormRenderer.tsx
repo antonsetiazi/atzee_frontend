@@ -113,6 +113,7 @@ export default function FormRenderer({
         }
     }
     // console.log(schema.redirect_to);
+    // console.log(schema);
 
     return (
         <form

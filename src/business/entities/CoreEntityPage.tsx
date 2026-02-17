@@ -15,9 +15,10 @@ import BlockChart from "./blocks/BlockChart";
 import BlockStat from "./blocks/BlockStat";
 import BlockShortcut from "./blocks/BlockShortcut";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
-import Topbar from "@/core/ui/layout/Topbar";
 import BlockBanner from "./blocks/BlockBanner";
 import BlockMap from "./blocks/BlockMap";
+import PageHeader from "@/core/ui/layout/PageHeader";
+import { useSessionStore } from "@/core/session/session.store";
 
 interface Props {
     entityKey: string;
@@ -26,9 +27,9 @@ interface Props {
 export default function CoreEntityPage({ entityKey }: Props) {
     const { id } = useParams<{ id: string }>();
     const { isMobile } = useBreakpoint();
-
     const [schema, setSchema] = useState<any>(null);
     const [loadingSchema, setLoadingSchema] = useState(true);
+    const isHydrated = useSessionStore((s) => s.isHydrated);
 
     useEffect(() => {
         if (!entityKey) return;
@@ -227,27 +228,16 @@ export default function CoreEntityPage({ entityKey }: Props) {
         return null;
     }
 
+    if (!isHydrated) return <LoadingState />;
     // console.log(schema);
     return (
         <div className="max-w-7xl mx-auto">
-            {/* Topbar for mobile */}
-            {isMobile && <Topbar title={schema.title} />}
+            <PageHeader
+                title={schema.title}
+                description={schema.description}
+                isMobile={isMobile}
+            />
 
-            {/* Page Header only for desktop */}
-            {!isMobile && (
-                <div className="flex items-center justify-between px-2 py-2">
-                    <div>
-                        <h1 className="text-lg font-semibold text-gray-900">
-                            {schema.title || "Entity"}
-                        </h1>
-                        {schema.description && (
-                            <p className="text-sm text-gray-500">
-                                {schema.description}
-                            </p>
-                        )}
-                    </div>
-                </div>
-            )}
             {/* Page Content */}
             <div className="space-y-2 px-2 py-2">
                 {schema.blocks?.map((block: any, idx: number) => {

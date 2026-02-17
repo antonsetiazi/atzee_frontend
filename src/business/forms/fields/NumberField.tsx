@@ -18,7 +18,7 @@ export default function NumberField({ field, value, error, onChange }: Props) {
             <input
                 type="number"
                 value={value ?? ""}
-                disabled={field.readonly}
+                disabled={field.disabled}
                 required={field.required}
                 onChange={(e) =>
                     onChange?.(

@@ -1,8 +1,11 @@
+// src/core/session/session.types.ts
+
 export interface SessionUser {
     id: string;
     username: string;
     full_name?: string;
     tenant_id: string;
+    avatar_url?: string;
 }
 
 export interface SessionState {

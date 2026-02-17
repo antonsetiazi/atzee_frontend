@@ -26,21 +26,18 @@ export default function AppLayout() {
                 const menu = await fetchMenu();
                 setMenu(menu);
 
-                const device = isMobile ? "mobile" : "desktop";
-
                 // 🔹 Mobile → bottom nav
-                if (device === "mobile") {
+                if (isMobile) {
                     const bottomNav = await fetchNavigation("bottom", "mobile");
                     setBottom(bottomNav?.items || []);
-                }
-
-                // 🔹 Desktop → sidebar/topbar
-                if (device === "desktop") {
+                    setTopbar([]);
+                } else {
                     const sidebarNav = await fetchNavigation(
                         "sidebar",
                         "desktop",
                     );
                     setTopbar(sidebarNav?.items || []);
+                    setBottom([]);
                 }
             } catch (error) {
                 console.error("App bootstrap failed:", error);
