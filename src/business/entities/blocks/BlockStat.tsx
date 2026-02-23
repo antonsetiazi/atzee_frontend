@@ -12,7 +12,7 @@ export default function BlockStat({ block, data }: Props) {
     // console.log(block.meta);
     const value = block.value ?? data?.[block.key] ?? null;
     return (
-        <div className="p-5">
+        <div className="bg-white rounded-lg shadow-sm p-6 w-full">
             <div className="text-sm font-medium text-gray-500">
                 {block.title}
             </div>

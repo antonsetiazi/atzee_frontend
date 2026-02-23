@@ -159,8 +159,9 @@ export default function CoreEntityPage({ entityKey }: Props) {
     // console.log(schema);
     // console.log(id);
     // console.log(pageData);
+
     return (
-        <div className="max-w-7xl mx-auto">
+        <div className="mx-auto w-full">
             <PageHeader
                 title={schema.title}
                 description={schema.description}
@@ -168,7 +169,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
             />
 
             {/* Page Content */}
-            <div className="space-y-2 px-2 py-2">
+            <div className="space-y-4 px-2 py-2">
                 {schema.blocks?.map((block: any, idx: number) => {
                     return (
                         <BlockRenderer

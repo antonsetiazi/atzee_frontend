@@ -47,7 +47,7 @@ export default function BlockRenderer({
         return (
             <div
                 key={idx}
-                className={`grid w-full ${containerClasses} p-4`}
+                className={`grid w-full ${containerClasses}`}
                 style={{
                     gridTemplateColumns: block.columns
                         ? `repeat(${block.columns}, 1fr)`
@@ -100,10 +100,7 @@ export default function BlockRenderer({
             block.data_key && pageData ? pageData[block.data_key] : pageData;
 
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 w-full"
-            >
+            <div key={idx}>
                 <BlockCardList
                     block={block}
                     data={blockData}
@@ -122,10 +119,7 @@ export default function BlockRenderer({
 
     if (block.type === "form") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 w-full"
-            >
+            <div key={idx}>
                 <BlockForm
                     entityKey={entityKey}
                     schema={schema}
@@ -141,7 +135,7 @@ export default function BlockRenderer({
 
     if (block.type === "table") {
         return (
-            <div key={idx} className="bg-white rounded-lg shadow-sm">
+            <div key={idx}>
                 <BlockTable
                     entityKey={entityKey}
                     schema={schema}
@@ -208,7 +202,7 @@ export default function BlockRenderer({
 
     if (block.type === "stat") {
         return (
-            <div key={idx} className="bg-white rounded-lg shadow-sm p-6 w-full">
+            <div key={idx}>
                 <BlockStat block={block} data={pageData} />
             </div>
         );
@@ -224,7 +218,7 @@ export default function BlockRenderer({
 
     if (block.type === "chart") {
         return (
-            <div key={idx} className="bg-white rounded-lg shadow-sm p-6 w-full">
+            <div key={idx}>
                 <BlockChart block={block} />
             </div>
         );
@@ -232,10 +226,7 @@ export default function BlockRenderer({
 
     if (block.type === "text") {
         return (
-            <div
-                key={idx}
-                className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
-            >
+            <div key={idx}>
                 <BlockText block={block} />
             </div>
         );
@@ -243,7 +234,7 @@ export default function BlockRenderer({
 
     if (block.type === "banner") {
         return (
-            <div key={idx} className="bg-white rounded shadow-sm w-full">
+            <div key={idx}>
                 <BlockBanner block={block} schema={schema} />
             </div>
         );
@@ -251,10 +242,7 @@ export default function BlockRenderer({
 
     if (block.type === "map") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
-            >
+            <div key={idx}>
                 <BlockMap block={block} entityKey={entityKey} id={id} />
             </div>
         );
@@ -262,10 +250,7 @@ export default function BlockRenderer({
 
     if (block.type === "action") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 w-full"
-            >
+            <div key={idx}>
                 <BlockActionGroup block={block} entityId={id} />
             </div>
         );
@@ -273,10 +258,7 @@ export default function BlockRenderer({
 
     if (block.type === "shortcut") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-4"
-            >
+            <div key={idx}>
                 <BlockShortcut block={block} />
             </div>
         );
@@ -284,10 +266,7 @@ export default function BlockRenderer({
 
     if (block.type === "transaction_summary") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-4"
-            >
+            <div key={idx}>
                 <BlockTransactionSummary
                     block={block}
                     formValues={schema?.formValues} // nanti kita rapikan
@@ -298,10 +277,7 @@ export default function BlockRenderer({
 
     if (block.type === "booking") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-4"
-            >
+            <div key={idx}>
                 <BlockBooking block={block} />
             </div>
         );

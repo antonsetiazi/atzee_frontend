@@ -29,14 +29,12 @@ export default function PageHeader({
     ) : (
         /* DESKTOP VERSION */
         <div className="flex items-center justify-between px-2 py-2">
-            <div>
-                <h1 className="text-lg font-semibold text-gray-900">
-                    {title || "Entity"}
-                </h1>
-                {description && (
-                    <p className="text-sm text-gray-500">{description}</p>
-                )}
-            </div>
+            <h1 className="text-lg font-semibold text-gray-900">
+                {title || "Entity"}
+            </h1>
+            {description && (
+                <p className="text-sm text-gray-500">{description}</p>
+            )}
         </div>
     );
 }

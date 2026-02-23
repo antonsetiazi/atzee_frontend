@@ -22,10 +22,14 @@ export default function AppTopbar({ title }: TopbarProps) {
 
     // console.log(items);
     // console.log(user);
+    const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
 
     return (
-        <header className="h-14 border-b border-gray-100 bg-white">
-            <div className="mx-auto h-full px-4 flex items-center justify-between">
+        <header className="h-14 border-b border-gray-100 bg-white px-4">
+            <div
+                className="mx-auto h-full flex items-center justify-between"
+                style={{ maxWidth: MAX_WIDTH }}
+            >
                 {/* LEFT SIDE */}
                 <div className="flex items-center gap-6">
                     {/* Mobile Hamburger */}

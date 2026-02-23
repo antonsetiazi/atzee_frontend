@@ -1,10 +1,10 @@
 // src/core/ui/layout/AppLayout.tsx
 
 import { useEffect } from "react";
-import { fetchMenu } from "@/core/ui/menu/menu.api";
-import { fetchNavigation } from "@/core/ui/navigation/navigation.api";
+// import { fetchMenu } from "@/core/ui/menu/menu.api";
+// import { useMenuStore } from "@/core/ui/menu/menu.store";
 
-import { useMenuStore } from "@/core/ui/menu/menu.store";
+import { fetchNavigation } from "@/core/ui/navigation/navigation.api";
 import { useNavigationStore } from "@/core/ui/navigation/navigation.store";
 import { useSessionStore } from "@/core/session/session.store";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
@@ -16,7 +16,7 @@ export default function AppLayout() {
     const token = useSessionStore((s) => s.token);
     const { isMobile } = useBreakpoint();
 
-    const setMenu = useMenuStore((state) => state.setMenu);
+    // const setMenu = useMenuStore((state) => state.setMenu);
     const setBottom = useNavigationStore((state) => state.setBottom);
     const setTopbar = useNavigationStore((state) => state.setTopbar);
 
@@ -25,8 +25,8 @@ export default function AppLayout() {
         async function bootstrap() {
             try {
                 // 🔹 Existing menu (JANGAN DIGANGGU)
-                const menu = await fetchMenu();
-                setMenu(menu);
+                // const menu = await fetchMenu();
+                // setMenu(menu);
 
                 // 🔹 Mobile → bottom nav
                 if (isMobile) {
@@ -52,7 +52,7 @@ export default function AppLayout() {
         }
 
         bootstrap();
-    }, [token, isMobile, setMenu, setBottom, setTopbar]);
+    }, [token, isMobile, setBottom, setTopbar]);
 
     return <ShellProvider />;
 }
