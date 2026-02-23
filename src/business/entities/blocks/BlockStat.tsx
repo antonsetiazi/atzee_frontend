@@ -5,9 +5,12 @@ import { formatValue } from "@/core/dashboard/utils/formatValue";
 
 interface Props {
     block: any;
+    data?: any;
 }
 
-export default function BlockStat({ block }: Props) {
+export default function BlockStat({ block, data }: Props) {
+    // console.log(block.meta);
+    const value = block.value ?? data?.[block.key] ?? null;
     return (
         <div className="p-5">
             <div className="text-sm font-medium text-gray-500">
@@ -15,7 +18,7 @@ export default function BlockStat({ block }: Props) {
             </div>
             <div className="mt-3 flex items-end gap-2">
                 <div className="text-3xl font-semibold text-gray-900">
-                    {formatValue(block.value, block.meta)}
+                    {formatValue(value, block.meta)}
                 </div>
                 {block.suffix && (
                     <div className="pb-1 text-sm font-medium text-gray-400">

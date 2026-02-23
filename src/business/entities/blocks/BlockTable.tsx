@@ -96,6 +96,7 @@ export default function BlockTable({
     );
 
     // console.log(schema);
+    // console.log(data);
     return (
         <div className="bg-white rounded-lg shadow-sm">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">

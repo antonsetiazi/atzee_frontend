@@ -1,0 +1,205 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// src/business/entities/blocks/BlockActionGroup.tsx
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import {
+    httpPost,
+    httpPatch,
+    httpPut,
+    httpDelete,
+} from "@/core/http/http.client";
+
+import { useSessionStore } from "@/core/session/session.store";
+import { usePermissionStore } from "@/core/permissions/permission.store";
+import Icon from "@/core/ui/icons/Icon";
+
+type Props = {
+    block: any;
+    entityId?: string;
+};
+
+export default function BlockActionGroup({ block, entityId }: Props) {
+    const navigate = useNavigate();
+    const reloadSession = useSessionStore((s: any) => s.reloadSession);
+
+    const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
+
+    const hasPermission = usePermissionStore((s) => s.has);
+    const permissionLoaded = usePermissionStore((s) => s.isLoaded);
+
+    const {
+        title,
+        description,
+        actions = [],
+        direction = "row",
+        justify = "start",
+        align = "center",
+        gap = 12,
+        wrap = true,
+    } = block;
+
+    /* ===========================
+       HELPERS
+    =========================== */
+
+    const resolveUrl = (url?: string) => {
+        if (!url) return undefined;
+        return url.replace("{id}", entityId ?? "");
+    };
+
+    const applyAffects = async (affects?: string) => {
+        if (!affects) return;
+
+        if (affects === "session_user") {
+            await reloadSession();
+        }
+
+        // nanti bisa tambahkan:
+        // permissions
+        // config
+        // session_settings
+    };
+
+    const callApiByMethod = async (
+        endpoint: string,
+        method: string,
+        body?: any,
+    ) => {
+        switch (method?.toUpperCase()) {
+            case "POST":
+                return httpPost(endpoint, body);
+            case "PATCH":
+                return httpPatch(endpoint, body);
+            case "PUT":
+                return httpPut(endpoint, body);
+            case "DELETE":
+                return httpDelete(endpoint);
+            default:
+                return httpPost(endpoint, body);
+        }
+    };
+
+    /* ===========================
+       ACTION HANDLER
+    =========================== */
+
+    const handleAction = async (action: any, index: number) => {
+        if (loadingIndex !== null) return;
+
+        try {
+            setLoadingIndex(index);
+
+            // 🔹 NAVIGATE
+            if (action.type === "navigate" && action.to) {
+                navigate(resolveUrl(action.to)!);
+                return;
+            }
+
+            // 🔹 API CALL
+            if (action.type === "api" && action.endpoint) {
+                await callApiByMethod(
+                    resolveUrl(action.endpoint)!,
+                    action.method || "POST",
+                    action.body,
+                );
+
+                await applyAffects(action.affects);
+            }
+
+            // 🔹 SUBMIT (biasanya di FormBlock)
+            if (action.type === "submit") {
+                console.warn("Submit action should be handled by FormBlock");
+            }
+        } finally {
+            setLoadingIndex(null);
+        }
+    };
+
+    /* ===========================
+       LAYOUT CLASS MAPPING
+    =========================== */
+
+    const justifyClass: Record<string, string> = {
+        start: "justify-start",
+        center: "justify-center",
+        between: "justify-between",
+        around: "justify-around",
+    };
+
+    const alignClass: Record<string, string> = {
+        start: "items-start",
+        center: "items-center",
+        stretch: "items-stretch",
+    };
+
+    // console.log(block);
+    /* ===========================
+       RENDER
+    =========================== */
+
+    return (
+        <div className="w-full">
+            {title && <h3 className="text-lg font-semibold mb-1">{title}</h3>}
+
+            {description && (
+                <p className="text-sm text-gray-500 mb-3">{description}</p>
+            )}
+
+            <div
+                className={`
+                    flex
+                    ${direction === "column" ? "flex-col" : "flex-row"}
+                    ${wrap ? "flex-wrap" : "flex-nowrap"}
+                    ${justifyClass[justify]}
+                    ${alignClass[align]}
+                `}
+                style={{ gap: `${gap}px` }}
+            >
+                {actions.map((action: any, idx: number) => {
+                    if (
+                        permissionLoaded &&
+                        action.permission &&
+                        !hasPermission(action.permission)
+                    ) {
+                        return null;
+                    }
+
+                    const isLoading = loadingIndex === idx;
+
+                    return (
+                        <button
+                            key={idx}
+                            disabled={isLoading}
+                            onClick={() => handleAction(action, idx)}
+                            className={`
+                                inline-flex
+                                items-center
+                                gap-2
+                                px-4
+                                py-2
+                                rounded-xl
+                                text-sm
+                                font-medium
+                                transition
+                                ${
+                                    isLoading
+                                        ? "bg-gray-400 cursor-not-allowed"
+                                        : "bg-blue-600 hover:bg-blue-700"
+                                }
+                                text-white
+                            `}
+                        >
+                            {action.icon && (
+                                <Icon name={action.icon} />
+                                // <span className="text-base">{action.icon}</span>
+                            )}
+                            {isLoading ? "Processing..." : action.label}
+                        </button>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}

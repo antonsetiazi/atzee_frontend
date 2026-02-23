@@ -8,8 +8,8 @@ const TENANT_CODE = import.meta.env.VITE_TENANT;
 
 export function LoginForm() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("admin@example.com"); // default untuk dev
-    const [password, setPassword] = useState("admin123");
+    const [email, setEmail] = useState("customer@ustadzku.com"); // default untuk dev
+    const [password, setPassword] = useState("Customer123!");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

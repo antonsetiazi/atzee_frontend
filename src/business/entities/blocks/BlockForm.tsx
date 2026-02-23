@@ -15,7 +15,21 @@ interface Props {
     block: any;
     id?: string;
     idx: number;
+    pageData?: any;
+    context?: Record<string, any>;
 }
+
+// 🔹 Fungsi rekursif untuk menemukan FormBlock
+const findFormBlock = (blocks: any[]): any | undefined => {
+    for (const b of blocks) {
+        if (b.type === "form") return b;
+        if (b.blocks) {
+            const nested = findFormBlock(b.blocks);
+            if (nested) return nested;
+        }
+    }
+    return undefined;
+};
 
 export default function BlockForm({
     entityKey,
@@ -23,6 +37,8 @@ export default function BlockForm({
     block,
     id,
     idx,
+    pageData,
+    context = {},
 }: Props) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -34,7 +50,8 @@ export default function BlockForm({
     const [initialValues, setInitialValues] = useState<any>({});
     const [loadingData, setLoadingData] = useState(true);
     const isCreatePage = entityKey.endsWith(".create");
-
+    const isFilterMode = block.mode === "filter";
+    // console.log(initialValues);
     useEffect(() => {
         // console.log(entityKey);
         if (!entityKey) return;
@@ -42,15 +59,75 @@ export default function BlockForm({
         async function load() {
             setLoadingData(true);
 
-            /**
-             * CREATE PAGE
-             */
-            if (isCreatePage) {
+            if (isFilterMode) {
                 setInitialValues({});
                 setLoadingData(false);
                 return;
             }
 
+            /**
+             * CREATE PAGE
+             */
+            if (isCreatePage) {
+                const injectedValues: Record<string, any> = {};
+
+                block.fields?.forEach((field: any) => {
+                    if (field.bind?.startsWith("context.")) {
+                        const key = field.bind.replace("context.", "");
+                        if (context[key] !== undefined) {
+                            injectedValues[field.key] = context[key];
+                        }
+                    }
+                });
+
+                setInitialValues(injectedValues);
+                setLoadingData(false);
+                return;
+            }
+
+            /**
+             * 🔹 PRIORITAS 1: Navigation State
+             */
+            const state = location.state as any;
+            if (state?.initialValues) {
+                setInitialValues(state.initialValues);
+                setLoadingData(false);
+                return;
+            }
+
+            /**
+             * 🔹 PRIORITAS 2: Page-level data_source (Detail Page)
+             */
+            if (pageData) {
+                setInitialValues(pageData);
+                setLoadingData(false);
+                return;
+            }
+
+            /**
+             * 🔹 PRIORITAS 3: Fallback (Legacy Support)
+             * Jika page tidak punya data_source
+             */
+            try {
+                const formBlock = findFormBlock(schema.blocks);
+
+                if (id && formBlock?.submit_to) {
+                    const submitUrl = formBlock.submit_to
+                        .replace("{id}", id.toString())
+                        .replace("{parent_id}", parentId ?? "");
+
+                    const res = await fetchEntityDetail(submitUrl);
+                    setInitialValues(res);
+                }
+            } catch (err) {
+                console.error("Failed to fetch entity detail:", err);
+            } finally {
+                setLoadingData(false);
+            }
+
+            /**
+             * 🔹 SELF ENTITY QUERY (rare case)
+             */
             if (!id) {
                 try {
                     const res = await httpPost(
@@ -67,39 +144,22 @@ export default function BlockForm({
                 return;
             }
 
-            /**
-             * EDIT PAGE
-             * 1️⃣ Coba ambil dari navigation state
-             */
-            const state = location.state as any;
-            if (state?.initialValues) {
-                setInitialValues(state.initialValues);
-                setLoadingData(false);
-                return;
-            }
-
-            try {
-                // Ambil URL dari schema.blocks[form].submit_to
-                const formBlock = schema.blocks.find(
-                    (b: any) => b.type === "form",
-                );
-                if (formBlock?.submit_to) {
-                    const submitUrl = formBlock.submit_to
-                        .replace("{id}", id.toString())
-                        .replace("{parent_id}", parentId ?? "");
-                    const res = await fetchEntityDetail(submitUrl);
-                    setInitialValues(res);
-                }
-            } catch (err) {
-                console.error("Failed to fetch entity detail:", err);
-            } finally {
-                setLoadingData(false);
-            }
-            return;
+            setLoadingData(false);
         }
 
         load();
-    }, [entityKey, id, parentId, schema, isCreatePage, location.state]);
+    }, [
+        entityKey,
+        id,
+        parentId,
+        schema,
+        isCreatePage,
+        isFilterMode,
+        location.state,
+        pageData,
+        context,
+        block,
+    ]);
 
     const formContext = useMemo<FormContext>(
         () => ({
@@ -114,10 +174,7 @@ export default function BlockForm({
         ?.replace("{parent_id}", parentId ?? "");
 
     if (loadingData) return <LoadingState />;
-    // console.log(initialValues);
-    // console.log("id: ", id);
-    // console.log("parentId: ", parentId);
-    // console.log(schema.entity);
+
     return (
         <div key={idx}>
             <FormRenderer

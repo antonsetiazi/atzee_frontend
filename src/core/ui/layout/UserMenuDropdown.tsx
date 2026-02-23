@@ -78,7 +78,18 @@ export default function UserMenuDropdown({
                         className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     >
                         <Icon name="user-check" className="w-4 h-4" />
-                        Profile
+                        Account Profile
+                    </button>
+
+                    <button
+                        onClick={() => {
+                            navigate("/business/profile");
+                            setOpen(false);
+                        }}
+                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    >
+                        <Icon name="briefcase" className="w-4 h-4" />
+                        Business Profile
                     </button>
 
                     <button

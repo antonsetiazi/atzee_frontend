@@ -1,24 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/entities/CoreEntityPage.tsx
 
-import { useEffect, useState } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import { useParams, Navigate, useLocation } from "react-router-dom";
 import { useUISchemaStore } from "../schema/ui-schema.store";
-import WorkflowContainer from "../workflows/WorkflowContainer";
 import LoadingState from "@/shared/ui/LoadingState";
-import BlockForm from "./blocks/BlockForm";
-import BlockTable from "./blocks/BlockTable";
-import BlockFiles from "./blocks/BlockFiles";
-import BlockTags from "./blocks/BlockTags";
-import BlockText from "./blocks/BlockText";
-import BlockChart from "./blocks/BlockChart";
-import BlockStat from "./blocks/BlockStat";
-import BlockShortcut from "./blocks/BlockShortcut";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
-import BlockBanner from "./blocks/BlockBanner";
-import BlockMap from "./blocks/BlockMap";
 import PageHeader from "@/core/ui/layout/PageHeader";
 import { useSessionStore } from "@/core/session/session.store";
+import BlockRenderer from "./BlockRenderer";
+import { httpGet, httpPost } from "@/core/http/http.client";
 
 interface Props {
     entityKey: string;
@@ -26,11 +17,35 @@ interface Props {
 
 export default function CoreEntityPage({ entityKey }: Props) {
     const { id } = useParams<{ id: string }>();
+    const location = useLocation();
     const { isMobile } = useBreakpoint();
-    const [schema, setSchema] = useState<any>(null);
-    const [loadingSchema, setLoadingSchema] = useState(true);
     const isHydrated = useSessionStore((s) => s.isHydrated);
 
+    const [schema, setSchema] = useState<any>(null);
+    const [loadingSchema, setLoadingSchema] = useState(true);
+
+    const [pageData, setPageData] = useState<any>(null);
+    const [loadingData, setLoadingData] = useState(false);
+
+    /**
+     * 🔹 Stable Context (ANTI-INFINITE LOOP)
+     */
+    const context = useMemo(() => {
+        if (!schema?.accept_context) return {};
+
+        const params = new URLSearchParams(location.search);
+        const ctx: Record<string, any> = {};
+
+        params.forEach((value, key) => {
+            ctx[key] = value;
+        });
+
+        return ctx;
+    }, [location.search, schema?.accept_context]);
+
+    /**
+     * 🔹 Load UI Schema
+     */
     useEffect(() => {
         if (!entityKey) return;
 
@@ -61,6 +76,74 @@ export default function CoreEntityPage({ entityKey }: Props) {
         };
     }, [entityKey]);
 
+    /**
+     * 🔹 Load Page Data (jika ada data_source di page)
+     */
+    useEffect(() => {
+        if (!schema?.data_source) return;
+
+        let alive = true;
+
+        async function loadData() {
+            setLoadingData(true);
+
+            try {
+                let url = schema.data_source;
+
+                // 🔹 Replace dynamic {id}
+                if (id) {
+                    url = url.replace("{id}", id);
+                }
+
+                // 🔹 Replace context {param}
+                if (schema.accept_context && context) {
+                    Object.keys(context).forEach((key) => {
+                        url = url.replace(`{${key}}`, context[key]);
+                    });
+                }
+
+                let res: any;
+
+                if (schema.method === "GET") {
+                    res = await httpGet(url);
+                } else {
+                    // POST / PATCH / etc
+                    res = await httpPost(url, context);
+                }
+
+                if (!alive) return;
+
+                // 🔥 SAFE NORMALIZATION
+                let normalized: any = null;
+
+                // Jika response array → berarti list endpoint
+                if (Array.isArray(res)) {
+                    normalized = res;
+                }
+                // Jika response object → biarkan utuh (aggregate / detail)
+                else if (res && typeof res === "object") {
+                    normalized = res;
+                }
+                // fallback
+                else {
+                    normalized = null;
+                }
+
+                setPageData(normalized);
+            } catch (err) {
+                console.error("Failed to fetch page data:", err);
+            } finally {
+                if (alive) setLoadingData(false);
+            }
+        }
+
+        loadData();
+
+        return () => {
+            alive = false;
+        };
+    }, [schema, id, context]);
+
     if (!entityKey) {
         return <Navigate to="/dashboard" replace />;
     }
@@ -70,166 +153,12 @@ export default function CoreEntityPage({ entityKey }: Props) {
         return <LoadingState />;
     }
 
-    function renderBlock(block: any, idx: number): React.ReactNode {
-        // 🔥 CONTAINER BLOCK
-        if (block.type === "container") {
-            return (
-                <div
-                    key={idx}
-                    className="grid w-full"
-                    style={{
-                        gridTemplateColumns: block.columns
-                            ? `repeat(${block.columns}, 1fr)`
-                            : "repeat(auto-fit, minmax(250px, 1fr))",
-                        gap: block.gap ?? 16,
-                    }}
-                >
-                    {block.blocks?.map((child: any, i: number) =>
-                        renderBlock(child, i),
-                    )}
-                </div>
-            );
-        }
-
-        if (block.type === "shortcut") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white border border-gray-200 rounded-lg shadow-sm p-4"
-                >
-                    <BlockShortcut block={block} />
-                </div>
-            );
-        }
-
-        if (block.type === "table") {
-            return (
-                <div key={idx} className="bg-white rounded-lg shadow-sm">
-                    <BlockTable
-                        entityKey={entityKey}
-                        schema={schema}
-                        block={block}
-                        id={id}
-                        searchMode={block.search_mode ?? "client"}
-                    />
-                </div>
-            );
-        }
-        if (block.type === "form") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
-                >
-                    <BlockForm
-                        entityKey={entityKey}
-                        schema={schema}
-                        block={block}
-                        id={id}
-                        idx={idx}
-                    />
-                </div>
-            );
-        }
-
-        if (block.type === "workflow") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white border border-gray-200 rounded-lg shadow-sm p-6"
-                >
-                    <WorkflowContainer
-                        key={idx}
-                        workflow={block}
-                        onAction={(action) =>
-                            console.log("Workflow action:", action)
-                        }
-                    />
-                </div>
-            );
-        }
-
-        // 🔥 FILE BLOCK
-        if (block.type === "files") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
-                >
-                    <BlockFiles block={block} entityKey={entityKey} id={id} />
-                </div>
-            );
-        }
-
-        // 🔥 TAG BLOCK
-        if (block.type === "tags") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
-                >
-                    <BlockTags block={block} entityKey={entityKey} id={id} />
-                </div>
-            );
-        }
-
-        if (block.type === "stat") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white rounded-lg shadow-sm p-6 w-full"
-                >
-                    <BlockStat block={block} />
-                </div>
-            );
-        }
-
-        if (block.type === "chart") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white rounded-lg shadow-sm p-6 w-full"
-                >
-                    <BlockChart block={block} />
-                </div>
-            );
-        }
-
-        if (block.type === "text") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white rounded-lg shadow-sm p-6 max-w-3xl"
-                >
-                    <BlockText block={block} />
-                </div>
-            );
-        }
-
-        if (block.type === "banner") {
-            return (
-                <div key={idx} className="bg-white rounded shadow-sm w-full">
-                    <BlockBanner block={block} schema={schema} />
-                </div>
-            );
-        }
-
-        if (block.type === "map") {
-            return (
-                <div
-                    key={idx}
-                    className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 max-w-3xl"
-                >
-                    <BlockMap block={block} entityKey={entityKey} id={id} />
-                </div>
-            );
-        }
-
-        return null;
-    }
-
+    if (!isHydrated) return <LoadingState />;
+    if (loadingData) return <LoadingState />;
     if (!isHydrated) return <LoadingState />;
     // console.log(schema);
+    // console.log(id);
+    // console.log(pageData);
     return (
         <div className="max-w-7xl mx-auto">
             <PageHeader
@@ -241,7 +170,18 @@ export default function CoreEntityPage({ entityKey }: Props) {
             {/* Page Content */}
             <div className="space-y-2 px-2 py-2">
                 {schema.blocks?.map((block: any, idx: number) => {
-                    return renderBlock(block, idx);
+                    return (
+                        <BlockRenderer
+                            key={idx}
+                            block={block}
+                            idx={idx}
+                            entityKey={entityKey}
+                            schema={schema}
+                            pageData={pageData}
+                            context={context}
+                            id={id}
+                        />
+                    );
                 })}
             </div>
         </div>

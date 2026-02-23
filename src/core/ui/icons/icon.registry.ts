@@ -15,6 +15,10 @@ import {
     ArrowRightStartOnRectangleIcon,
     ChevronDownIcon,
     Cog6ToothIcon,
+    BriefcaseIcon,
+    MagnifyingGlassCircleIcon,
+    CalendarDateRangeIcon,
+    CreditCardIcon,
 } from "@heroicons/react/20/solid";
 
 export const iconRegistry: Record<string, any> = {
@@ -36,4 +40,10 @@ export const iconRegistry: Record<string, any> = {
     "log-out": ArrowRightStartOnRectangleIcon,
     "chevron-down": ChevronDownIcon,
     cog: Cog6ToothIcon,
+
+    briefcase: BriefcaseIcon,
+    search: MagnifyingGlassCircleIcon,
+    calendar: CalendarDateRangeIcon,
+    "credit-card": CreditCardIcon,
+    eye: EyeIcon,
 };

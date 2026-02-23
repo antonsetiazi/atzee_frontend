@@ -154,8 +154,8 @@ export default function FormRenderer({
             </div>
 
             {/* FOOTER ACTIONS */}
-            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-2">
-                {!isViewMode && (
+            {!isViewMode && (
+                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-2">
                     <button
                         type="submit"
                         disabled={loading}
@@ -163,8 +163,8 @@ export default function FormRenderer({
                     >
                         {loading ? "Saving..." : "Submit"}
                     </button>
-                )}
-            </div>
+                </div>
+            )}
         </form>
     );
 }

@@ -4,7 +4,7 @@ import type { MenuItem } from "./types";
 
 function filterMenu(
     items: MenuItem[],
-    can: (p?: string) => boolean
+    can: (p?: string) => boolean,
 ): MenuItem[] {
     return items
         .filter((item) => can(item.permission))

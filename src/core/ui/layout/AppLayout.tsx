@@ -10,6 +10,8 @@ import { useSessionStore } from "@/core/session/session.store";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import ShellProvider from "./shell/ShellProvider";
 
+const TENANT_CODE = import.meta.env.VITE_TENANT;
+
 export default function AppLayout() {
     const token = useSessionStore((s) => s.token);
     const { isMobile } = useBreakpoint();
@@ -28,13 +30,18 @@ export default function AppLayout() {
 
                 // 🔹 Mobile → bottom nav
                 if (isMobile) {
-                    const bottomNav = await fetchNavigation("bottom", "mobile");
+                    const bottomNav = await fetchNavigation(
+                        "bottom",
+                        "mobile",
+                        TENANT_CODE,
+                    );
                     setBottom(bottomNav?.items || []);
                     setTopbar([]);
                 } else {
                     const sidebarNav = await fetchNavigation(
                         "sidebar",
                         "desktop",
+                        TENANT_CODE,
                     );
                     setTopbar(sidebarNav?.items || []);
                     setBottom([]);

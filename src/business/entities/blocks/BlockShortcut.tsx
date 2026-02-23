@@ -20,11 +20,11 @@ export default function BlockShortcut({ block }: Props) {
 
     return (
         <div className="">
-            {block.title && (
+            {/* {block.title && (
                 <div className="text-gray-700 font-semibold text-lg mb-3 text-center">
                     {block.title}
                 </div>
-            )}
+            )} */}
 
             {/* Horizontal scroll container */}
             <div
@@ -38,23 +38,23 @@ export default function BlockShortcut({ block }: Props) {
                         to={item.to || "#"}
                         className={`
                             flex flex-col items-center justify-center
-                            min-w-18 sm:min-w-20 md:min-w-25
-                            py-3
+                            w-24 sm:w-28 md:w-32
+                            py-4
                             bg-white rounded-xl shadow hover:shadow-md transition
                             snap-start
                             first:ml-3 last:mr-3
                         `}
                     >
                         {/* Icon Circle */}
-                        <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-linear-to-tr from-indigo-500 to-purple-500 rounded-full mb-2">
+                        <div className="flex items-center justify-center w-12 h-12 bg-indigo-50 rounded-full mb-3">
                             <Icon
                                 name={item.icon || "home"}
-                                className="w-6 h-6 text-white"
+                                className="w-6 h-6 text-indigo-600"
                             />
                         </div>
 
                         {/* Label */}
-                        <span className="text-sm sm:text-base md:text-base text-gray-700 dark:text-gray-200 text-center truncate">
+                        <span className="text-sm font-medium text-gray-700 text-center">
                             {item.label}
                         </span>
                     </Link>

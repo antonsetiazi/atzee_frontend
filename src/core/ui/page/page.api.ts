@@ -1,3 +1,5 @@
+// src/core/ui/page/page.api.ts
+
 import { httpGet } from "@/core/http/http.client";
 import type { UIPage } from "./page.types";
 
@@ -14,5 +16,6 @@ export async function fetchPages(): Promise<UIPage[]> {
  * Ambil page berdasarkan page_key
  */
 export async function fetchPage(pageKey: string): Promise<UIPage> {
+    // console.log("fetchPage, pageKey: ", pageKey);
     return httpGet<UIPage>(`/ui/pages/${pageKey}/`);
 }
