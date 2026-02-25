@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/entities/blocks/BlockStat.tsx
 
-import { formatValue } from "@/core/dashboard/utils/formatValue";
+import { formatValue } from "@/shared/utils/formatValue";
 
 interface Props {
     block: any;

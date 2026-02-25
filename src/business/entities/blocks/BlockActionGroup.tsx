@@ -14,13 +14,19 @@ import {
 import { useSessionStore } from "@/core/session/session.store";
 import { usePermissionStore } from "@/core/permissions/permission.store";
 import Icon from "@/core/ui/icons/Icon";
+import { useFeedbackStore } from "@/core/feedback/feedback.store";
 
 type Props = {
     block: any;
     entityId?: string;
+    entityData?: any;
 };
 
-export default function BlockActionGroup({ block, entityId }: Props) {
+export default function BlockActionGroup({
+    block,
+    entityId,
+    entityData,
+}: Props) {
     const navigate = useNavigate();
     const reloadSession = useSessionStore((s: any) => s.reloadSession);
 
@@ -56,10 +62,9 @@ export default function BlockActionGroup({ block, entityId }: Props) {
             await reloadSession();
         }
 
-        // nanti bisa tambahkan:
-        // permissions
-        // config
-        // session_settings
+        if (affects === "reload") {
+            navigate(0);
+        }
     };
 
     const callApiByMethod = async (
@@ -99,11 +104,21 @@ export default function BlockActionGroup({ block, entityId }: Props) {
 
             // 🔹 API CALL
             if (action.type === "api" && action.endpoint) {
-                await callApiByMethod(
+                const response = await callApiByMethod(
                     resolveUrl(action.endpoint)!,
                     action.method || "POST",
                     action.body,
                 );
+
+                useFeedbackStore.getState().push({
+                    type: "success",
+                    title: action.success_title || "Berhasil",
+                    message:
+                        response?.message ||
+                        action.success_message ||
+                        "Operasi berhasil dilakukan.",
+                    duration: 3000,
+                });
 
                 await applyAffects(action.affects);
             }
@@ -133,7 +148,7 @@ export default function BlockActionGroup({ block, entityId }: Props) {
         center: "items-center",
         stretch: "items-stretch",
     };
-
+    // console.log("ENTITY DATA:", entityData);
     // console.log(block);
     /* ===========================
        RENDER
@@ -158,6 +173,20 @@ export default function BlockActionGroup({ block, entityId }: Props) {
                 style={{ gap: `${gap}px` }}
             >
                 {actions.map((action: any, idx: number) => {
+                    if (action.when && entityData) {
+                        const entries = Object.entries(action.when);
+
+                        const isValid = entries.every(
+                            ([field, expectedValue]) => {
+                                return entityData[field] === expectedValue;
+                            },
+                        );
+
+                        if (!isValid) {
+                            return null;
+                        }
+                    }
+
                     if (
                         permissionLoaded &&
                         action.permission &&

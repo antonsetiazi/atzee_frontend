@@ -14,7 +14,7 @@ export default function MobileShell({
     const bottomNavHeight = 64; // px
 
     return (
-        <div className="relative flex h-screen flex-col bg-gray-100">
+        <div className="relative flex h-screen flex-col bg-white">
             {/* Drawer Overlay */}
             {drawerOpen && (
                 <div

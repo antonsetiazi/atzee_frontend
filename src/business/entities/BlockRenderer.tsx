@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// src/business/entities/BlockRenderer.tsx
+
 import React from "react";
 import WorkflowContainer from "../workflows/WorkflowContainer";
 import BlockForm from "./blocks/BlockForm";
@@ -18,7 +20,8 @@ import BlockList from "./blocks/BlockList";
 import BlockTransactionSummary from "./blocks/BlockTransactionSummary";
 import BlockBooking from "./blocks/BlockBooking";
 import BlockInfo from "./blocks/BlockInfo";
-// import BlockContainer from "./blocks/BlockContainer";
+import BlockListView from "./blocks/BlockListView";
+import { executeWorkflowAction } from "@/business/workflows/workflow.executor";
 
 interface Props {
     block: any;
@@ -94,6 +97,17 @@ export default function BlockRenderer({
         );
     }
 
+    if (block.type === "list_view") {
+        const blockData =
+            block.data_key && pageData ? pageData[block.data_key] : pageData;
+
+        return (
+            <div key={idx}>
+                <BlockListView block={block} data={blockData} />
+            </div>
+        );
+    }
+
     // 🔥 CARD LIST
     if (block.type === "card_list") {
         const blockData =
@@ -164,15 +178,11 @@ export default function BlockRenderer({
 
     if (block.type === "workflow") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6"
-            >
+            <div key={idx}>
                 <WorkflowContainer
                     workflow={block}
-                    onAction={(action) =>
-                        console.log("Workflow action:", action)
-                    }
+                    entityData={pageData}
+                    onAction={(action) => executeWorkflowAction(action, id)}
                 />
             </div>
         );
@@ -251,7 +261,11 @@ export default function BlockRenderer({
     if (block.type === "action") {
         return (
             <div key={idx}>
-                <BlockActionGroup block={block} entityId={id} />
+                <BlockActionGroup
+                    block={block}
+                    entityId={id}
+                    entityData={pageData}
+                />
             </div>
         );
     }

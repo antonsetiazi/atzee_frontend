@@ -19,9 +19,7 @@ export default function PageRoutes() {
     return (
         <>
             {Object.values(pages).map((page) => {
-                // const path = pageKeyToPath(page.key, page.domain, page.entity);
                 const path = page.path;
-                // console.log("path: ", path);
                 return (
                     <Route
                         key={page.key}

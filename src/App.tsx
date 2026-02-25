@@ -52,10 +52,7 @@ function App() {
                                 >
                                     {/* ROOT ONLY */}
                                     <Route index element={<EntryRedirect />} />
-                                    {/* <Route
-                                        path="dashboard"
-                                        element={<DashboardPage />}
-                                    /> */}
+
                                     {usersRoutes.map(renderRoute)}
                                     {/* {productRoutes.map(renderRoute)} */}
 

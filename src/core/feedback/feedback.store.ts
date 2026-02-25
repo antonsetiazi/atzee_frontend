@@ -1,3 +1,5 @@
+// src/core/feedback/feedback.store.ts
+
 import { create } from "zustand";
 import type { FeedbackMessage } from "./feedback.types";
 

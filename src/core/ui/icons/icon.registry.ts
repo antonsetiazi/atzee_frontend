@@ -19,6 +19,7 @@ import {
     MagnifyingGlassCircleIcon,
     CalendarDateRangeIcon,
     CreditCardIcon,
+    WalletIcon,
 } from "@heroicons/react/20/solid";
 
 export const iconRegistry: Record<string, any> = {
@@ -46,4 +47,5 @@ export const iconRegistry: Record<string, any> = {
     calendar: CalendarDateRangeIcon,
     "credit-card": CreditCardIcon,
     eye: EyeIcon,
+    wallet: WalletIcon,
 };

@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/workflows/WorkflowBadge.tsx
 
 import type { WorkflowStatus } from "./workflow.types";
 
 interface Props {
     status: WorkflowStatus;
+    entityData?: any;
 }
 
 const colorMap: Record<string, string> = {
@@ -14,12 +16,25 @@ const colorMap: Record<string, string> = {
     yellow: "bg-yellow-200 text-yellow-700",
 };
 
-export default function WorkflowBadge({ status }: Props) {
+function formatStatus(value: string) {
+    return value
+        .replaceAll("_", " ")
+        .toLowerCase()
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+export default function WorkflowBadge({ status, entityData }: Props) {
+    const value = entityData?.[status.key];
+
+    if (!value) return null;
+
     const colorClass = colorMap[status.color ?? "gray"];
 
     return (
-        <span className={`px-2 py-1 rounded text-xs font-medium ${colorClass}`}>
-            {status.label}
+        <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${colorClass}`}
+        >
+            {formatStatus(value)}
         </span>
     );
 }
