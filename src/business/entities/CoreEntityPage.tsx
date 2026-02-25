@@ -10,6 +10,7 @@ import PageHeader from "@/core/ui/layout/PageHeader";
 import { useSessionStore } from "@/core/session/session.store";
 import BlockRenderer from "./BlockRenderer";
 import { httpGet, httpPost } from "@/core/http/http.client";
+import { getCache, setCache } from "./entity.cache";
 
 interface Props {
     entityKey: string;
@@ -26,6 +27,10 @@ export default function CoreEntityPage({ entityKey }: Props) {
 
     const [pageData, setPageData] = useState<any>(null);
     const [loadingData, setLoadingData] = useState(false);
+
+    function buildCacheKey(entityKey: string, url: string, context: any) {
+        return `${entityKey}::${url}::${JSON.stringify(context || {})}`;
+    }
 
     /**
      * 🔹 Stable Context (ANTI-INFINITE LOOP)
@@ -85,49 +90,51 @@ export default function CoreEntityPage({ entityKey }: Props) {
         let alive = true;
 
         async function loadData() {
+            let url = schema.data_source;
+
+            if (id) {
+                url = url.replace("{id}", id);
+            }
+
+            if (schema.accept_context && context) {
+                Object.keys(context).forEach((key) => {
+                    url = url.replace(`{${key}}`, context[key]);
+                });
+            }
+
+            const cacheKey = buildCacheKey(entityKey, url, context);
+
+            // ✅ 1️⃣ CHECK CACHE FIRST
+            const cached = getCache<any>(cacheKey);
+            if (cached) {
+                setPageData(cached);
+                return; // 🚀 STOP HERE
+            }
+
+            // ❌ NOT CACHED → FETCH
             setLoadingData(true);
 
             try {
-                let url = schema.data_source;
-
-                // 🔹 Replace dynamic {id}
-                if (id) {
-                    url = url.replace("{id}", id);
-                }
-
-                // 🔹 Replace context {param}
-                if (schema.accept_context && context) {
-                    Object.keys(context).forEach((key) => {
-                        url = url.replace(`{${key}}`, context[key]);
-                    });
-                }
-
                 let res: any;
 
                 if (schema.method === "GET") {
                     res = await httpGet(url);
                 } else {
-                    // POST / PATCH / etc
                     res = await httpPost(url, context);
                 }
 
                 if (!alive) return;
 
-                // 🔥 SAFE NORMALIZATION
                 let normalized: any = null;
 
-                // Jika response array → berarti list endpoint
                 if (Array.isArray(res)) {
                     normalized = res;
-                }
-                // Jika response object → biarkan utuh (aggregate / detail)
-                else if (res && typeof res === "object") {
+                } else if (res && typeof res === "object") {
                     normalized = res;
                 }
-                // fallback
-                else {
-                    normalized = null;
-                }
+
+                // ✅ SAVE TO CACHE
+                setCache(cacheKey, normalized);
 
                 setPageData(normalized);
             } catch (err) {
@@ -142,7 +149,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
         return () => {
             alive = false;
         };
-    }, [schema, id, context]);
+    }, [schema, id, context, entityKey]);
 
     if (!entityKey) {
         return <Navigate to="/dashboard" replace />;
