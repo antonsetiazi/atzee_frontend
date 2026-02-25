@@ -2,6 +2,7 @@
 
 // import Sidebar from "../Sidebar";
 import AppTopbar from "../AppTopbar";
+import Footer from "../Footer";
 
 export default function DesktopShell({
     children,
@@ -13,10 +14,10 @@ export default function DesktopShell({
         <div className="flex h-screen bg-gray-100">
             {/* <Sidebar /> */}
 
-            <div className="flex flex-1 flex-col overflow-hidden bg-white">
+            <div className="flex flex-1 flex-col overflow-hidden">
                 <AppTopbar />
 
-                <main className="flex-1 overflow-y-auto p-4">
+                <main className="flex-1 overflow-y-auto">
                     <div
                         className="mx-auto w-full"
                         style={{ maxWidth: MAX_WIDTH }}
@@ -24,6 +25,8 @@ export default function DesktopShell({
                         {children}
                     </div>
                 </main>
+
+                <Footer />
             </div>
         </div>
     );

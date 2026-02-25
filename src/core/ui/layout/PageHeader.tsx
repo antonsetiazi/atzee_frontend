@@ -28,7 +28,7 @@ export default function PageHeader({
         </div>
     ) : (
         /* DESKTOP VERSION */
-        <div className="flex items-center justify-between px-2 py-2">
+        <div className="flex items-center justify-between px-4 py-4 bg-white">
             <h1 className="text-lg font-semibold text-gray-900">
                 {title || "Entity"}
             </h1>

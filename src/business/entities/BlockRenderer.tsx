@@ -243,9 +243,11 @@ export default function BlockRenderer({
     }
 
     if (block.type === "banner") {
+        const blockData =
+            block.data_key && pageData ? pageData[block.data_key] : pageData;
         return (
             <div key={idx}>
-                <BlockBanner block={block} schema={schema} />
+                <BlockBanner data={blockData} />
             </div>
         );
     }

@@ -169,19 +169,21 @@ export default function CoreEntityPage({ entityKey }: Props) {
             />
 
             {/* Page Content */}
-            <div className="space-y-4 px-2 py-2">
+            <div className="space-y-1">
                 {schema.blocks?.map((block: any, idx: number) => {
                     return (
-                        <BlockRenderer
-                            key={idx}
-                            block={block}
-                            idx={idx}
-                            entityKey={entityKey}
-                            schema={schema}
-                            pageData={pageData}
-                            context={context}
-                            id={id}
-                        />
+                        <div key={idx} className="bg-white p-4">
+                            <BlockRenderer
+                                key={idx}
+                                block={block}
+                                idx={idx}
+                                entityKey={entityKey}
+                                schema={schema}
+                                pageData={pageData}
+                                context={context}
+                                id={id}
+                            />
+                        </div>
                     );
                 })}
             </div>

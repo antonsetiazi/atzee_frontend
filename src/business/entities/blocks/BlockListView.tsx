@@ -70,6 +70,24 @@ export default function BlockListView({
                 </h3>
             )}
 
+            {safeData.length === 0 ? (
+                <div className="w-full space-y-4">
+                    <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-10 text-center">
+                        <div className="text-base font-semibold text-gray-700">
+                            {block.empty_title || "No data found"}
+                        </div>
+
+                        {block.empty_description && (
+                            <div className="mt-2 text-sm text-gray-500">
+                                {block.empty_description}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ) : (
+                <></>
+            )}
+
             {safeData.map((item: any, idx: number) => {
                 const val = item[block.value_key || "id"];
 
