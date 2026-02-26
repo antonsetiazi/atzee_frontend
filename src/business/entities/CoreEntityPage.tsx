@@ -45,8 +45,12 @@ export default function CoreEntityPage({ entityKey }: Props) {
             ctx[key] = value;
         });
 
+        if (id) {
+            ctx["id"] = id;
+        }
+
         return ctx;
-    }, [location.search, schema?.accept_context]);
+    }, [location.search, schema?.accept_context, id]);
 
     /**
      * 🔹 Load UI Schema
@@ -120,7 +124,36 @@ export default function CoreEntityPage({ entityKey }: Props) {
                 if (schema.method === "GET") {
                     res = await httpGet(url);
                 } else {
-                    res = await httpPost(url, context);
+                    // POST → ambil payload_from_context dari schema
+                    let payload = {};
+
+                    if (schema.payload_from_context) {
+                        payload = Object.keys(
+                            schema.payload_from_context,
+                        ).reduce(
+                            (acc, key) => {
+                                const val = schema.payload_from_context[key];
+
+                                // ganti placeholder {id} atau context lainnya
+                                if (typeof val === "string") {
+                                    let replaced = val;
+                                    Object.keys(context).forEach((cKey) => {
+                                        replaced = replaced.replace(
+                                            `{${cKey}}`,
+                                            context[cKey],
+                                        );
+                                    });
+                                    acc[key] = replaced;
+                                } else {
+                                    acc[key] = val;
+                                }
+                                return acc;
+                            },
+                            {} as Record<string, any>,
+                        );
+                    }
+
+                    res = await httpPost(url, payload);
                 }
 
                 if (!alive) return;

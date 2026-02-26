@@ -22,6 +22,7 @@ import BlockBooking from "./blocks/BlockBooking";
 import BlockInfo from "./blocks/BlockInfo";
 import BlockListView from "./blocks/BlockListView";
 import { executeWorkflowAction } from "@/business/workflows/workflow.executor";
+import BlockImageGallery from "./blocks/BlockImageGallery";
 
 interface Props {
     block: any;
@@ -71,29 +72,59 @@ export default function BlockRenderer({
     // console.log(block.type);
     // 🔥 CONTAINER
     if (block.type === "container") {
+        const isColumn = block.direction === "column";
+
         return (
             <div
                 key={idx}
-                className="grid w-full"
-                style={{
-                    gridTemplateColumns: block.columns
-                        ? `repeat(${block.columns}, 1fr)`
-                        : "repeat(auto-fit, minmax(250px, 1fr))",
-                    gap: block.gap ?? 20,
-                }}
+                className={`
+                    w-full
+                    ${!isColumn ? "grid" : "flex flex-col"}
+                `}
+                style={
+                    !isColumn
+                        ? {
+                              gridTemplateColumns: block.columns
+                                  ? `repeat(${block.columns}, 1fr)`
+                                  : "repeat(auto-fit, minmax(250px, 1fr))",
+                              gap: block.gap ?? 20,
+                          }
+                        : {
+                              gap: block.gap ?? 16,
+                          }
+                }
             >
-                {block.blocks?.map((child: any, i: number) => (
-                    <BlockRenderer
-                        key={i}
-                        block={child}
-                        idx={i}
-                        entityKey={entityKey}
-                        schema={schema}
-                        pageData={pageData}
-                        context={context}
-                        id={id}
-                    />
-                ))}
+                {block.blocks?.map((child: any, i: number) => {
+                    const isLast = i === block.blocks.length - 1;
+
+                    // 🔹 separator style
+                    const separatorStyle: React.CSSProperties = {};
+
+                    // Vertical lines between column blocks
+                    if (block.column_line_separator && isColumn && !isLast) {
+                        separatorStyle.borderBottom =
+                            "1px solid var(--color-border)";
+                    }
+
+                    // Horizontal lines between row blocks
+                    if (block.row_line_separator && !isColumn && !isLast) {
+                        separatorStyle.borderRight =
+                            "1px solid var(--color-border)";
+                    }
+                    return (
+                        <div key={i} style={separatorStyle}>
+                            <BlockRenderer
+                                block={child}
+                                idx={i}
+                                entityKey={entityKey}
+                                schema={schema}
+                                pageData={pageData}
+                                context={context}
+                                id={id}
+                            />
+                        </div>
+                    );
+                })}
             </div>
         );
     }
@@ -248,6 +279,16 @@ export default function BlockRenderer({
         return (
             <div key={idx}>
                 <BlockBanner data={blockData} />
+            </div>
+        );
+    }
+
+    if (block.type === "image_gallery") {
+        const blockData =
+            block.data_key && pageData ? pageData[block.data_key] : pageData;
+        return (
+            <div key={idx}>
+                <BlockImageGallery pageData={blockData} />
             </div>
         );
     }

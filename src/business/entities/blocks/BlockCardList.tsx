@@ -74,13 +74,7 @@ export default function BlockCardList({
                 </div>
             )}
 
-            <div
-                className={`grid gap-4 ${
-                    block.layout === "list"
-                        ? "grid-cols-1"
-                        : `grid-cols-${block.columns || 2}`
-                }`}
-            >
+            <div className="flex flex-wrap gap-4 justify-start">
                 {safeData.map((item: any, idx: number) => {
                     const val = item[block.value_key || "id"];
 
@@ -94,29 +88,15 @@ export default function BlockCardList({
                             key={idx}
                             onClick={() => handleSelect(item)}
                             className={`
-                                group
-                                relative
-                                cursor-pointer
-                                rounded-2xl
-                                border
-                                bg-[var(--color-surface)]
-                                p-5
-                                transition-all
-                                duration-200
+                                group relative cursor-pointer rounded-2xl border bg-[var(--color-surface)] 
+                                p-3 transition-all duration-200
                                 ${
                                     isSelected
-                                        ? `
-                                            border-[var(--color-primary)]
-                                            ring-2
-                                            ring-[var(--color-primary)]/20
-                                            shadow-md
-                                        `
-                                        : `
-                                            border-[var(--color-border)]
-                                            hover:border-[var(--color-primary)]/40
-                                            hover:shadow-sm
-                                        `
+                                        ? "border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20 shadow-md"
+                                        : "border-[var(--color-border)] hover:border-[var(--color-primary)]/40 hover:shadow-sm"
                                 }
+                                flex-shrink-0
+                                w-full sm:w-[48%] md:w-[32%] lg:w-[23%]
                             `}
                         >
                             {/* Subtle top accent when selected */}
@@ -127,6 +107,25 @@ export default function BlockCardList({
                             <div className="space-y-2">
                                 {block.fields?.map((field: any) => {
                                     const fieldVal = item[field.key];
+                                    // console.log(field);
+                                    // 🔥 IMAGE VARIANT
+                                    if (
+                                        field.meta?.type === "image" &&
+                                        fieldVal
+                                    ) {
+                                        return (
+                                            <div
+                                                key={field.key}
+                                                className="mb-3 w-full aspect-[4/3] overflow-hidden rounded-xl"
+                                            >
+                                                <img
+                                                    src={fieldVal}
+                                                    alt="image"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        );
+                                    }
 
                                     return (
                                         <div
