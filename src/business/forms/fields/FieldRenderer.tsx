@@ -14,6 +14,7 @@ import ViewField from "./ViewField";
 import FileField from "./FileField";
 import JsonField from "./JsonField";
 import DurationField from "./DurationField";
+import PasswordField from "./PasswordField";
 
 interface Props {
     field: FormFieldSchema;
@@ -43,6 +44,16 @@ export default function FieldRenderer({
         case "text":
             return (
                 <TextField
+                    field={field}
+                    value={value}
+                    error={error}
+                    onChange={onChange}
+                />
+            );
+
+        case "password":
+            return (
+                <PasswordField
                     field={field}
                     value={value}
                     error={error}

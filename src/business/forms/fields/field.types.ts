@@ -17,6 +17,7 @@ export type FieldType =
 export interface BaseFieldSchema {
     key: string; // 🔑 PRIMARY ID
     label: string;
+    placeholder: string;
 
     default?: any;
     required?: boolean;
@@ -28,6 +29,10 @@ export interface BaseFieldSchema {
 
 export interface TextFieldSchema extends BaseFieldSchema {
     type: "text";
+}
+
+export interface PasswordFieldSchema extends BaseFieldSchema {
+    type: "password";
 }
 
 export interface EmailFieldSchema extends BaseFieldSchema {
@@ -90,6 +95,7 @@ export interface DurationFieldSchema extends BaseFieldSchema {
 
 export type FormFieldSchema =
     | TextFieldSchema
+    | PasswordFieldSchema
     | EmailFieldSchema
     | NumberFieldSchema
     | SelectFieldSchema

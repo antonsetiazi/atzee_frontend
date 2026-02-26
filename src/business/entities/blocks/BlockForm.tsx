@@ -49,9 +49,10 @@ export default function BlockForm({
 
     const [initialValues, setInitialValues] = useState<any>({});
     const [loadingData, setLoadingData] = useState(true);
-    const isCreatePage = entityKey.endsWith(".create");
+    const isCreatePage = block.mode === "create";
     const isFilterMode = block.mode === "filter";
     // console.log(initialValues);
+
     useEffect(() => {
         // console.log(entityKey);
         if (!entityKey) return;
@@ -174,6 +175,8 @@ export default function BlockForm({
         ?.replace("{parent_id}", parentId ?? "");
 
     if (loadingData) return <LoadingState />;
+
+    // console.log(block);
 
     return (
         <div key={idx}>
