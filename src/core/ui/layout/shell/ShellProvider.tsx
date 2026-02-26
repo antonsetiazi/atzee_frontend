@@ -6,6 +6,7 @@ import { useBreakpoint } from "../hooks/useBreakpoint";
 import { ShellContext } from "./ShellContext";
 import DesktopShell from "./DesktopShell";
 import MobileShell from "./MobileShell";
+import PageTransition from "@/core/routing/PageTransition";
 
 export default function ShellProvider() {
     const { isMobile } = useBreakpoint();
@@ -23,7 +24,9 @@ export default function ShellProvider() {
         return (
             <ShellContext.Provider value={value}>
                 <MobileShell>
-                    <Outlet />
+                    <PageTransition>
+                        <Outlet />
+                    </PageTransition>
                 </MobileShell>
             </ShellContext.Provider>
         );
@@ -32,7 +35,9 @@ export default function ShellProvider() {
     return (
         <ShellContext.Provider value={value}>
             <DesktopShell>
-                <Outlet />
+                <PageTransition>
+                    <Outlet />
+                </PageTransition>
             </DesktopShell>
         </ShellContext.Provider>
     );

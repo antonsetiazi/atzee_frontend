@@ -65,7 +65,10 @@ export default function BlockListView({
     return (
         <div className="w-full space-y-4">
             {block.title && (
-                <h3 className="text-xl font-semibold text-gray-900 tracking-tight">
+                <h3
+                    className="text-xl font-semibold tracking-tight"
+                    style={{ color: "var(--text-primary)" }}
+                >
                     {block.title}
                 </h3>
             )}
@@ -108,24 +111,38 @@ export default function BlockListView({
 
                     const value = item[config.key];
 
-                    const getStatusStyle = (status: string) => {
+                    function getStatusStyle(status: string) {
                         switch (status) {
                             case "PENDING_PAYMENT":
-                                return "bg-amber-50 text-amber-700 ring-1 ring-amber-200";
+                                return {
+                                    background: "var(--status-warning-bg)",
+                                    color: "var(--status-warning-text)",
+                                    border: "1px solid var(--status-warning-border)",
+                                };
                             case "PAID":
-                                return "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200";
+                                return {
+                                    background: "var(--status-success-bg)",
+                                    color: "var(--status-success-text)",
+                                    border: "1px solid var(--status-success-border)",
+                                };
                             case "CANCELLED":
-                                return "bg-rose-50 text-rose-700 ring-1 ring-rose-200";
+                                return {
+                                    background: "var(--status-danger-bg)",
+                                    color: "var(--status-danger-text)",
+                                    border: "1px solid var(--status-danger-border)",
+                                };
                             default:
-                                return "bg-gray-100 text-gray-600 ring-1 ring-gray-200";
+                                return {
+                                    background: "var(--color-surface-alt)",
+                                    color: "var(--text-secondary)",
+                                    border: "1px solid var(--color-border)",
+                                };
                         }
-                    };
-
+                    }
                     return (
                         <span
-                            className={`px-3 py-1 text-xs font-medium rounded-full ${getStatusStyle(
-                                value,
-                            )}`}
+                            className="px-3 py-1 text-xs font-medium rounded-full"
+                            style={getStatusStyle(value)}
                         >
                             {formatValue(value, config)}
                         </span>
@@ -136,38 +153,53 @@ export default function BlockListView({
                     <div
                         key={idx}
                         onClick={() => handleClick(item)}
-                        className={`
-                        group relative overflow-hidden rounded-2xl
-                        bg-white transition-all duration-300 cursor-pointer
-                        border
-                        ${
-                            isSelected
-                                ? "border-blue-500 shadow-md"
-                                : "border-gray-200 hover:border-gray-300 hover:shadow-lg"
-                        }
-                    `}
+                        className="group relative overflow-hidden rounded-2xl transition-all duration-200 cursor-pointer"
+                        style={{
+                            background: "var(--color-surface)",
+                            border: "1px solid var(--color-border)",
+                            boxShadow: isSelected
+                                ? "0 0 0 1px var(--color-primary)"
+                                : "none",
+                        }}
                     >
                         {/* Accent line */}
-                        <div className="absolute left-0 top-0 h-full w-1 bg-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-
+                        <div
+                            className="absolute left-0 top-0 h-full w-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{
+                                background: "var(--color-primary)",
+                            }}
+                        />
                         <div className="p-5">
                             <div className="flex justify-between items-start gap-6">
                                 <div className="flex-1 min-w-0 space-y-1">
                                     {/* Title */}
-                                    <div className="text-base font-semibold text-gray-900 truncate">
+                                    <div
+                                        className="text-base font-semibold truncate"
+                                        style={{ color: "var(--text-primary)" }}
+                                    >
                                         {renderField(block.tile.title)}
                                     </div>
 
                                     {/* Subtitle */}
                                     {block.tile.subtitle && (
-                                        <div className="text-sm text-gray-600">
+                                        <div
+                                            className="text-sm"
+                                            style={{
+                                                color: "var(--text-secondary)",
+                                            }}
+                                        >
                                             {renderField(block.tile.subtitle)}
                                         </div>
                                     )}
 
                                     {/* Description */}
                                     {block.tile.description && (
-                                        <div className="text-sm text-gray-500">
+                                        <div
+                                            className="text-sm"
+                                            style={{
+                                                color: "var(--text-muted)",
+                                            }}
+                                        >
                                             {renderField(
                                                 block.tile.description,
                                             )}
@@ -176,18 +208,37 @@ export default function BlockListView({
 
                                     {/* Meta */}
                                     {block.tile?.meta && (
-                                        <div className="flex flex-wrap gap-x-6 gap-y-1 pt-2 text-xs text-gray-500">
+                                        <div
+                                            className="flex flex-wrap gap-x-6 gap-y-1 pt-2 text-xs"
+                                            style={{
+                                                color: "var(--text-secondary)",
+                                            }}
+                                        >
                                             {Object.entries(
                                                 block.tile.meta,
                                             ).map(([label, config]: any) => (
                                                 <div key={label}>
-                                                    <span className="text-gray-400">
+                                                    <span
+                                                        style={{
+                                                            color: "var(--text-muted)",
+                                                        }}
+                                                    >
                                                         {label}:
                                                     </span>{" "}
-                                                    <span className="text-gray-700 font-medium">
+                                                    <span
+                                                        className="font-medium"
+                                                        style={{
+                                                            color: "var(--text-primary)",
+                                                        }}
+                                                    >
                                                         {renderField(config)}
                                                         {config?.suffix && (
-                                                            <span className="ml-1 text-gray-400">
+                                                            <span
+                                                                className="ml-1"
+                                                                style={{
+                                                                    color: "var(--text-muted)",
+                                                                }}
+                                                            >
                                                                 {config.suffix}
                                                             </span>
                                                         )}
@@ -201,10 +252,12 @@ export default function BlockListView({
                                 {/* Trailing */}
                                 {block.tile.trailing && (
                                     <div className="text-right shrink-0">
-                                        <div className="text-sm text-gray-400">
-                                            {/* optional label later */}
-                                        </div>
-                                        <div className="text-lg font-semibold text-gray-900">
+                                        <div
+                                            className="text-lg font-semibold"
+                                            style={{
+                                                color: "var(--text-primary)",
+                                            }}
+                                        >
                                             {renderField(block.tile.trailing)}
                                         </div>
                                     </div>
@@ -217,7 +270,10 @@ export default function BlockListView({
                                     renderStatus(block.tile.status)}
 
                                 {block.tile?.action?.type === "navigate" && (
-                                    <div className="text-xs text-gray-400">
+                                    <div
+                                        className="text-xs"
+                                        style={{ color: "var(--text-muted)" }}
+                                    >
                                         Tap to view detail →
                                     </div>
                                 )}

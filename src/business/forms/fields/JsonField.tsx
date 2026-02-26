@@ -33,7 +33,7 @@ export default function JsonField({ field, value, error, onChange }: Props) {
     };
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <label className="font-medium text-sm">
                 {field.label}
                 {field.required && " *"}

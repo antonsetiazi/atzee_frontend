@@ -12,7 +12,7 @@ export default function ToastRenderer() {
     if (messages.length === 0) return null;
 
     return (
-        <div className="fixed top-4 right-4 z-50 space-y-3">
+        <div className="fixed top-6 right-6 z-[100] flex w-full max-w-sm flex-col gap-3">
             {messages.map((msg) => (
                 <ToastItem
                     key={msg.id}
@@ -29,10 +29,6 @@ interface ToastItemProps {
     onClose: () => void;
 }
 
-/**
- * Komponen individual toast
- * Bertanggung jawab atas auto-dismiss
- */
 function ToastItem({ msg, onClose }: ToastItemProps) {
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -42,28 +38,63 @@ function ToastItem({ msg, onClose }: ToastItemProps) {
         return () => clearTimeout(timer);
     }, [onClose]);
 
-    const variantClasses = {
-        success: "bg-green-50 border-green-200 text-green-800",
-        error: "bg-red-50 border-red-200 text-red-800",
-        warning: "bg-yellow-50 border-yellow-200 text-yellow-800",
-        info: "bg-blue-50 border-blue-200 text-blue-800",
+    const variantStyles = {
+        success: {
+            border: "border-[var(--color-success)]/40",
+            accent: "bg-[var(--color-success)]",
+        },
+        error: {
+            border: "border-[var(--color-danger)]/40",
+            accent: "bg-[var(--color-danger)]",
+        },
+        warning: {
+            border: "border-[var(--color-warning)]/40",
+            accent: "bg-[var(--color-warning)]",
+        },
+        info: {
+            border: "border-[var(--color-primary)]/40",
+            accent: "bg-[var(--color-primary)]",
+        },
     };
+
+    const style = variantStyles[msg.type] || variantStyles.info;
 
     return (
         <div
             onClick={onClose}
             className={`
-                cursor-pointer rounded-xl border px-4 py-3 shadow-md
-                backdrop-blur-sm
-                transition-all duration-200 ease-out
-                hover:shadow-lg hover:-translate-y-px]
-                ${variantClasses[msg.type] || variantClasses.info}
+                group
+                relative
+                cursor-pointer
+                overflow-hidden
+                rounded-2xl
+                border
+                ${style.border}
+                bg-[var(--color-surface-elevated)]
+                px-4
+                py-3
+                shadow-lg
+                backdrop-blur-md
+                transition-all
+                duration-200
+                hover:-translate-y-0.5
+                hover:shadow-xl
             `}
         >
-            {msg.title && (
-                <div className="font-semibold mb-0.5">{msg.title}</div>
-            )}
-            <div className="text-sm leading-snug opacity-90">{msg.message}</div>
+            {/* Accent bar */}
+            <div
+                className={`absolute left-0 top-0 h-full w-1 ${style.accent}`}
+            />
+            <div className="pl-3">
+                {msg.title && (
+                    <div className="mb-0.5 text-sm font-semibold text-[var(--color-text-primary)]">
+                        {msg.title}
+                    </div>
+                )}
+                <div className="text-sm leading-snug text-[var(--color-text-secondary)]">
+                    {msg.message}
+                </div>
+            </div>
         </div>
     );
 }

@@ -25,22 +25,31 @@ export default function AppTopbar({ title }: TopbarProps) {
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
 
     return (
-        <header className="h-14 border-b border-gray-100 bg-white px-4">
+        <header
+            className="relative z-40 h-14 border-b backdrop-blur-md"
+            style={{
+                borderColor: "var(--color-border)",
+                background: "var(--color-surface)",
+            }}
+        >
             <div
-                className="mx-auto h-full flex items-center justify-between"
+                className="mx-auto h-full flex items-center justify-between px-6"
                 style={{ maxWidth: MAX_WIDTH }}
             >
                 {/* LEFT SIDE */}
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-8">
                     {/* Mobile Hamburger */}
                     {isMobile && (
                         <button
                             onClick={toggleDrawer}
-                            className="rounded-md p-2 hover:bg-gray-100"
+                            className="rounded-md p-2 transition-colors"
+                            style={{
+                                color: "var(--text-secondary)",
+                            }}
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5 text-gray-700"
+                                className="h-5 w-5"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
@@ -57,14 +66,17 @@ export default function AppTopbar({ title }: TopbarProps) {
 
                     {/* Mobile Title */}
                     {isMobile && (
-                        <span className="text-sm font-medium text-gray-700 leading-none">
+                        <span
+                            className="text-sm font-medium leading-none"
+                            style={{ color: "var(--text-primary)" }}
+                        >
                             {title || "Dashboard"}
                         </span>
                     )}
 
                     {/* Desktop Navigation */}
                     {!isMobile && (
-                        <div className="flex items-center gap-8">
+                        <div className="flex items-center gap-10">
                             {items.map((item) => {
                                 const active =
                                     item.route &&
@@ -76,11 +88,12 @@ export default function AppTopbar({ title }: TopbarProps) {
                                         onClick={() =>
                                             item.route && navigate(item.route)
                                         }
-                                        className={`relative flex items-center gap-2 text-sm font-medium transition-colors ${
-                                            active
-                                                ? "text-gray-900"
-                                                : "text-gray-600 hover:text-gray-900"
-                                        }`}
+                                        className="relative flex items-center gap-2 text-sm font-medium transition-all duration-200"
+                                        style={{
+                                            color: active
+                                                ? "var(--text-primary)"
+                                                : "var(--text-secondary)",
+                                        }}
                                     >
                                         <Icon
                                             name={item.icon}
@@ -90,7 +103,13 @@ export default function AppTopbar({ title }: TopbarProps) {
 
                                         {/* Active indicator */}
                                         {active && (
-                                            <div className="absolute -bottom-4.5 left-0 right-0 h-0.5 bg-gray-900 rounded-full" />
+                                            <div
+                                                className="absolute -bottom-[18px] left-0 right-0 h-[2px] rounded-full"
+                                                style={{
+                                                    background:
+                                                        "var(--color-primary)",
+                                                }}
+                                            />
                                         )}
                                     </button>
                                 );

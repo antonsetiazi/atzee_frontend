@@ -2,6 +2,10 @@
 // src/core/ui/icons/icon.registry.ts
 
 import {
+    BookOpenIcon,
+    QuestionMarkCircleIcon,
+} from "@heroicons/react/20/solid";
+import {
     PencilSquareIcon,
     XCircleIcon,
     EyeIcon,
@@ -48,4 +52,6 @@ export const iconRegistry: Record<string, any> = {
     "credit-card": CreditCardIcon,
     eye: EyeIcon,
     wallet: WalletIcon,
+    booking: BookOpenIcon,
+    help: QuestionMarkCircleIcon,
 };

@@ -20,7 +20,6 @@ export default function UserMenuDropdown({
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -32,13 +31,16 @@ export default function UserMenuDropdown({
         return () =>
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-    // console.log(avatarUrl);
+
     return (
-        <div className="relative" ref={ref}>
+        <div className="relative z-50" ref={ref}>
             {/* Trigger */}
             <button
                 onClick={() => setOpen(!open)}
-                className="group flex items-center gap-3 rounded-md px-3 py-1.5 transition-colors hover:bg-gray-100"
+                className="group flex items-center gap-3 rounded-md px-3 py-1.5 transition-all duration-200"
+                style={{
+                    color: "var(--text-secondary)",
+                }}
             >
                 {/* Avatar */}
                 {avatarUrl ? (
@@ -46,77 +48,116 @@ export default function UserMenuDropdown({
                         src={avatarUrl}
                         alt="avatar"
                         className="h-8 w-8 rounded-full object-cover"
+                        style={{
+                            border: "1px solid var(--color-border)",
+                        }}
                     />
                 ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-medium text-gray-600">
+                    <div
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium"
+                        style={{
+                            background: "var(--color-surface-alt)",
+                            color: "var(--text-primary)",
+                        }}
+                    >
                         {name.charAt(0).toUpperCase()}
                     </div>
                 )}
 
-                {/* Name (desktop only optional later) */}
-                <span className="text-sm font-medium text-gray-700">
+                <span
+                    className="text-sm font-medium"
+                    style={{ color: "var(--text-primary)" }}
+                >
                     {name}
                 </span>
 
-                {/* Chevron */}
                 <Icon
                     name="chevron-down"
-                    className={`w-4 h-4 text-gray-500 transition-transform ${
+                    className={`w-4 h-4 transition-transform duration-200 ${
                         open ? "rotate-180" : ""
                     }`}
+                    style={{ color: "var(--text-muted)" }}
                 />
             </button>
 
             {/* Dropdown */}
             {open && (
-                <div className="absolute right-0 mt-2 w-48 rounded-lg border border-gray-100 bg-white shadow-lg py-2 z-50">
-                    <button
-                        onClick={() => {
-                            navigate("/account/profile");
-                            setOpen(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    >
-                        <Icon name="user-check" className="w-4 h-4" />
-                        Account Profile
-                    </button>
+                <div
+                    className="absolute right-0 mt-3 w-52 rounded-lg py-2 backdrop-blur-md"
+                    style={{
+                        background: "var(--color-surface)",
+                        border: "1px solid var(--color-border)",
+                        boxShadow: "var(--shadow)",
+                        zIndex: 999,
+                    }}
+                >
+                    <DropdownItem
+                        icon="user-check"
+                        label="Account Profile"
+                        onClick={() => navigate("/account/profile")}
+                    />
 
-                    <button
-                        onClick={() => {
-                            navigate("/business/profile");
-                            setOpen(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    >
-                        <Icon name="briefcase" className="w-4 h-4" />
-                        Business Profile
-                    </button>
+                    <DropdownItem
+                        icon="briefcase"
+                        label="Business Profile"
+                        onClick={() => navigate("/business/profile")}
+                    />
 
-                    <button
-                        onClick={() => {
-                            navigate("/account/settings");
-                            setOpen(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    >
-                        <Icon name="cog" className="w-4 h-4" />
-                        Settings
-                    </button>
+                    <DropdownItem
+                        icon="cog"
+                        label="Settings"
+                        onClick={() => navigate("/account/settings")}
+                    />
 
-                    <div className="my-2 border-t border-gray-100" />
-
-                    <button
-                        onClick={() => {
-                            logout();
-                            setOpen(false);
+                    <div
+                        className="my-2"
+                        style={{
+                            borderTop: "1px solid var(--color-border)",
                         }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    >
-                        <Icon name="log-out" className="w-4 h-4" />
-                        Logout
-                    </button>
+                    />
+
+                    <DropdownItem
+                        icon="log-out"
+                        label="Logout"
+                        onClick={logout}
+                        danger
+                    />
                 </div>
             )}
         </div>
+    );
+}
+
+interface ItemProps {
+    icon: string;
+    label: string;
+    onClick: () => void;
+    danger?: boolean;
+}
+
+function DropdownItem({ icon, label, onClick, danger }: ItemProps) {
+    return (
+        <button
+            onClick={onClick}
+            className="flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors duration-150"
+            style={{
+                color: danger ? "var(--color-error)" : "var(--text-secondary)",
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--color-surface-alt)";
+                e.currentTarget.style.color = danger
+                    ? "var(--color-error)"
+                    : "var(--text-primary)";
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = danger
+                    ? "var(--color-error)"
+                    : "var(--text-secondary)";
+            }}
+        >
+            <Icon name={icon} className="w-4 h-4" />
+            {label}
+        </button>
     );
 }

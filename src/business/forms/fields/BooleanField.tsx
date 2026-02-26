@@ -12,7 +12,7 @@ interface Props {
 
 export default function BooleanField({ field, value, error, onChange }: Props) {
     return (
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-1.5 text-sm">
             <input
                 type="checkbox"
                 checked={!!value}

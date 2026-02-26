@@ -11,15 +11,32 @@ export default function DesktopShell({
 }) {
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div
+            className="flex h-screen"
+            style={{
+                background: `
+                    radial-gradient(circle at 20% 0%, 
+                    var(--color-surface-alt), 
+                    var(--color-background) 40%)
+                `,
+                color: "var(--text-primary)",
+            }}
+        >
             {/* <Sidebar /> */}
 
             <div className="flex flex-1 flex-col overflow-hidden">
                 <AppTopbar />
 
-                <main className="flex-1 overflow-y-auto">
+                {/* Main Content */}
+                <main
+                    className="flex-1 overflow-y-auto"
+                    style={{
+                        background: "var(--color-background)",
+                        backdropFilter: "blur(6px)",
+                    }}
+                >
                     <div
-                        className="mx-auto w-full"
+                        className="mx-auto w-full px-6 py-8"
                         style={{ maxWidth: MAX_WIDTH }}
                     >
                         {children}

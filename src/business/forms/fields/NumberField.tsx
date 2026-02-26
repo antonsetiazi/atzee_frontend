@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { NumberFieldSchema } from "./field.types";
-import { inputBase } from "./field.ui";
+import { inputBase, inputError } from "./field.ui";
 
 interface Props {
     field: NumberFieldSchema;
@@ -12,7 +12,7 @@ interface Props {
 
 export default function NumberField({ field, value, error, onChange }: Props) {
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">{field.label}</label>
 
             <input
@@ -26,7 +26,7 @@ export default function NumberField({ field, value, error, onChange }: Props) {
                         e.target.value === "" ? null : Number(e.target.value),
                     )
                 }
-                className={inputBase}
+                className={`${inputBase} ${error ? inputError : ""}`}
             />
             {error && <p className="text-sm text-red-600">{error}</p>}
         </div>

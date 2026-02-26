@@ -6,10 +6,42 @@ export type BrandingConfig = {
     faviconUrl?: string;
 
     theme: {
+        // ================= Mode =================
         mode: "light" | "dark";
+
+        // ================= Core Colors =================
         primary: string;
         secondary: string;
         accent?: string;
+
+        // ================= Surface System =================
+        background: string;
+        surface: string;
+        surfaceAlt: string;
+
+        // ================= Text System =================
+        textPrimary: string;
+        textSecondary: string;
+        textMuted: string;
+
+        // ================= State Colors =================
+        success: string;
+        warning: string;
+        error: string;
+
+        // ================= Border =================
+        border: string;
+
+        // ================= Radius & Shadow =================
+        radius: string;
+        shadow: string;
+
+        // ================= Typography =================
+        font?: {
+            family?: string;
+            size?: string;
+            weight?: string;
+        };
     };
 
     layout?: {

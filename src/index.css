@@ -1,18 +1,64 @@
 @import "tailwindcss";
 
+/* =======================================
+   🎨 DESIGN TOKEN - DEFAULT (FALLBACK)
+   ======================================= */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* ================= Core Colors ================= */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-primary: #2563eb;
+  --color-secondary: #1e40af;
+  --color-accent: #10b981;
+
+  /* ================= Surface System ================= */
+
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-alt: #334155;
+
+  /* ================= Text System ================= */
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  /* ================= State Colors ================= */
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* ================= Border ================= */
+
+  --color-border: #334155;
+
+  /* ================= Radius & Shadow ================= */
+
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.4);
+
+  /* ================= Typography ================= */
+
+  /* --font-family: 'Inter', sans-serif; */
+  --font-size: 16px;
+  --font-weight: 400;
+}
+
+body {
+  margin: 0;
+  /* display: flex; */
+  /* place-items: center; */
+  min-width: 320px;
+  min-height: 100vh;
+  
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
+
+  background: var(--color-background);
+  color: var(--text-primary);
 }
 
 a {
@@ -22,14 +68,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  /* display: flex; */
-  /* place-items: center; */
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 /* h1 {
@@ -50,4 +88,62 @@ body {
   /* button {
     background-color: #f9f9f9;
   } */
+}
+
+/* =======================================
+   🧱 UTILITY SEMANTIC CLASSES (Optional)
+   ======================================= */
+
+.bg-surface {
+  background: var(--color-surface);
+}
+
+.bg-surface-alt {
+  background: var(--color-surface-alt);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.border-default {
+  border-color: var(--color-border);
+}
+
+.shadow-default {
+  box-shadow: var(--shadow);
+}
+
+.rounded-default {
+  border-radius: var(--radius);
+}
+
+.page-transition {
+    animation: pageSlideIn 1260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pageSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(18px) scale(0.995);
+        filter: blur(2px);
+    }
+    60% {
+        opacity: 1;
+        transform: translateX(0px) scale(1);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0px) scale(1);
+        filter: blur(0);
+    }
 }

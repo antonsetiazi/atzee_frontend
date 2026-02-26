@@ -2,7 +2,7 @@
 // src/business/forms/fields/DateField.tsx
 
 import type { FormFieldSchema } from "./field.types";
-import { inputBase } from "./field.ui";
+import { inputBase, inputError } from "./field.ui";
 
 interface Props {
     field: FormFieldSchema;
@@ -13,7 +13,7 @@ interface Props {
 
 export default function DateField({ field, value, error, onChange }: Props) {
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">{field.label}</label>
 
             <input
@@ -22,7 +22,7 @@ export default function DateField({ field, value, error, onChange }: Props) {
                 onChange={(e) => onChange?.(field.key, e.target.value)}
                 disabled={field.readonly}
                 required={field.required}
-                className={inputBase}
+                className={`${inputBase} ${error ? inputError : ""}`}
             />
 
             {error && <p className="text-sm text-red-600">{error}</p>}

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/entities/blocks/BlockCardList.tsx
 
+import { formatValue } from "@/shared/utils/formatValue";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -64,9 +65,13 @@ export default function BlockCardList({
     // console.log(data);
     // console.log(block.data_key);
     return (
-        <div className="w-full">
+        <div className="w-full space-y-4">
             {block.title && (
-                <h3 className="text-lg font-semibold mb-2">{block.title}</h3>
+                <div className="px-1">
+                    <h3 className="text-base font-semibold tracking-tight text-[var(--color-text-primary)]">
+                        {block.title}
+                    </h3>
+                </div>
             )}
 
             <div
@@ -88,44 +93,62 @@ export default function BlockCardList({
                         <div
                             key={idx}
                             onClick={() => handleSelect(item)}
-                            className={`cursor-pointer border rounded-lg p-4 transition-all ${
-                                isSelected
-                                    ? "border-blue-500 bg-blue-50"
-                                    : "border-gray-200 hover:border-blue-300"
-                            }`}
+                            className={`
+                                group
+                                relative
+                                cursor-pointer
+                                rounded-2xl
+                                border
+                                bg-[var(--color-surface)]
+                                p-5
+                                transition-all
+                                duration-200
+                                ${
+                                    isSelected
+                                        ? `
+                                            border-[var(--color-primary)]
+                                            ring-2
+                                            ring-[var(--color-primary)]/20
+                                            shadow-md
+                                        `
+                                        : `
+                                            border-[var(--color-border)]
+                                            hover:border-[var(--color-primary)]/40
+                                            hover:shadow-sm
+                                        `
+                                }
+                            `}
                         >
-                            {block.fields?.map((field: any) => {
-                                const fieldVal = item[field.key];
+                            {/* Subtle top accent when selected */}
+                            {isSelected && (
+                                <div className="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-[var(--color-primary)]" />
+                            )}
 
-                                if (field.format === "currency") {
+                            <div className="space-y-2">
+                                {block.fields?.map((field: any) => {
+                                    const fieldVal = item[field.key];
+
                                     return (
                                         <div
                                             key={field.key}
-                                            className="font-medium"
+                                            className={`
+                                                ${
+                                                    field.variant === "primary"
+                                                        ? "text-base font-semibold text-[var(--color-text-primary)]"
+                                                        : "text-sm text-[var(--color-text-secondary)]"
+                                                }
+                                            `}
                                         >
-                                            Rp{" "}
-                                            {Number(fieldVal).toLocaleString()}
+                                            {formatValue(fieldVal, field.meta)}
+                                            {field.suffix && (
+                                                <span className="ml-1 text-xs text-[var(--color-text-muted)]">
+                                                    {field.suffix}
+                                                </span>
+                                            )}
                                         </div>
                                     );
-                                }
-
-                                if (field.format === "duration") {
-                                    return (
-                                        <div
-                                            key={field.key}
-                                            className="text-sm text-gray-500"
-                                        >
-                                            {fieldVal} menit
-                                        </div>
-                                    );
-                                }
-
-                                return (
-                                    <div key={field.key} className="text-sm">
-                                        {fieldVal}
-                                    </div>
-                                );
-                            })}
+                                })}
+                            </div>
                         </div>
                     );
                 })}

@@ -123,12 +123,31 @@ export default function BlockBooking({ block }: Props) {
     if (!context) return null;
 
     return (
-        <div className="max-w-3xl mx-auto bg-white py-6 space-y-6">
-            <h2 className="text-2xl font-semibold">{block.title}</h2>
+        <div
+            className="max-w-3xl mx-auto p-8 space-y-8"
+            style={{
+                background: "var(--color-background)",
+            }}
+        >
+            <h2
+                className="text-2xl font-semibold tracking-tight"
+                style={{ color: "var(--text-primary)" }}
+            >
+                {block.title}
+            </h2>
 
             {/* Partner */}
-            <div className="bg-gray-50 p-4 rounded border border-gray-200">
-                <div className="text-lg font-medium">
+            <div
+                className="rounded-xl p-5"
+                style={{
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                }}
+            >
+                <div
+                    className="text-lg font-medium"
+                    style={{ color: "var(--text-primary)" }}
+                >
                     {context.partner?.name}
                 </div>
             </div>
@@ -158,33 +177,63 @@ export default function BlockBooking({ block }: Props) {
                                         setSelectedServices([service.id]);
                                     }
                                 }}
-                                className={`relative cursor-pointer border border-gray-200 rounded-lg p-4 transition ${
-                                    isSelected
-                                        ? "border-blue-500 bg-blue-50"
-                                        : "hover:border-gray-400"
-                                }`}
+                                className="relative cursor-pointer rounded-xl p-4 transition-all duration-200"
+                                style={{
+                                    background: isSelected
+                                        ? "var(--color-surface-alt)"
+                                        : "var(--color-surface)",
+                                    border: isSelected
+                                        ? "1px solid var(--color-primary)"
+                                        : "1px solid var(--color-border)",
+                                }}
                             >
                                 {/* Checkmark */}
 
                                 <div className="flex gap-3">
                                     {isSelected ? (
-                                        <div className="bg-blue-500 text-white w-6 h-6 flex items-center justify-center rounded-full">
+                                        <div
+                                            className="w-6 h-6 flex items-center justify-center rounded-full text-sm"
+                                            style={{
+                                                background:
+                                                    "var(--color-primary)",
+                                                color: "white",
+                                            }}
+                                        >
                                             ✓
                                         </div>
                                     ) : (
-                                        <div className="bg-white border-2 border-gray-200 w-6 h-6 flex items-center justify-center rounded-full"></div>
+                                        <div
+                                            className="w-6 h-6 rounded-full"
+                                            style={{
+                                                border: "2px solid var(--color-border)",
+                                            }}
+                                        />
                                     )}
 
                                     <div className="flex flex-1 justify-between">
                                         <div>
-                                            <div className="font-medium">
+                                            <div
+                                                style={{
+                                                    color: "var(--text-primary)",
+                                                }}
+                                            >
                                                 {service.name}
                                             </div>
-                                            <div className="text-sm text-gray-500">
+                                            <div
+                                                className="text-sm"
+                                                style={{
+                                                    color: "var(--text-secondary)",
+                                                }}
+                                            >
                                                 {service.duration_minutes} menit
                                             </div>
                                         </div>
-                                        <div className="font-semibold">
+                                        <div
+                                            className="font-semibold"
+                                            style={{
+                                                color: "var(--text-primary)",
+                                            }}
+                                        >
                                             Rp{" "}
                                             {Number(
                                                 service.price,
@@ -221,13 +270,23 @@ export default function BlockBooking({ block }: Props) {
                                 key={index}
                                 disabled={!slot.available}
                                 onClick={() => setSelectedSlot(slot)}
-                                className={`p-2 border rounded ${
-                                    !slot.available
-                                        ? "bg-gray-200 cursor-not-allowed"
+                                className="p-2 rounded-md text-sm font-medium transition"
+                                style={{
+                                    background: !slot.available
+                                        ? "var(--color-surface-alt)"
                                         : selectedSlot?.start === slot.start
-                                          ? "bg-blue-600 text-white"
-                                          : "hover:bg-blue-50 border-gray-200"
-                                }`}
+                                          ? "var(--color-primary)"
+                                          : "var(--color-surface)",
+                                    color:
+                                        selectedSlot?.start === slot.start
+                                            ? "white"
+                                            : "var(--text-primary)",
+                                    border: "1px solid var(--color-border)",
+                                    opacity: !slot.available ? 0.5 : 1,
+                                    cursor: !slot.available
+                                        ? "not-allowed"
+                                        : "pointer",
+                                }}
                             >
                                 {new Date(slot.start).toLocaleTimeString(
                                     "id-ID",
@@ -247,24 +306,42 @@ export default function BlockBooking({ block }: Props) {
                 <button
                     onClick={handleEstimate}
                     disabled={!selectedSlot}
-                    className="w-full bg-gray-800 text-white py-2 rounded disabled:opacity-50"
+                    className="w-full py-2 rounded-lg font-medium transition disabled:opacity-50"
+                    style={{
+                        background: "var(--color-surface-alt)",
+                        color: "var(--text-primary)",
+                        border: "1px solid var(--color-border)",
+                    }}
                 >
                     Hitung Estimasi
                 </button>
             )}
 
             {estimate && (
-                <div className="bg-gray-50 p-4 border border-gray-200 rounded space-y-1">
+                <div
+                    className="p-5 rounded-xl space-y-2"
+                    style={{
+                        background: "var(--color-surface)",
+                        border: "1px solid var(--color-border)",
+                    }}
+                >
                     <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>
+                        <span style={{ color: "var(--text-secondary)" }}>
+                            Subtotal
+                        </span>
+                        <span style={{ color: "var(--text-secondary)" }}>
                             Rp{" "}
                             {Number(estimate.subtotal).toLocaleString("id-ID")}
                         </span>
                     </div>
-                    <div className="flex justify-between font-semibold text-lg">
-                        <span>Total</span>
-                        <span>
+                    <div
+                        className="flex justify-between font-semibold text-lg"
+                        style={{ color: "var(--text-primary)" }}
+                    >
+                        <span style={{ color: "var(--text-secondary)" }}>
+                            Total
+                        </span>
+                        <span style={{ color: "var(--text-secondary)" }}>
                             Rp {Number(estimate.total).toLocaleString("id-ID")}
                         </span>
                     </div>
@@ -285,7 +362,11 @@ export default function BlockBooking({ block }: Props) {
             <button
                 onClick={handleSubmit}
                 disabled={!selectedSlot}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium disabled:opacity-50"
+                className="w-full py-3 rounded-xl font-semibold transition disabled:opacity-50"
+                style={{
+                    background: "var(--color-primary)",
+                    color: "white",
+                }}
             >
                 Buat Booking
             </button>

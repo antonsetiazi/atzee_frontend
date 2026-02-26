@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { DateTimeFieldSchema } from "./field.types";
-import { inputBase } from "./field.ui";
+import { inputBase, inputError } from "./field.ui";
 
 interface Props {
     field: DateTimeFieldSchema;
@@ -25,7 +25,7 @@ export default function DateTimeField({
     };
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">
                 {field.label}
                 {field.required && " *"}
@@ -37,7 +37,7 @@ export default function DateTimeField({
                 onChange={handleChange}
                 required={field.required}
                 // style={{ display: "block", width: "100%" }}
-                className={inputBase}
+                className={`${inputBase} ${error ? inputError : ""}`}
             />
 
             {error && <p className="text-sm text-red-600">{error}</p>}

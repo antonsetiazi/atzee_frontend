@@ -33,6 +33,32 @@ interface Props {
     id?: string;
 }
 
+/**
+ * 🔥 Premium Surface Wrapper
+ */
+function Surface({
+    children,
+    padded = true,
+}: {
+    children: React.ReactNode;
+    padded?: boolean;
+}) {
+    return (
+        <div
+            className={`w-full rounded-2xl ${
+                padded ? "p-6" : ""
+            } transition-all duration-300`}
+            style={{
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+                boxShadow: "var(--shadow-sm)",
+            }}
+        >
+            {children}
+        </div>
+    );
+}
+
 export default function BlockRenderer({
     block,
     idx,
@@ -45,17 +71,15 @@ export default function BlockRenderer({
     // console.log(block.type);
     // 🔥 CONTAINER
     if (block.type === "container") {
-        const containerClasses = block.background_color ?? ""; // ambil dari schema
-
         return (
             <div
                 key={idx}
-                className={`grid w-full ${containerClasses}`}
+                className="grid w-full"
                 style={{
                     gridTemplateColumns: block.columns
                         ? `repeat(${block.columns}, 1fr)`
                         : "repeat(auto-fit, minmax(250px, 1fr))",
-                    gap: block.gap ?? 16,
+                    gap: block.gap ?? 20,
                 }}
             >
                 {block.blocks?.map((child: any, i: number) => (
@@ -77,10 +101,7 @@ export default function BlockRenderer({
     // 🔥 LIST
     if (block.type === "list") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 w-full"
-            >
+            <Surface key={idx}>
                 <BlockList
                     block={block}
                     entityKey={entityKey}
@@ -93,7 +114,7 @@ export default function BlockRenderer({
                         );
                     }}
                 />
-            </div>
+            </Surface>
         );
     }
 
@@ -101,11 +122,7 @@ export default function BlockRenderer({
         const blockData =
             block.data_key && pageData ? pageData[block.data_key] : pageData;
 
-        return (
-            <div key={idx}>
-                <BlockListView block={block} data={blockData} />
-            </div>
-        );
+        return <BlockListView key={idx} block={block} data={blockData} />;
     }
 
     // 🔥 CARD LIST
@@ -114,108 +131,91 @@ export default function BlockRenderer({
             block.data_key && pageData ? pageData[block.data_key] : pageData;
 
         return (
-            <div key={idx}>
-                <BlockCardList
-                    block={block}
-                    data={blockData}
-                    context={context}
-                    onSelect={(field, value) => {
-                        window.dispatchEvent(
-                            new CustomEvent("form:set-value", {
-                                detail: { field, value },
-                            }),
-                        );
-                    }}
-                />
-            </div>
+            <BlockCardList
+                key={idx}
+                block={block}
+                data={blockData}
+                context={context}
+                onSelect={(field, value) => {
+                    window.dispatchEvent(
+                        new CustomEvent("form:set-value", {
+                            detail: { field, value },
+                        }),
+                    );
+                }}
+            />
         );
     }
 
     if (block.type === "form") {
         return (
-            <div key={idx}>
-                <BlockForm
-                    entityKey={entityKey}
-                    schema={schema}
-                    block={block}
-                    id={id}
-                    idx={idx}
-                    pageData={pageData}
-                    context={context}
-                />
-            </div>
+            <BlockForm
+                key={idx}
+                entityKey={entityKey}
+                schema={schema}
+                block={block}
+                id={id}
+                idx={idx}
+                pageData={pageData}
+                context={context}
+            />
         );
     }
 
     if (block.type === "table") {
         return (
-            <div key={idx}>
-                <BlockTable
-                    entityKey={entityKey}
-                    schema={schema}
-                    block={block}
-                    id={id}
-                    searchMode={block.search_mode ?? "client"}
-                />
-            </div>
+            <BlockTable
+                key={idx}
+                entityKey={entityKey}
+                schema={schema}
+                block={block}
+                id={id}
+                searchMode={block.search_mode ?? "client"}
+            />
         );
     }
 
     if (block.type === "availability") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 w-full"
-            >
+            <Surface key={idx}>
                 <BlockAvailability
                     block={block}
                     entityKey={entityKey}
                     context={context}
                 />
-            </div>
+            </Surface>
         );
     }
 
     if (block.type === "workflow") {
         return (
-            <div key={idx}>
-                <WorkflowContainer
-                    workflow={block}
-                    entityData={pageData}
-                    onAction={(action) => executeWorkflowAction(action, id)}
-                />
-            </div>
+            <WorkflowContainer
+                key={idx}
+                workflow={block}
+                entityData={pageData}
+                onAction={(action) => executeWorkflowAction(action, id)}
+            />
         );
     }
 
     if (block.type === "files") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 w-full"
-            >
+            <Surface key={idx}>
                 <BlockFiles block={block} entityKey={entityKey} id={id} />
-            </div>
+            </Surface>
         );
     }
 
     if (block.type === "tags") {
         return (
-            <div
-                key={idx}
-                className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 w-full"
-            >
+            <Surface key={idx}>
                 <BlockTags block={block} entityKey={entityKey} id={id} />
-            </div>
+            </Surface>
         );
     }
 
     if (block.type === "stat") {
-        return (
-            <div key={idx}>
-                <BlockStat block={block} data={pageData} />
-            </div>
-        );
+        return <BlockStat key={idx} block={block} data={pageData} />;
     }
 
     if (block.type === "info") {

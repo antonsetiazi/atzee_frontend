@@ -27,7 +27,10 @@ export default function BlockShortcut({ block }: Props) {
 
     if (!block.items?.length) {
         return (
-            <div className="text-sm text-gray-400 py-4 text-center">
+            <div
+                className="py-6 text-sm text-center"
+                style={{ color: "var(--text-muted)" }}
+            >
                 No shortcuts available
             </div>
         );
@@ -38,7 +41,7 @@ export default function BlockShortcut({ block }: Props) {
             <div
                 ref={containerRef}
                 className={`
-                    flex gap-4 py-4
+                    flex gap-5 py-6
                     ${
                         isOverflowing
                             ? "overflow-x-auto snap-x snap-mandatory scrollbar-hide"
@@ -52,27 +55,48 @@ export default function BlockShortcut({ block }: Props) {
                         to={item.to || "#"}
                         className={`
                             flex flex-col items-center justify-center
-                            min-w-35
-                            ${
-                                isOverflowing
-                                    ? "w-28 sm:w-32 shrink-0"
-                                    : "flex-1"
-                            }
-                            py-5
-                            bg-white rounded-2xl
-                            shadow-sm hover:shadow-md
-                            transition-all duration-200
+                            min-w-36
+                            ${isOverflowing ? "w-32 shrink-0" : "flex-1"}
+                            py-6 px-4
+                            rounded-2xl
+                            transition-all duration-300
                             snap-start
                         `}
+                        style={{
+                            background: "var(--color-surface)",
+                            border: "1px solid var(--color-border)",
+                            boxShadow: "var(--shadow-sm)",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform =
+                                "translateY(-4px)";
+                            e.currentTarget.style.boxShadow = "var(--shadow)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "translateY(0)";
+                            e.currentTarget.style.boxShadow =
+                                "var(--shadow-sm)";
+                        }}
                     >
-                        <div className="flex items-center justify-center w-12 h-12 bg-indigo-50 rounded-full mb-3">
+                        {/* Icon Circle */}
+                        <div
+                            className="flex items-center justify-center w-14 h-14 rounded-full mb-4"
+                            style={{
+                                background: "var(--color-surface-alt)",
+                            }}
+                        >
                             <Icon
                                 name={item.icon || "home"}
-                                className="w-6 h-6 text-indigo-600"
+                                size="lg"
+                                className="text-primary"
                             />
                         </div>
 
-                        <span className="text-sm font-medium text-gray-700 text-center">
+                        {/* Label */}
+                        <span
+                            className="text-sm font-medium text-center"
+                            style={{ color: "var(--text-secondary)" }}
+                        >
                             {item.label}
                         </span>
                     </Link>

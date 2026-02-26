@@ -12,16 +12,34 @@ export default function BlockStat({ block, data }: Props) {
     // console.log(block.meta);
     const value = block.value ?? data?.[block.key] ?? null;
     return (
-        <div className="bg-white rounded-lg shadow-sm p-6 w-full">
-            <div className="text-sm font-medium text-gray-500">
+        <div
+            className="w-full rounded-xl p-6"
+            style={{
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+            }}
+        >
+            {/* Title */}
+            <div
+                className="text-sm font-medium"
+                style={{ color: "var(--text-secondary)" }}
+            >
                 {block.title}
             </div>
-            <div className="mt-3 flex items-end gap-2">
-                <div className="text-3xl font-semibold text-gray-900">
+            {/* Value */}
+            <div className="mt-4 flex items-end gap-2">
+                <div
+                    className="text-3xl font-semibold tracking-tight"
+                    style={{ color: "var(--text-primary)" }}
+                >
                     {formatValue(value, block.meta)}
                 </div>
+
                 {block.suffix && (
-                    <div className="pb-1 text-sm font-medium text-gray-400">
+                    <div
+                        className="pb-1 text-sm font-medium"
+                        style={{ color: "var(--text-muted)" }}
+                    >
                         {block.suffix}
                     </div>
                 )}

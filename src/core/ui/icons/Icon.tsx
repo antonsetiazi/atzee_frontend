@@ -1,16 +1,39 @@
 // src/core/ui/icons/Icon.tsx
 
+import type { SVGProps } from "react";
 import { iconRegistry } from "./icon.registry";
 
-interface Props {
+interface Props extends SVGProps<SVGSVGElement> {
     name: string;
-    className?: string;
+    size?: "sm" | "md" | "lg";
 }
 
-export default function Icon({ name, className }: Props) {
+const sizeMap = {
+    sm: "w-4 h-4",
+    md: "w-5 h-5",
+    lg: "w-6 h-6",
+};
+
+export default function Icon({
+    name,
+    size = "md",
+    className = "",
+    ...rest
+}: Props) {
     const Component = iconRegistry[name];
 
     if (!Component) return null;
 
-    return <Component className={className || "w-5 h-5"} />;
+    return (
+        <Component
+            className={`
+                ${sizeMap[size]}
+                shrink-0
+                text-current
+                ${className}
+            `}
+            aria-hidden={rest["aria-label"] ? undefined : true}
+            {...rest}
+        />
+    );
 }

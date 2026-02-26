@@ -10,7 +10,7 @@ interface Props {
 
 export default function ViewField({ field, value }: Props) {
     return (
-        <div className="space-y-1">
+        <div className="space-y-1 gap-1.5">
             <label className="block text-sm font-medium text-gray-500">
                 {field.label}
             </label>

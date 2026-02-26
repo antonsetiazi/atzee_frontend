@@ -123,15 +123,35 @@ export default function FormRenderer({
     return (
         <form
             onSubmit={isViewMode ? undefined : handleSubmit}
-            className="bg-white border border-gray-200 rounded-lg shadow-sm"
+            className="rounded-xl overflow-hidden"
+            style={{
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+            }}
         >
             {/* HEADER */}
-            <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-800">
+            <div
+                className="px-6 py-5"
+                style={{
+                    borderBottom: "1px solid var(--color-border)",
+                }}
+            >
+                <h2
+                    className="text-lg font-semibold tracking-tight"
+                    style={{
+                        color: "var(--text-primary)",
+                    }}
+                >
                     {schema.title ?? "Form"}
                 </h2>
+
                 {schema.description && (
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p
+                        className="text-sm mt-1"
+                        style={{
+                            color: "var(--text-secondary)",
+                        }}
+                    >
                         {schema.description}
                     </p>
                 )}
@@ -155,7 +175,13 @@ export default function FormRenderer({
 
             {/* FOOTER ACTIONS */}
             {!isViewMode && (
-                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-2">
+                <div
+                    className="px-6 py-4 flex items-center justify-end gap-3"
+                    style={{
+                        borderTop: "1px solid var(--color-border)",
+                        background: "var(--color-surface-alt)",
+                    }}
+                >
                     <button
                         type="submit"
                         disabled={loading}

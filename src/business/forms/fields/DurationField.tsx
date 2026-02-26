@@ -43,7 +43,7 @@ export default function DurationField({
     }
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">
                 {field.label}
                 {field.required && " *"}

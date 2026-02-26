@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import type { SelectFieldSchema } from "./field.types";
-import { inputBase } from "./field.ui";
+import { inputBase, inputError } from "./field.ui";
 import { fetchFieldOptions } from "./field.api";
 
 interface Option {
@@ -59,7 +59,7 @@ export default function SelectField({ field, value, error, onChange }: Props) {
     }, [field.options, field.data_source]);
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">{field.label}</label>
 
             <select
@@ -67,7 +67,7 @@ export default function SelectField({ field, value, error, onChange }: Props) {
                 disabled={field.readonly}
                 required={field.required}
                 onChange={(e) => onChange?.(field.key, e.target.value)}
-                className={inputBase}
+                className={`${inputBase} ${error ? inputError : ""}`}
             >
                 <option value="">
                     {loading ? "Loading..." : "-- Select --"}

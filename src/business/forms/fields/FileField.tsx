@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { FileFieldSchema } from "./field.types";
-import { inputBase } from "./field.ui";
+import { inputBase, inputError } from "./field.ui";
 
 interface Props {
     field: FileFieldSchema;
@@ -22,7 +22,7 @@ export default function FileField({ field, value, error, onChange }: Props) {
     };
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium">
                 {field.label}
                 {field.required && <span className="required">*</span>}
@@ -34,7 +34,7 @@ export default function FileField({ field, value, error, onChange }: Props) {
                 accept={field.accept}
                 multiple={field.multiple}
                 onChange={handleChange}
-                className={inputBase}
+                className={`${inputBase} ${error ? inputError : ""}`}
             />
 
             {value && !field.multiple && value instanceof File && (

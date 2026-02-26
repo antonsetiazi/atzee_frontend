@@ -160,36 +160,55 @@ export default function CoreEntityPage({ entityKey }: Props) {
         return <LoadingState />;
     }
 
-    if (!isHydrated) return <LoadingState />;
-    if (loadingData) return <LoadingState />;
-    if (!isHydrated) return <LoadingState />;
+    if (!isHydrated || loadingData) {
+        return <LoadingState />;
+    }
     // console.log(schema);
     // console.log(id);
     // console.log(pageData);
 
     return (
-        <div className="mx-auto w-full">
+        <div
+            className="w-full"
+            style={{
+                background: "var(--color-background)",
+            }}
+        >
             <PageHeader
                 title={schema.title}
                 description={schema.description}
                 isMobile={isMobile}
             />
 
-            {/* Page Content */}
-            <div className="space-y-1">
+            {/* Page Body */}
+            <div
+                className={`
+                mx-auto
+                w-full
+                ${isMobile ? "px-4 py-4 space-y-3" : "px-6 py-6 space-y-4"}
+            `}
+            >
                 {schema.blocks?.map((block: any, idx: number) => {
                     return (
-                        <div key={idx} className="bg-white p-4">
-                            <BlockRenderer
-                                key={idx}
-                                block={block}
-                                idx={idx}
-                                entityKey={entityKey}
-                                schema={schema}
-                                pageData={pageData}
-                                context={context}
-                                id={id}
-                            />
+                        <div
+                            key={idx}
+                            className="rounded-xl"
+                            style={{
+                                background: "var(--color-surface)",
+                                border: "1px solid var(--color-border)",
+                            }}
+                        >
+                            <div className={isMobile ? "p-4" : "p-6"}>
+                                <BlockRenderer
+                                    block={block}
+                                    idx={idx}
+                                    entityKey={entityKey}
+                                    schema={schema}
+                                    pageData={pageData}
+                                    context={context}
+                                    id={id}
+                                />
+                            </div>
                         </div>
                     );
                 })}

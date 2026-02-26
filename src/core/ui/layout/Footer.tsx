@@ -7,7 +7,13 @@ export default function Footer() {
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
 
     return (
-        <footer className="border-t border-gray-200 bg-linear-to-b from-white to-gray-50">
+        <footer
+            className="border-t backdrop-blur-sm"
+            style={{
+                borderColor: "var(--color-border)",
+                background: "var(--color-surface)",
+            }}
+        >
             <div
                 className="mx-auto w-full px-6 py-4"
                 style={{ maxWidth: MAX_WIDTH }}
@@ -15,26 +21,41 @@ export default function Footer() {
                 <div className="flex items-center justify-between text-sm">
                     {/* Left */}
                     <div className="flex items-center gap-3">
-                        <span className="font-semibold text-gray-800 tracking-wide">
+                        <span
+                            className="font-semibold tracking-wide"
+                            style={{ color: "var(--text-primary)" }}
+                        >
                             {TITLE}
                         </span>
 
-                        <span className="text-gray-300">|</span>
+                        <span style={{ color: "var(--text-muted)" }}>|</span>
 
-                        <span className="text-gray-500">
+                        <span style={{ color: "var(--text-secondary)" }}>
                             © {new Date().getFullYear()} {COPYRIGHT}
                         </span>
                     </div>
 
                     {/* Right */}
-                    <div className="flex items-center gap-3">
-                        <span className="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium tracking-wide">
+                    <div className="flex items-center gap-4">
+                        <span
+                            className="px-3 py-1 text-xs font-medium tracking-wide"
+                            style={{
+                                background: "var(--color-surface-alt)",
+                                color: "var(--text-secondary)",
+                                borderRadius: "9999px",
+                            }}
+                        >
                             v{VERSION}
                         </span>
 
-                        <span className="h-4 w-px bg-gray-200" />
+                        <span
+                            className="h-4 w-px"
+                            style={{
+                                background: "var(--color-border)",
+                            }}
+                        />
 
-                        <span className="text-gray-400">
+                        <span style={{ color: "var(--text-muted)" }}>
                             Engineered with precision
                         </span>
                     </div>

@@ -2,7 +2,7 @@
 // src/business/forms/fields/TextFields.tsx
 
 import type { TextFieldSchema } from "./field.types";
-import { inputBase } from "./field.ui";
+import { inputBase, inputError } from "./field.ui";
 
 interface Props {
     field: TextFieldSchema;
@@ -13,8 +13,17 @@ interface Props {
 
 export default function TextField({ field, value, error, onChange }: Props) {
     return (
-        <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">{field.label}</label>
+        <div className="flex flex-col gap-1.5">
+            {/* Label */}
+            <label
+                htmlFor={field.key}
+                className="text-sm font-medium text-[var(--color-text-secondary)]"
+            >
+                {field.label}
+                {field.required && (
+                    <span className="ml-1 text-[var(--color-danger)]">*</span>
+                )}
+            </label>
 
             <input
                 type="text"
@@ -23,10 +32,15 @@ export default function TextField({ field, value, error, onChange }: Props) {
                 disabled={field.disabled}
                 required={field.required}
                 onChange={(e) => onChange?.(field.key, e.target.value)}
-                className={inputBase}
+                className={`${inputBase} ${error ? inputError : ""}`}
             />
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {/* Error */}
+            {error && (
+                <p className="text-xs font-medium text-[var(--color-danger)]">
+                    {error}
+                </p>
+            )}
         </div>
     );
 }

@@ -20,6 +20,7 @@ export default function LoginPage() {
                         : "bg-linear-to-br from-slate-100 via-gray-100 to-slate-200"
                 }
             `}
+            style={{ background: "#0f172a" }}
         >
             {/* Background decoration (desktop only) */}
             {!isMobile && (
