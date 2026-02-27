@@ -40,3 +40,16 @@ export function clearEntityCacheByPrefix(prefix: string) {
         }
     }
 }
+
+export function getAllCacheEntries() {
+    const result: Record<string, any> = {};
+
+    for (const [key, entry] of cache.entries()) {
+        result[key] = {
+            age: Date.now() - entry.timestamp,
+            data: entry.data,
+        };
+    }
+
+    return result;
+}

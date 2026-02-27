@@ -86,6 +86,12 @@ export default function FormRenderer({
             clearEntityCacheByPrefix(`table:${entity}`);
             context.refresh?.();
 
+            if (schema.refresh_cache?.length) {
+                schema.refresh_cache.forEach((prefix) => {
+                    clearEntityCacheByPrefix(prefix);
+                });
+            }
+
             if (schema.affects) {
                 await handleCoreAffects(schema.affects);
             }

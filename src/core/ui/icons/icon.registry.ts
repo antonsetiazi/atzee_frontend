@@ -2,6 +2,7 @@
 // src/core/ui/icons/icon.registry.ts
 
 import {
+    BellAlertIcon,
     BookOpenIcon,
     QuestionMarkCircleIcon,
 } from "@heroicons/react/20/solid";
@@ -54,4 +55,5 @@ export const iconRegistry: Record<string, any> = {
     wallet: WalletIcon,
     booking: BookOpenIcon,
     help: QuestionMarkCircleIcon,
+    notification: BellAlertIcon,
 };

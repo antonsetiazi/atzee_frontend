@@ -48,4 +48,5 @@ export interface FormSchema {
     redirect_to?: FormRedirect;
     actions?: FormAction[];
     affects?: "session_user" | "session_settings" | "permissions" | "config";
+    refresh_cache?: string[];
 }

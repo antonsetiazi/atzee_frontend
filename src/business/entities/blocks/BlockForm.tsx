@@ -176,8 +176,6 @@ export default function BlockForm({
 
     if (loadingData) return <LoadingState />;
 
-    // console.log(block);
-
     return (
         <div key={idx}>
             <FormRenderer

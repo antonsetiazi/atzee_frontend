@@ -11,6 +11,7 @@ import { useSessionStore } from "@/core/session/session.store";
 import BlockRenderer from "./BlockRenderer";
 import { httpGet, httpPost } from "@/core/http/http.client";
 import { getCache, setCache } from "./entity.cache";
+// import { getAllCacheEntries } from "@/business/entities/entity.cache";
 
 interface Props {
     entityKey: string;
@@ -110,6 +111,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
 
             // ✅ 1️⃣ CHECK CACHE FIRST
             const cached = getCache<any>(cacheKey);
+
             if (cached) {
                 setPageData(cached);
                 return; // 🚀 STOP HERE
@@ -199,6 +201,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
     // console.log(schema);
     // console.log(id);
     // console.log(pageData);
+    // console.log(getAllCacheEntries());
 
     return (
         <div
