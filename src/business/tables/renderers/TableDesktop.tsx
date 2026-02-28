@@ -88,9 +88,12 @@ export default function TableDesktop({
     // console.log(schema);
     // console.log(filteredData);
     return (
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-            {/* Search */}
-            <div className="border-b border-gray-200 p-4">
+        <div className="w-full">
+            {/* 🔎 Search */}
+            <div
+                className="pb-4"
+                style={{ borderBottom: "1px solid var(--color-border)" }}
+            >
                 <input
                     value={searchValue}
                     onChange={(e) => {
@@ -99,18 +102,34 @@ export default function TableDesktop({
                     }}
                     placeholder="Search data..."
                     className="
-                        w-full rounded-lg border border-gray-300
-                        px-3 py-2 text-sm
-                        focus:border-indigo-600 focus:outline-none
-                        focus:ring-2 focus:ring-indigo-600/20
+                        w-full rounded-xl
+                        px-4 py-2.5 text-sm
+                        transition-all duration-200
                     "
+                    style={{
+                        background: "var(--color-surface-alt)",
+                        border: "1px solid var(--color-border)",
+                        color: "var(--text-primary)",
+                        outline: "none",
+                    }}
                 />
             </div>
 
             {/* Table */}
             {!filteredData.length ? (
-                <div className="p-6 text-sm text-gray-500">
-                    No data available
+                <div className="py-12 text-center">
+                    <div
+                        className="text-base font-medium"
+                        style={{ color: "var(--text-primary)" }}
+                    >
+                        No data available
+                    </div>
+                    <div
+                        className="mt-2 text-sm"
+                        style={{ color: "var(--text-secondary)" }}
+                    >
+                        Try adjusting your search or filters.
+                    </div>
                 </div>
             ) : (
                 <div className="overflow-x-auto">
@@ -121,7 +140,7 @@ export default function TableDesktop({
                             onSort={handleSort}
                         />
                         <tbody>
-                            {data.map((row, idx) => (
+                            {filteredData.map((row, idx) => (
                                 <TableRow
                                     entity={entity}
                                     key={idx}
@@ -136,13 +155,18 @@ export default function TableDesktop({
             )}
 
             {/* Pagination */}
-            <TablePagination
-                total={total}
-                page={page}
-                pageSize={pageSize}
-                onPageChange={onPageChange}
-                onPageSizeChange={onPageSizeChange}
-            />
+            <div
+                className="pt-4"
+                style={{ borderTop: "1px solid var(--color-border)" }}
+            >
+                <TablePagination
+                    total={total}
+                    page={page}
+                    pageSize={pageSize}
+                    onPageChange={onPageChange}
+                    onPageSizeChange={onPageSizeChange}
+                />
+            </div>
         </div>
     );
 }

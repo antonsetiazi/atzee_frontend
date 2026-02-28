@@ -17,16 +17,45 @@ interface Props {
 
 export default function TableRow({ entity, row, schema, context }: Props) {
     return (
-        <tr className="border-b border-gray-200 last:border-b-0 hover:bg-gray-50">
+        <tr
+            className="transition-colors duration-150"
+            style={{
+                borderBottom: "1px solid var(--color-border)",
+            }}
+            onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "var(--color-surface-alt)")
+            }
+            onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "transparent")
+            }
+        >
             {schema.columns.map((col) => (
-                <td key={col.key} className="px-4 py-3 text-sm text-gray-700">
-                    {String(row[col.key] ?? "-")}
+                <td
+                    key={col.key}
+                    className="px-4 py-3 text-sm"
+                    style={{
+                        color: "var(--text-primary)",
+                    }}
+                >
+                    {row[col.key] !== undefined &&
+                    row[col.key] !== null &&
+                    row[col.key] !== "" ? (
+                        String(row[col.key])
+                    ) : (
+                        <span
+                            style={{
+                                color: "var(--text-secondary)",
+                            }}
+                        >
+                            —
+                        </span>
+                    )}
                 </td>
             ))}
 
             {schema.actions && (
-                <td className="px-4 py-3 text-center">
-                    <div className="flex justify-center">
+                <td className="px-4 py-3">
+                    <div className="flex justify-end">
                         <ActionRenderer
                             entity={entity}
                             actions={schema.actions}

@@ -94,19 +94,28 @@ export default function UserMenuDropdown({
                     <DropdownItem
                         icon="user-check"
                         label="Account Profile"
-                        onClick={() => navigate("/account/profile")}
+                        onClick={() => {
+                            setOpen(false);
+                            navigate("/account/profile");
+                        }}
                     />
 
                     <DropdownItem
                         icon="briefcase"
                         label="Business Profile"
-                        onClick={() => navigate("/business/profile")}
+                        onClick={() => {
+                            setOpen(false);
+                            navigate("/business/profile");
+                        }}
                     />
 
                     <DropdownItem
                         icon="cog"
                         label="Settings"
-                        onClick={() => navigate("/account/settings")}
+                        onClick={() => {
+                            setOpen(false);
+                            navigate("/account/settings");
+                        }}
                     />
 
                     <div

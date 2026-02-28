@@ -44,34 +44,32 @@ export default function TableMobile({
     );
 
     if (loading) {
-        return <div className="p-4 text-sm text-gray-500">Loading...</div>;
+        return (
+            <div
+                className="py-6 text-center text-sm"
+                style={{ color: "var(--text-secondary)" }}
+            >
+                Loading data...
+            </div>
+        );
     }
 
     return (
         <div className="space-y-4">
-            {/* Search */}
+            {/* SEARCH */}
             <input
                 placeholder="Search..."
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
                 onChange={(e) => onSearch(e.target.value)}
+                className="w-full rounded-xl px-4 py-2.5 text-sm transition-all"
+                style={{
+                    background: "var(--color-surface-alt)",
+                    border: "1px solid var(--color-border)",
+                    color: "var(--text-primary)",
+                }}
             />
 
-            {/* Cards */}
+            {/* CARDS */}
             {data.map((row, idx) => {
-                /**
-                 * SMART PRIORITY ENGINE
-                 * ----------------------
-                 * If priority:
-                 *  - 1 → Primary
-                 *  - 2 → Important
-                 *  - 3 → Secondary
-                 *
-                 * If null/undefined:
-                 *  - First column → Primary
-                 *  - Second column → Important
-                 *  - Others → Secondary
-                 */
-
                 const columnsWithPriority: (TableColumnSchema & {
                     _priority: 1 | 2 | 3;
                 })[] = schema.columns.map((col, index) => {
@@ -83,14 +81,8 @@ export default function TableMobile({
                         return { ...col, _priority: col.priority };
                     }
 
-                    // Smart fallback
-                    if (index === 0) {
-                        return { ...col, _priority: 1 };
-                    }
-
-                    if (index === 1) {
-                        return { ...col, _priority: 2 };
-                    }
+                    if (index === 0) return { ...col, _priority: 1 };
+                    if (index === 1) return { ...col, _priority: 2 };
 
                     return { ...col, _priority: 3 };
                 });
@@ -98,11 +90,9 @@ export default function TableMobile({
                 const primary = columnsWithPriority.filter(
                     (c) => c._priority === 1,
                 );
-
                 const important = columnsWithPriority.filter(
                     (c) => c._priority === 2,
                 );
-
                 const secondary = columnsWithPriority.filter(
                     (c) => c._priority === 3,
                 );
@@ -112,51 +102,78 @@ export default function TableMobile({
                 return (
                     <div
                         key={idx}
-                        className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+                        className="rounded-2xl p-4 transition-all"
+                        style={{
+                            background: "var(--color-surface)",
+                            border: "1px solid var(--color-border)",
+                        }}
                     >
                         {/* PRIMARY */}
                         {primary.map((col) => (
                             <div
                                 key={col.key}
-                                className="text-base font-semibold text-gray-900"
+                                className="text-base font-semibold"
+                                style={{ color: "var(--text-primary)" }}
                             >
-                                {String(row[col.key] ?? "-")}
+                                {String(row[col.key] ?? "—")}
                             </div>
                         ))}
 
                         {/* IMPORTANT */}
-                        <div className="mt-2 space-y-1">
+                        <div className="mt-3 space-y-1.5">
                             {important.map((col) => (
                                 <div
                                     key={col.key}
                                     className="flex justify-between text-sm"
                                 >
-                                    <span className="text-gray-500">
+                                    <span
+                                        style={{
+                                            color: "var(--text-secondary)",
+                                        }}
+                                    >
                                         {col.label}
                                     </span>
-                                    <span className="font-medium text-gray-800 text-right">
-                                        {String(row[col.key] ?? "-")}
+                                    <span
+                                        className="font-medium text-right"
+                                        style={{ color: "var(--text-primary)" }}
+                                    >
+                                        {String(row[col.key] ?? "—")}
                                     </span>
                                 </div>
                             ))}
                         </div>
 
-                        {/* SECONDARY (Expandable) */}
+                        {/* SECONDARY */}
                         {secondary.length > 0 && (
                             <>
                                 {isExpanded && (
-                                    <div className="mt-2 space-y-1 border-t pt-2">
+                                    <div
+                                        className="mt-3 space-y-1.5 pt-3"
+                                        style={{
+                                            borderTop:
+                                                "1px solid var(--color-border)",
+                                        }}
+                                    >
                                         {secondary.map((col) => (
                                             <div
                                                 key={col.key}
                                                 className="flex justify-between text-sm"
                                             >
-                                                <span className="text-gray-500">
+                                                <span
+                                                    style={{
+                                                        color: "var(--text-secondary)",
+                                                    }}
+                                                >
                                                     {col.label}
                                                 </span>
-                                                <span className="text-gray-700 text-right">
+                                                <span
+                                                    className="text-right"
+                                                    style={{
+                                                        color: "var(--text-primary)",
+                                                    }}
+                                                >
                                                     {String(
-                                                        row[col.key] ?? "-",
+                                                        row[col.key] ?? "—",
                                                     )}
                                                 </span>
                                             </div>
@@ -165,7 +182,10 @@ export default function TableMobile({
                                 )}
 
                                 <button
-                                    className="mt-2 text-xs text-blue-600"
+                                    className="mt-3 text-xs font-medium transition-colors"
+                                    style={{
+                                        color: "var(--text-secondary)",
+                                    }}
                                     onClick={() =>
                                         setExpandedRows((prev) => ({
                                             ...prev,
@@ -180,7 +200,12 @@ export default function TableMobile({
 
                         {/* ACTIONS */}
                         {schema.actions && (
-                            <div className="mt-3 flex justify-end gap-2 border-t pt-3">
+                            <div
+                                className="mt-4 pt-3 flex justify-end"
+                                style={{
+                                    borderTop: "1px solid var(--color-border)",
+                                }}
+                            >
                                 <ActionRenderer
                                     entity={entity}
                                     actions={schema.actions}
@@ -194,18 +219,35 @@ export default function TableMobile({
                 );
             })}
 
-            {/* Simple Pagination */}
-            <div className="flex justify-between text-sm text-gray-600">
+            {/* PAGINATION */}
+            <div
+                className="flex items-center justify-between text-sm pt-2"
+                style={{ color: "var(--text-secondary)" }}
+            >
                 <button
                     disabled={page <= 1}
                     onClick={() => onPageChange(page - 1)}
+                    className="transition-opacity disabled:opacity-40"
                 >
                     Prev
                 </button>
-                <span>Page {page}</span>
+
+                <span>
+                    Page{" "}
+                    <span
+                        style={{
+                            color: "var(--text-primary)",
+                            fontWeight: 500,
+                        }}
+                    >
+                        {page}
+                    </span>
+                </span>
+
                 <button
                     disabled={page * pageSize >= total}
                     onClick={() => onPageChange(page + 1)}
+                    className="transition-opacity disabled:opacity-40"
                 >
                     Next
                 </button>

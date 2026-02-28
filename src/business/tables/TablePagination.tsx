@@ -18,21 +18,45 @@ export default function TablePagination({
 }: Props) {
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
+    const isPrevDisabled = page <= 1;
+    const isNextDisabled = page >= totalPages;
+
     return (
-        <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 text-sm text-gray-600">
-            {/* Info */}
-            <div>
-                Page <strong>{page}</strong> of <strong>{totalPages}</strong> ·{" "}
-                <strong>{total}</strong> items
+        <div
+            className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between py-4"
+            style={{
+                color: "var(--text-secondary)",
+            }}
+        >
+            {/* INFO */}
+            <div className="text-sm">
+                Page{" "}
+                <span style={{ color: "var(--text-primary)", fontWeight: 500 }}>
+                    {page}
+                </span>{" "}
+                of{" "}
+                <span style={{ color: "var(--text-primary)", fontWeight: 500 }}>
+                    {totalPages}
+                </span>{" "}
+                ·{" "}
+                <span style={{ color: "var(--text-primary)", fontWeight: 500 }}>
+                    {total}
+                </span>{" "}
+                items
             </div>
 
             {/* CONTROLS */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
                 {/* PAGE SIZE */}
                 <select
                     value={pageSize}
                     onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                    className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+                    className="px-3 py-2 text-sm rounded-xl transition-all duration-150"
+                    style={{
+                        background: "var(--color-surface-alt)",
+                        border: "1px solid var(--color-border)",
+                        color: "var(--text-primary)",
+                    }}
                 >
                     {[10, 20, 50, 100].map((size) => (
                         <option key={size} value={size}>
@@ -41,31 +65,60 @@ export default function TablePagination({
                     ))}
                 </select>
 
-                {/* PREV */}
-                <button
-                    disabled={page <= 1}
-                    onClick={() => onPageChange(page - 1)}
-                    className="
-                        rounded-md border border-gray-300 px-3 py-1
-                        hover:bg-gray-100
-                        disabled:opacity-50
-                    "
+                {/* SEGMENTED NAV */}
+                <div
+                    className="flex items-center rounded-xl overflow-hidden"
+                    style={{
+                        border: "1px solid var(--color-border)",
+                        background: "var(--color-surface-alt)",
+                    }}
                 >
-                    Prev
-                </button>
+                    <button
+                        disabled={isPrevDisabled}
+                        onClick={() => onPageChange(page - 1)}
+                        className="px-4 py-2 text-sm transition-all duration-150 disabled:opacity-40"
+                        style={{
+                            color: "var(--text-primary)",
+                        }}
+                        onMouseEnter={(e) =>
+                            !isPrevDisabled &&
+                            (e.currentTarget.style.background =
+                                "var(--color-surface)")
+                        }
+                        onMouseLeave={(e) =>
+                            (e.currentTarget.style.background = "transparent")
+                        }
+                    >
+                        Prev
+                    </button>
 
-                {/* NEXT */}
-                <button
-                    disabled={page >= totalPages}
-                    onClick={() => onPageChange(page + 1)}
-                    className="
-                        rounded-md border border-gray-300 px-3 py-1
-                        hover:bg-gray-100
-                        disabled:opacity-50
-                    "
-                >
-                    Next
-                </button>
+                    <div
+                        style={{
+                            width: "1px",
+                            background: "var(--color-border)",
+                            height: "24px",
+                        }}
+                    />
+
+                    <button
+                        disabled={isNextDisabled}
+                        onClick={() => onPageChange(page + 1)}
+                        className="px-4 py-2 text-sm transition-all duration-150 disabled:opacity-40"
+                        style={{
+                            color: "var(--text-primary)",
+                        }}
+                        onMouseEnter={(e) =>
+                            !isNextDisabled &&
+                            (e.currentTarget.style.background =
+                                "var(--color-surface)")
+                        }
+                        onMouseLeave={(e) =>
+                            (e.currentTarget.style.background = "transparent")
+                        }
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
         </div>
     );

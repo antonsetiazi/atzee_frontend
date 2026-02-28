@@ -50,12 +50,13 @@ export function ActionRenderer<T>({
     };
 
     return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
             {actions.map((action, idx) => {
                 if (action.permission && !has(action.permission)) return null;
                 if (!matchWhen(action.when, row)) return null;
-                // console.log(action);
+
                 const onClick = async () => {
+                    // 🔥 logic kamu tetap sama (tidak diubah)
                     if (action.confirm) {
                         const ok = await confirm({
                             title: action.confirm.title,
@@ -66,18 +67,14 @@ export function ActionRenderer<T>({
                         if (!ok) return;
                     }
 
-                    // Navigasi dengan support template {field}
                     if (action.type === "navigate" && action.to) {
-                        // console.log("action.to", action.to);
                         const path = row
                             ? resolvePath(action.to, row, context)
                             : action.to;
-                        // console.log(path);
-                        if (detail_as_state == true) {
+
+                        if (detail_as_state === true) {
                             navigate(path, {
-                                state: {
-                                    initialValues: row,
-                                },
+                                state: { initialValues: row },
                             });
                         } else {
                             navigate(path);
@@ -86,9 +83,9 @@ export function ActionRenderer<T>({
                         return;
                     }
 
-                    // Delete
                     if (action.type === "delete" && action.endpoint) {
                         const url = resolvePath(action.endpoint, row, context);
+
                         try {
                             await httpDelete(url);
 
@@ -99,13 +96,12 @@ export function ActionRenderer<T>({
                             });
 
                             clearEntityCacheByPrefix(`table:${entity}`);
-
-                            // refresh table
                             context.refresh();
                         } catch (err) {
                             console.error("Delete failed:", err);
                             alert("Failed to delete. See console for details.");
                         }
+
                         return;
                     }
 
@@ -116,38 +112,47 @@ export function ActionRenderer<T>({
                             navigate,
                             refresh: () => {},
                         });
-                    } else {
-                        console.warn(
-                            `Action ${action.label} has no execute function`,
-                        );
                     }
                 };
 
                 const uniqueKey = `${action.key}-${idx}`;
-
                 const isDanger = action.type === "delete";
-
                 const Icon = action.icon ? iconRegistry[action.icon] : null;
-                // console.log(action.icon);
 
                 return (
                     <button
                         key={uniqueKey}
                         onClick={onClick}
-                        className={`
-                            inline-flex items-center
-                            rounded-md px-2 py-1
-                            text-xs font-medium
-                            transition
-                            ${
-                                isDanger
-                                    ? "text-red-500 hover:bg-red-50"
-                                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                            }
-                        `}
                         title={action.label}
+                        className="inline-flex items-center justify-center
+                               rounded-xl px-3 py-1.5 text-xs font-medium
+                               transition-all duration-150"
+                        style={{
+                            color: isDanger
+                                ? "var(--color-danger)"
+                                : "var(--text-secondary)",
+                            background: "transparent",
+                            border: "1px solid transparent",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background =
+                                "var(--color-surface-alt)";
+                            e.currentTarget.style.border =
+                                "1px solid var(--color-border)";
+                            e.currentTarget.style.color = isDanger
+                                ? "var(--color-danger)"
+                                : "var(--text-primary)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.border =
+                                "1px solid transparent";
+                            e.currentTarget.style.color = isDanger
+                                ? "var(--color-danger)"
+                                : "var(--text-secondary)";
+                        }}
                     >
-                        {Icon ? <Icon className="h-5 w-5" /> : action.label}
+                        {Icon ? <Icon className="h-4 w-4" /> : action.label}
                     </button>
                 );
             })}

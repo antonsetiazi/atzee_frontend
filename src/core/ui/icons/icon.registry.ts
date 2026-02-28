@@ -4,9 +4,13 @@
 import {
     BellAlertIcon,
     BookOpenIcon,
+    ChartBarSquareIcon,
+    CurrencyDollarIcon,
+    InboxArrowDownIcon,
+    MapPinIcon,
     QuestionMarkCircleIcon,
-} from "@heroicons/react/20/solid";
-import {
+    ShieldCheckIcon,
+    UserGroupIcon,
     PencilSquareIcon,
     XCircleIcon,
     EyeIcon,
@@ -56,4 +60,10 @@ export const iconRegistry: Record<string, any> = {
     booking: BookOpenIcon,
     help: QuestionMarkCircleIcon,
     notification: BellAlertIcon,
+    inbox: InboxArrowDownIcon,
+    "map-pin": MapPinIcon,
+    "dollar-sign": CurrencyDollarIcon,
+    users: UserGroupIcon,
+    shield: ShieldCheckIcon,
+    "bar-chart": ChartBarSquareIcon,
 };

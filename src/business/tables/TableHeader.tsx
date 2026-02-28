@@ -14,37 +14,81 @@ interface Props {
 }
 
 export default function TableHeader({ columns, sortState, onSort }: Props) {
-    function getSortIndicator(field: string) {
-        const current = sortState.find((s) => s.field === field);
-        if (!current) return "⇅";
-        return current.direction === "asc" ? "↑" : "↓";
+    function getSortState(field: string) {
+        return sortState.find((s) => s.field === field);
     }
 
     return (
-        <thead className="bg-gray-50">
-            <tr className="border-b border-gray-200">
-                {columns.map((col) => (
-                    <th
-                        key={col.key}
-                        style={{ width: col.width }}
-                        onClick={() => col.sortable && onSort(col.key)}
-                        className={`
-                            px-4 py-3 text-left text-xs font-semibold
-                            uppercase tracking-wide text-gray-600
-                            ${col.sortable ? "cursor-pointer hover:text-gray-900" : ""}
-                        `}
-                    >
-                        <span className="inline-flex items-center gap-1">
-                            {col.label}
-                            {col.sortable && (
-                                <span className="text-[10px] opacity-70">
-                                    {getSortIndicator(col.key)}
+        <thead
+            style={{
+                background: "var(--color-surface-alt)",
+                borderBottom: "1px solid var(--color-border)",
+            }}
+            className="sticky top-0 z-10"
+        >
+            <tr>
+                {columns.map((col) => {
+                    const currentSort = getSortState(col.key);
+
+                    return (
+                        <th
+                            key={col.key}
+                            style={{ width: col.width }}
+                            onClick={() => col.sortable && onSort(col.key)}
+                            className={`
+                                px-4 py-3 text-left text-xs font-medium
+                                transition-all duration-150
+                                ${col.sortable ? "cursor-pointer" : ""}
+                            `}
+                        >
+                            <div
+                                className="inline-flex items-center gap-2"
+                                style={{
+                                    color: "var(--text-secondary)",
+                                }}
+                            >
+                                <span
+                                    className={`
+                                        transition-colors duration-150
+                                        ${
+                                            col.sortable
+                                                ? "group-hover:text-[var(--text-primary)]"
+                                                : ""
+                                        }
+                                    `}
+                                >
+                                    {col.label}
                                 </span>
-                            )}
-                        </span>
-                    </th>
-                ))}
-                <th className="px-4 py-3 text-xs font-semibold text-gray-600"></th>
+
+                                {col.sortable && (
+                                    <span
+                                        className="text-[10px] transition-all duration-200"
+                                        style={{
+                                            color: currentSort
+                                                ? "var(--text-primary)"
+                                                : "var(--text-secondary)",
+                                            opacity: currentSort ? 1 : 0.4,
+                                        }}
+                                    >
+                                        {currentSort
+                                            ? currentSort.direction === "asc"
+                                                ? "▲"
+                                                : "▼"
+                                            : "▲"}
+                                    </span>
+                                )}
+                            </div>
+                        </th>
+                    );
+                })}
+
+                {/* Action column spacer */}
+                <th
+                    className="px-4 py-3 text-xs"
+                    style={{
+                        color: "var(--text-secondary)",
+                    }}
+                />
             </tr>
         </thead>
     );

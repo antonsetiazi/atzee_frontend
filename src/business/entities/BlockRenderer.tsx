@@ -194,18 +194,20 @@ export default function BlockRenderer({
     }
 
     if (block.type === "table") {
+        const blockData =
+            block.data_key && pageData ? pageData[block.data_key] : pageData;
+
         return (
             <BlockTable
                 key={idx}
-                entityKey={entityKey}
-                schema={schema}
                 block={block}
+                data={blockData?.items || blockData || []}
+                total={blockData?.total}
+                entityKey={entityKey}
                 id={id}
-                searchMode={block.search_mode ?? "client"}
             />
         );
     }
-
     if (block.type === "availability") {
         return (
             <Surface key={idx}>
