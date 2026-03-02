@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/ui/icons/icon.registry.ts
 
+import { ClockIcon, ReceiptRefundIcon } from "@heroicons/react/20/solid";
 import {
     BellAlertIcon,
     BookOpenIcon,
@@ -29,6 +30,7 @@ import {
     CalendarDateRangeIcon,
     CreditCardIcon,
     WalletIcon,
+    PauseCircleIcon,
 } from "@heroicons/react/20/solid";
 
 export const iconRegistry: Record<string, any> = {
@@ -66,4 +68,7 @@ export const iconRegistry: Record<string, any> = {
     users: UserGroupIcon,
     shield: ShieldCheckIcon,
     "bar-chart": ChartBarSquareIcon,
+    "pause-circle": PauseCircleIcon,
+    "rotate-ccw": ReceiptRefundIcon,
+    clock: ClockIcon,
 };

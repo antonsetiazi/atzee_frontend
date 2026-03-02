@@ -6,7 +6,6 @@ import { applyBranding } from "./applyBranding";
 
 export function BrandingProvider({ children }: { children: React.ReactNode }) {
     const branding = useBrandingStore((s) => s.branding);
-    // console.log(branding);
     useEffect(() => {
         if (branding) {
             applyBranding(branding);

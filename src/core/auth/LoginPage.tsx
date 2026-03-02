@@ -49,7 +49,7 @@ export default function LoginPage() {
                             ${isMobile ? "h-14 w-14" : "h-12 w-12"}
                         `}
                     >
-                        <span className="text-lg font-bold">ERP</span>
+                        <span className="text-sm font-bold">ATZEE</span>
                     </div>
 
                     <h1
@@ -57,7 +57,7 @@ export default function LoginPage() {
                             isMobile ? "text-xl" : "text-2xl"
                         } font-semibold text-gray-800`}
                     >
-                        {import.meta.env.VITE_TENANT_LABEL}
+                        {import.meta.env.VITE_APP_TITLE}
                     </h1>
 
                     <p className="mt-1 text-sm text-gray-500">

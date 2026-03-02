@@ -6,7 +6,7 @@ import { useTenantStore } from "@/core/tenant/tenant.store";
 import { usePermissionStore } from "@/core/permissions/permission.store";
 import { usePageStore } from "@/core/ui/page/page.store";
 
-import { resolveBranding } from "@/core/ui/branding/branding.resolver";
+// import { resolveBranding } from "@/core/ui/branding/branding.resolver";
 import { useBrandingStore } from "@/core/ui/branding/branding.store";
 
 let bootstrapping: Promise<void> | null = null;
@@ -30,7 +30,8 @@ export function ensurePlatformReady(): Promise<void> {
         // 2️⃣ backend context
         await switchTenant(activeTenant.id);
 
-        const branding = resolveBranding(activeTenant);
+        // const branding = resolveBranding(activeTenant);
+        const branding = activeTenant.branding;
         useBrandingStore.getState().setBranding(branding);
 
         // 3️⃣ permissions

@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useAuthService } from "@/core/auth/auth.service";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT;
+const EMAIL = import.meta.env.VITE_DEFAULT_LOGIN_EMAIL;
+const PASSWORD = import.meta.env.VITE_DEFAULT_LOGIN_PASSWORD;
 
 export function LoginForm() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("admin@ustadzku.com"); // default untuk dev
-    const [password, setPassword] = useState("Admin123!");
+    const [email, setEmail] = useState(EMAIL); // default untuk dev
+    const [password, setPassword] = useState(PASSWORD);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

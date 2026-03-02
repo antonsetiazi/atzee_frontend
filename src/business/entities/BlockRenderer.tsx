@@ -23,6 +23,7 @@ import BlockInfo from "./blocks/BlockInfo";
 import BlockListView from "./blocks/BlockListView";
 import { executeWorkflowAction } from "@/business/workflows/workflow.executor";
 import BlockImageGallery from "./blocks/BlockImageGallery";
+import { TransactionWorkspace } from "../transaction_workspace/TransactionWorkspace";
 
 interface Props {
     block: any;
@@ -252,93 +253,68 @@ export default function BlockRenderer({
     }
 
     if (block.type === "info") {
-        return (
-            <div key={idx}>
-                <BlockInfo block={block} data={pageData} />
-            </div>
-        );
+        return <BlockInfo key={idx} block={block} data={pageData} />;
     }
 
     if (block.type === "chart") {
-        return (
-            <div key={idx}>
-                <BlockChart block={block} />
-            </div>
-        );
+        return <BlockChart key={idx} block={block} />;
     }
 
     if (block.type === "text") {
-        return (
-            <div key={idx}>
-                <BlockText block={block} />
-            </div>
-        );
+        return <BlockText key={idx} block={block} />;
     }
 
     if (block.type === "banner") {
         const blockData =
             block.data_key && pageData ? pageData[block.data_key] : pageData;
-        return (
-            <div key={idx}>
-                <BlockBanner data={blockData} />
-            </div>
-        );
+
+        return <BlockBanner key={idx} data={blockData} />;
     }
 
     if (block.type === "image_gallery") {
         const blockData =
             block.data_key && pageData ? pageData[block.data_key] : pageData;
-        return (
-            <div key={idx}>
-                <BlockImageGallery pageData={blockData} />
-            </div>
-        );
+        return <BlockImageGallery key={idx} pageData={blockData} />;
     }
 
     if (block.type === "map") {
         return (
-            <div key={idx}>
-                <BlockMap block={block} entityKey={entityKey} id={id} />
-            </div>
+            <BlockMap key={idx} block={block} entityKey={entityKey} id={id} />
         );
     }
 
     if (block.type === "action") {
         return (
-            <div key={idx}>
-                <BlockActionGroup
-                    block={block}
-                    entityId={id}
-                    entityData={pageData}
-                />
-            </div>
+            <BlockActionGroup
+                key={idx}
+                block={block}
+                entityId={id}
+                entityData={pageData}
+            />
         );
     }
 
     if (block.type === "shortcut") {
-        return (
-            <div key={idx}>
-                <BlockShortcut block={block} />
-            </div>
-        );
+        return <BlockShortcut key={idx} block={block} />;
     }
 
     if (block.type === "transaction_summary") {
         return (
-            <div key={idx}>
-                <BlockTransactionSummary
-                    block={block}
-                    formValues={schema?.formValues} // nanti kita rapikan
-                />
-            </div>
+            <BlockTransactionSummary
+                key={idx}
+                block={block}
+                formValues={schema?.formValues} // nanti kita rapikan
+            />
         );
     }
 
     if (block.type === "booking") {
+        return <BlockBooking key={idx} block={block} />;
+    }
+
+    if (block.type === "transaction") {
         return (
-            <div key={idx}>
-                <BlockBooking block={block} />
-            </div>
+            <TransactionWorkspace key={idx} block={block} pageData={pageData} />
         );
     }
 
