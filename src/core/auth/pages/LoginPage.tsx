@@ -72,6 +72,7 @@ export default function LoginPage() {
             >
                 <div className={isMobile ? "p-6" : "p-8"}>
                     {/* Header */}
+
                     <div className="mb-8 text-center">
                         {/* Logo */}
                         <div
