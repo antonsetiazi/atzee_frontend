@@ -13,10 +13,11 @@ export default function BottomNavigation() {
 
     return (
         <div
-            className="flex justify-around items-center h-full px-2"
+            className="flex justify-around items-center h-16 px-2 rounded-t-3xl"
             style={{
                 background: "var(--color-surface)",
                 borderTop: "1px solid var(--color-border)",
+                boxShadow: "0 -2px 8px rgba(0,0,0,0.04)",
             }}
         >
             {items.map((item) => {

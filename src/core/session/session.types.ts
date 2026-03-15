@@ -6,6 +6,8 @@ export interface SessionUser {
     full_name?: string;
     tenant_id: string;
     avatar_url?: string;
+
+    role_id?: string;
 }
 
 export interface SessionState {

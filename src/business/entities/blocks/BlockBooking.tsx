@@ -7,6 +7,7 @@ import type { BookingBlockSchema } from "./types";
 import { httpGet, httpPost } from "@/core/http/http.client";
 import { inputBase } from "@/business/forms/fields/field.ui";
 import { useSessionStore } from "@/core/session/session.store";
+import { Button } from "@/core/ui/components";
 
 interface Props {
     block: BookingBlockSchema;
@@ -361,17 +362,16 @@ export default function BlockBooking({ block }: Props) {
             </div>
 
             {/* Submit */}
-            <button
+            <Button
+                type="button"
+                loading={loading}
+                fullWidth
                 onClick={handleSubmit}
                 disabled={!selectedSlot}
-                className="w-full py-3 rounded-xl font-semibold transition disabled:opacity-50"
-                style={{
-                    background: "var(--color-primary)",
-                    color: "white",
-                }}
+                size="lg"
             >
-                Buat Booking
-            </button>
+                {loading ? "Submit..." : "Buat Booking"}
+            </Button>
         </div>
     );
 }

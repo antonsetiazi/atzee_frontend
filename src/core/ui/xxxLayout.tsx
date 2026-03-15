@@ -1,15 +1,15 @@
-// src/core/ui/Layout.tsx
+// // src/core/ui/Layout.tsx
 
-import Sidebar from "./xxxSidebar";
-import { Outlet } from "react-router-dom";
+// import Sidebar from "./xxxSidebar";
+// import { Outlet } from "react-router-dom";
 
-export default function Layout() {
-    return (
-        <div className="flex">
-            <Sidebar />
-            <main className="flex-1 p-4">
-                <Outlet />
-            </main>
-        </div>
-    );
-}
+// export default function Layout() {
+//     return (
+//         <div className="flex">
+//             <Sidebar />
+//             <main className="flex-1 p-4">
+//                 <Outlet />
+//             </main>
+//         </div>
+//     );
+// }

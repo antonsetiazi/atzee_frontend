@@ -1,0 +1,206 @@
+Dan ini progress yang sudah kita lewati :
+
+OUTPUT
+======================================
+SESSION 1 :
+src/core/auth/auth.types.ts
+src/core/auth/auth.service.ts
+src/core/auth/auth.api.ts
+src/core/session/session.types.ts
+src/core/session/session.store.ts
+src/core/permissions/permission.store.ts
+src/core/routing/redirect.ts
+src/core/routing/EntryRedirect.tsx
+
+SESSION 1A — LOGIN UI (MINIMAL & PLATFORM-SAFE)
+src/core/auth/LoginForm.tsx
+src/core/auth/LoginPage.tsx
+
+SESSION 2:
+src/core/routing/route.types.ts
+src/core/routing/PrivateRoute.tsx
+src/core/routing/PermissionGuard.tsx
+src/core/routing/RouteRenderer.tsx
+
+SESSION 3:
+src/core/ui/menu/menu.types.ts
+src/core/ui/menu/menu.store.ts
+src/core/ui/menu/MenuRenderer.tsx
+src/core/ui/layout/Sidebar.tsx
+src/core/ui/layout/Topbar.tsx
+src/core/ui/layout/AppLayout.tsx
+src/core/auth/auth.service.ts (UPDATE)
+src/core/session/session.store.ts (UPDATE)
+src/core/permissions/permission.store.ts (UPDATE)
+
+SESSION 4:
+src/business/tables/table.types.ts
+src/business/tables/TableRenderer.tsx
+src/business/tables/TableHeader.tsx
+src/business/tables/TableRow.tsx
+src/business/tables/TablePagination.tsx
+src/core/permissions/usePermission.ts
+
+SESSION 5:
+src/business/actions/action.types.ts
+src/business/actions/ActionRenderer.tsx
+src/business/tables/table.types.ts (UPDATE)
+src/business/tables/TableRow.tsx (UPDATE)
+src/business/tables/TableRenderer.tsx (UPDATE)
+src/business/products/product.actions.ts
+src/business/products/product.table.ts
+src/business/products/ProductPage.tsx (UPDATE)
+
+SESSION 6:
+src/business/forms/form.types.ts
+src/business/forms/fields/field.types.ts
+src/business/forms/fields/FieldRenderer.tsx
+src/business/forms/fields/TextField.tsx
+src/business/forms/fields/NumberField.tsx
+src/business/forms/fields/SelectField.tsx
+
+SESSION 7:
+src/business/workflows/workflow.types.ts
+src/business/workflows/WorkflowBadge.tsx
+src/business/workflows/WorkflowActionRenderer.tsx
+src/business/workflows/WorkflowContainer.tsx
+src/business/products/ProductPage.tsx (UPDATE)
+
+SESSION 8:
+src/business/schema/ui-schema.types.ts
+src/business/schema/ui-schema.api.ts
+src/business/schema/ui-schema.store.ts
+src/business/entities/EntityPage.tsx (Generic Entity Page (REVOLUSI))
+src/core/http/http.client.ts
+src/business/forms/FormRenderer.tsx
+src/business/entities/entity.api.ts
+src/business/entities/entity.routes.ts
+
+SESSION 9:
+src/business/entities/entity.query.types.ts
+src/business/entities/entity.api.ts (UPDATE)
+src/core/http/http.client.ts (UPDATE)
+src/business/entities/EntityPage.tsx (UPDATE)
+src/business/tables/TableRenderer.tsx (UPDATE)
+src/business/tables/TableHeader.tsx (UPDATE)
+src/business/tables/TablePagination.tsx (UPDATE)
+src/business/schema/filter-schema.types.ts
+src/business/filters/FilterRenderer.tsx
+src/business/filters/FilterField.tsx
+
+SESSION 10:
+src/core/vertical/vertical.types.ts
+src/core/vertical/vertical.registry.ts
+src/core/vertical/loadVerticals.ts
+src/core/ui/layout/AppLayout.tsx (UPDATE)
+src/verticals/apotek/module.ts
+src/verticals/apotek/products/ApotekProductPage.tsx
+src/verticals/apotek/products/routes.ts
+
+SESSION 11:
+src/core/vertical/uiOverride.types.ts
+src/core/vertical/uiOverride.registry.ts
+src/core/session/session.types.ts (UPDATE)
+src/core/session/session.store.ts (UPDATE)
+src/verticals/apotek/module.ts (UPDATE)
+src/business/entities/EntityPage.tsx (UPDATE)
+src/business/entities/CoreEntityPage.tsx
+src/verticals/apotek/products/ApotekProductPage.tsx (UPDATE)
+
+SESSION 12:
+src/core/feedback/feedback.types.ts
+src/core/feedback/feedback.store.ts
+src/core/feedback/useFeedback.ts
+src/core/feedback/ToastRenderer.tsx
+src/core/feedback/ErrorBoundary.tsx
+src/core/http/http.client.ts (UPDATE)
+src/shared/ui/LoadingState.tsx
+src/shared/ui/EmptyState.tsx
+src/App.tsx (UPDATE)
+
+SESSION 13:
+src/business/schema/ui-schema.store.ts (UPDATE)
+src/business/entities/entity.cache.ts
+src/business/entities/entity.api.ts (UPDATE)
+src/business/actions/action.executor.ts
+src/business/entities/EntityPage.tsx (UPDATE)
+src/business/entities/CoreEntityPage.tsx (UPDATE)
+
+SESSION 14:
+src/core/audit/audit.types.ts
+src/core/audit/audit.store.ts
+src/core/audit/useAudit.ts
+src/core/audit/AuditBadge.tsx
+src/core/audit/AuditLogDrawer.tsx
+
+SESSION 15:
+src/core/tenant/tenant.types.ts
+src/core/tenant/tenant.api.ts
+src/core/tenant/tenant.store.ts
+src/core/tenant/TenantSwitcher.tsx
+src/core/ui/layout/Topbar.tsx (UPDATE)
+src/core/permissions/permission.store.ts (UPDATE)
+src/core/ui/menu/menu.store.ts (UPDATE)
+
+SESSION 16:
+.env
+src/shared/types/env.d.ts
+public/config/app.config.json
+src/core/config/appConfig.types.ts
+src/core/config/appConfig.store.ts
+src/main.tsx (UPDATE)
+vite.config.ts (UPDATE)
+src/core/http/http.client.ts (UPDATE)
+
+SESSION 17:
+src/core/ui/branding/branding.types.ts
+src/core/ui/branding/branding.store.ts
+src/core/ui/branding/applyBranding.ts
+src/core/ui/branding/BrandingProvider.tsx
+src/core/tenant/tenant.store.ts (UPDATE)
+src/core/tenant/tenant.api.ts (UPDATE)
+
+
+ROUTING SEMENTARA:
+======================================
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import LoginPage from "@/core/auth/LoginPage";
+import EntryRedirect from "@/core/routing/EntryRedirect";
+import AppLayout from "@/core/ui/layout/AppLayout";
+import { renderRoute } from "@/core/routing/RouteRenderer";
+
+import { ErrorBoundary } from "@/core/feedback/ErrorBoundary";
+import ToastRenderer from "@/core/feedback/ToastRenderer";
+
+// sementara
+import { productRoutes } from "./business/products/product.routes";
+
+function App() {
+    return (
+        <ErrorBoundary>
+            <BrowserRouter>
+                {/* GLOBAL FEEDBACK UI */}
+                <ToastRenderer />
+
+                <Routes>
+                    <Route path="/" element={<EntryRedirect />} />
+                    <Route path="/login" element={<LoginPage />} />
+
+                    <Route element={<AppLayout />}>
+                        {productRoutes.map(renderRoute)}
+
+                        <Route
+                            path="/dashboard"
+                            element={<div>Dashboard</div>}
+                        />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </ErrorBoundary>
+    );
+}
+
+export default App;
+
+

@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/dashboard/dashboard.types.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type WidgetType = "stat" | "table" | "chart" | "text";
 export type WidgetSize = "sm" | "md" | "lg";

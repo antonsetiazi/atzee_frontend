@@ -1,19 +1,13 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/forms/fields/field.api.ts
+// /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { httpPost } from "@/core/http/http.client";
-// import { fetchEntityList } from "@/business/entities/entity.api";
-// import type { FieldDataSource } from "./field.types";
 import { getFieldCache, setFieldCache } from "./field.cache";
 
 export interface SelectOption {
     label: string;
     value: string | number;
 }
-
-// function compileLabel(template: string, data: any) {
-//     return template.replace(/\{(\w+)\}/g, (_, key) => data[key] ?? "");
-// }
 
 function buildCacheKey(url: string) {
     return `field:${url}`;

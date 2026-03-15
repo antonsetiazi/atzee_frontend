@@ -8,7 +8,6 @@ import { submitForm } from "./form.submit";
 import { useNavigate } from "react-router-dom";
 import type { TableContext } from "../tables/table.context";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
-import { button } from "@/core/ui/ui.class";
 import { clearEntityCacheByPrefix } from "../entities/entity.cache";
 // import { usePageStore } from "@/core/ui/page/page.store";
 // import { pageKeyToPath } from "@/core/routing/page.utils";
@@ -16,6 +15,7 @@ import type { FormContext } from "./form.context";
 import { expandDotNotation, flattenObject } from "./form.utils";
 import { buildDefaultValues } from "./form.defaults";
 import { handleCoreAffects } from "@/core/utils/coreAffects";
+import { Button } from "@/core/ui/components";
 
 interface Props {
     entity: string;
@@ -188,13 +188,9 @@ export default function FormRenderer({
                         background: "var(--color-surface-alt)",
                     }}
                 >
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`${button.base} ${button.primary}`}
-                    >
+                    <Button type="submit" loading={loading} variant="success">
                         {loading ? "Saving..." : "Submit"}
-                    </button>
+                    </Button>
                 </div>
             )}
         </form>

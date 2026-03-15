@@ -1,6 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/ui/icons/icon.registry.ts
 
+import {
+    ArchiveBoxIcon,
+    BookmarkIcon,
+    CalendarIcon,
+    CheckCircleIcon,
+    CheckIcon,
+    DocumentCurrencyDollarIcon,
+    DocumentIcon,
+    EyeSlashIcon,
+    KeyIcon,
+    LifebuoyIcon,
+    PercentBadgeIcon,
+    PlayCircleIcon,
+    PlusCircleIcon,
+    ReceiptPercentIcon,
+    TagIcon,
+    UserIcon,
+    WifiIcon,
+} from "@heroicons/react/20/solid";
+import { TvIcon } from "@heroicons/react/20/solid";
+import { UsersIcon } from "@heroicons/react/20/solid";
+import { FireIcon } from "@heroicons/react/20/solid";
+import { CheckBadgeIcon } from "@heroicons/react/20/solid";
 import { ClockIcon, ReceiptRefundIcon } from "@heroicons/react/20/solid";
 import {
     BellAlertIcon,
@@ -58,6 +81,7 @@ export const iconRegistry: Record<string, any> = {
     calendar: CalendarDateRangeIcon,
     "credit-card": CreditCardIcon,
     eye: EyeIcon,
+    "eye-off": EyeSlashIcon,
     wallet: WalletIcon,
     booking: BookOpenIcon,
     help: QuestionMarkCircleIcon,
@@ -71,4 +95,24 @@ export const iconRegistry: Record<string, any> = {
     "pause-circle": PauseCircleIcon,
     "rotate-ccw": ReceiptRefundIcon,
     clock: ClockIcon,
+    "file-plus": PlusCircleIcon,
+    "check-circle": CheckCircleIcon,
+    receipt: ReceiptPercentIcon,
+    check: CheckIcon,
+    "calendar-plus": CalendarIcon,
+    tool: TvIcon,
+    "check-square": CheckBadgeIcon,
+    package: FireIcon,
+    "file-text": DocumentIcon,
+    lock: KeyIcon,
+    percent: PercentBadgeIcon,
+    archive: ArchiveBoxIcon,
+    target: TagIcon,
+    user: UserIcon,
+    "play-circle": PlayCircleIcon,
+    book: BookmarkIcon,
+    wifi: WifiIcon,
+    "life-buoy": LifebuoyIcon,
+    profile: UsersIcon,
+    transaction: DocumentCurrencyDollarIcon,
 };

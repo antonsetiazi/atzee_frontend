@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/ui/page/page.store.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { create } from "zustand";
 import type { UIPage } from "./page.types";

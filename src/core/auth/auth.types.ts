@@ -18,3 +18,20 @@ export interface LoginResponse {
         tenant_id: string;
     };
 }
+
+export type AuthMethod = "otp" | "password";
+
+export interface AuthConfig {
+    methods: AuthMethod[];
+    default_method: AuthMethod;
+}
+
+export interface RequestOtpPayload {
+    phone: string;
+}
+
+export interface VerifyOtpPayload {
+    phone: string;
+    otp: string;
+    tenant_code: string;
+}

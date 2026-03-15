@@ -15,6 +15,7 @@ import { useSessionStore } from "@/core/session/session.store";
 import { usePermissionStore } from "@/core/permissions/permission.store";
 import Icon from "@/core/ui/icons/Icon";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
+import { Button } from "@/core/ui/components";
 
 type Props = {
     block: any;
@@ -198,34 +199,14 @@ export default function BlockActionGroup({
                     const isLoading = loadingIndex === idx;
 
                     return (
-                        <button
+                        <Button
                             key={idx}
-                            disabled={isLoading}
+                            loading={isLoading}
                             onClick={() => handleAction(action, idx)}
-                            className={`
-                                inline-flex
-                                items-center
-                                gap-2
-                                px-4
-                                py-2
-                                rounded-xl
-                                text-sm
-                                font-medium
-                                transition
-                                ${
-                                    isLoading
-                                        ? "bg-gray-400 cursor-not-allowed"
-                                        : "bg-blue-600 hover:bg-blue-700"
-                                }
-                                text-white
-                            `}
+                            icon={<Icon name={action.icon} />}
                         >
-                            {action.icon && (
-                                <Icon name={action.icon} />
-                                // <span className="text-base">{action.icon}</span>
-                            )}
                             {isLoading ? "Processing..." : action.label}
-                        </button>
+                        </Button>
                     );
                 })}
             </div>

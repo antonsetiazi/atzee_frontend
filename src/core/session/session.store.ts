@@ -1,4 +1,5 @@
 // src/core/session/session.store.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { create } from "zustand";
 import type { SessionState, SessionUser } from "./session.types";
@@ -68,8 +69,18 @@ export const useSessionStore = create<SessionState & SessionActions>((set) => ({
                 user,
                 isAuthenticated: true,
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error("Failed to reload session", error);
+
+            // Jika token invalid → hapus token & reset session
+            if (error.status === 401) {
+                localStorage.removeItem("token");
+                set({
+                    token: null,
+                    user: null,
+                    isAuthenticated: false,
+                });
+            }
         }
     },
 }));

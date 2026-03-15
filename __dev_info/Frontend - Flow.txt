@@ -1,0 +1,20 @@
+App start
+   ↓
+TenantBootstrap
+   ↓
+AuthBootstrap
+   ↓
+load permissions
+   ↓
+load pages
+   ↓
+load navigations
+   ↓
+render
+
+TenantBootstrap:
+    - GET /tenants/current/
+    - Apply branding
+
+AuthBootstrap:
+    - Jika tidak ada token, maka user dianggap "GUEST"

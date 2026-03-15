@@ -1,37 +1,26 @@
 // src/core/routing/PageRoutes.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Route, Navigate } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { lazy } from "react";
 import PermissionGuard from "@/core/permissions/PermissionGuard";
-import { usePageStore } from "@/core/ui/page/page.store";
-// import { pageKeyToPath } from "./page.utils";
 
 const EntityPage = lazy(() => import("@/business/entities/EntityPage"));
 
-export default function PageRoutes() {
-    const pages = usePageStore((s) => s.pages);
-    // console.log("pages", pages);
-
-    if (Object.keys(pages).length === 0) {
-        return <Route path="*" element={<Navigate to="/login" replace />} />;
+export function buildPageRoutes(pages: any) {
+    if (!pages || Object.keys(pages).length === 0) {
+        return null;
     }
 
-    return (
-        <>
-            {Object.values(pages).map((page) => {
-                const path = page.path;
-                return (
-                    <Route
-                        key={page.key}
-                        path={path}
-                        element={
-                            <PermissionGuard permission={page.permissions?.[0]}>
-                                <EntityPage entityKey={page.key} />
-                            </PermissionGuard>
-                        }
-                    />
-                );
-            })}
-        </>
-    );
+    return Object.values(pages).map((page: any) => (
+        <Route
+            key={page.key}
+            path={page.path}
+            element={
+                <PermissionGuard permission={page.permissions?.[0]}>
+                    <EntityPage entityKey={page.key} />
+                </PermissionGuard>
+            }
+        />
+    ));
 }

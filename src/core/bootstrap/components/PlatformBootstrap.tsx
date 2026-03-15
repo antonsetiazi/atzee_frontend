@@ -1,0 +1,42 @@
+// src/core/bootstrap/components/PlatformBootstrap.tsx
+
+import { useEffect, useState } from "react";
+import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
+import { TenantBootstrap } from "@/core/bootstrap/services/tenant.bootstrap";
+
+export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
+    const [ready, setReady] = useState(false);
+
+    useEffect(() => {
+        async function init() {
+            await TenantBootstrap();
+            await runUserBootstrap();
+            setReady(true);
+        }
+
+        init();
+    }, []);
+
+    if (!ready) return <PlatformLoader />;
+
+    return <>{children}</>;
+}
+
+function PlatformLoader() {
+    return (
+        <div className="flex h-screen w-full items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+                {/* Spinner */}
+                <div className="relative h-10 w-10">
+                    <div className="absolute inset-0 rounded-full border-2 border-gray-200"></div>
+                    <div className="absolute inset-0 rounded-full border-2 border-indigo-600 border-t-transparent animate-spin"></div>
+                </div>
+
+                {/* Text */}
+                <p className="text-sm text-gray-500 tracking-wide">
+                    Loading platform...
+                </p>
+            </div>
+        </div>
+    );
+}

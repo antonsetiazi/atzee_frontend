@@ -1,0 +1,44 @@
+
+Core Frontend
+======================
+Yang ingin kita bangun adalah 
+SATU frontend ERP platform
+yang:
+bisa melayani puluhan modul bisnis
+tanpa membuat frontend baru
+tanpa hardcode menu / page / action
+tanpa frontend tahu domain bisnis
+
+konsep: 
+    “Frontend Core Platform”
+
+Syarat:
+    Frontend tidak tahu bisnis
+    Backend menentukan struktur
+    Vertical selalu bisa ditambah
+    Core tidak pernah disentuh
+
+| Lapisan     | Tugas                     | Tidak Boleh  |
+| ----------- | ------------------------- | ------------ |
+| Core UI     | Auth, routing, permission | Tahu bisnis  |
+| Business UI | Entity, form, workflow    | Tahu niche   |
+| Vertical UI | Custom UX                 | Merusak core |
+
+✅ Layak untuk 30–50 aplikasi UMKM
+✅ Layak untuk 5–10 tahun
+✅ Layak untuk tim kecil
+✅ Layak untuk SaaS serius
+
+
+ATURAN EMAS FRONTEND (WAJIB DITAATI)
+❌ DILARANG
+core/ import business/
+business/ import verticals/
+shared/ tahu domain / permission
+verticals/ memodifikasi core
+
+✅ BOLEH
+verticals/ import business/
+verticals/ register module
+backend mengontrol struktur UI
+frontend hanya mengeksekusi

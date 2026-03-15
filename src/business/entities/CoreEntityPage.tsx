@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/entities/CoreEntityPage.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState, useMemo } from "react";
 import { useParams, Navigate, useLocation } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useUISchemaStore } from "../schema/ui-schema.store";
 import LoadingState from "@/shared/ui/LoadingState";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import PageHeader from "@/core/ui/layout/PageHeader";
-import { useSessionStore } from "@/core/session/session.store";
+// import { useSessionStore } from "@/core/session/session.store";
 import BlockRenderer from "./BlockRenderer";
 import { httpGet, httpPost } from "@/core/http/http.client";
 import { getCache, setCache } from "./entity.cache";
@@ -21,7 +21,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
     const { isMobile } = useBreakpoint();
-    const isHydrated = useSessionStore((s) => s.isHydrated);
+    // const isHydrated = useSessionStore((s) => s.isHydrated);
 
     const [schema, setSchema] = useState<any>(null);
     const [loadingSchema, setLoadingSchema] = useState(true);
@@ -190,15 +190,10 @@ export default function CoreEntityPage({ entityKey }: Props) {
         return <Navigate to="/dashboard" replace />;
     }
 
-    // ⛔ Loading hanya jika schema benar-benar belum ada
-    if (!schema && loadingSchema) {
+    if (loadingSchema || loadingData) {
         return <LoadingState />;
     }
 
-    if (!isHydrated || loadingData) {
-        return <LoadingState />;
-    }
-    // console.log(schema);
     // console.log(id);
     // console.log(pageData);
     // console.log(getAllCacheEntries());
@@ -234,17 +229,15 @@ export default function CoreEntityPage({ entityKey }: Props) {
                                 border: "1px solid var(--color-border)",
                             }}
                         >
-                            <div className={isMobile ? "p-4" : "p-6"}>
-                                <BlockRenderer
-                                    block={block}
-                                    idx={idx}
-                                    entityKey={entityKey}
-                                    schema={schema}
-                                    pageData={pageData}
-                                    context={context}
-                                    id={id}
-                                />
-                            </div>
+                            <BlockRenderer
+                                block={block}
+                                idx={idx}
+                                entityKey={entityKey}
+                                schema={schema}
+                                pageData={pageData}
+                                context={context}
+                                id={id}
+                            />
                         </div>
                     );
                 })}

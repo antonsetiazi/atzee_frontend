@@ -65,9 +65,9 @@ export default function MobileShell({
                     className="fixed bottom-0 left-0 w-full z-30"
                     style={{
                         height: bottomNavHeight,
-                        background: "var(--color-surface)",
-                        borderTop: "1px solid var(--color-border)",
-                        boxShadow: "0 -2px 8px rgba(0,0,0,0.04)",
+                        // background: "var(--color-surface)",
+                        // borderTop: "1px solid var(--color-border)",
+                        // boxShadow: "0 -2px 8px rgba(0,0,0,0.04)",
                     }}
                 >
                     <BottomNavigation />

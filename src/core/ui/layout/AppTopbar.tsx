@@ -1,6 +1,5 @@
 // src/core/ui/layout/AppTopbar.tsx
 
-// import { useAuthService } from "@/core/auth/auth.service";
 import { useShell } from "./shell/ShellContext";
 import { useNavigationStore } from "@/core/ui/navigation/navigation.store";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -13,15 +12,12 @@ interface TopbarProps {
 }
 
 export default function AppTopbar({ title }: TopbarProps) {
-    // const { logout } = useAuthService();
     const { isMobile, toggleDrawer } = useShell();
     const items = useNavigationStore((s) => s.topbar);
     const navigate = useNavigate();
     const location = useLocation();
     const user = useSessionStore((s) => s.user);
 
-    // console.log(items);
-    // console.log(user);
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
 
     return (
@@ -119,11 +115,24 @@ export default function AppTopbar({ title }: TopbarProps) {
                 </div>
 
                 {/* RIGHT SIDE */}
-                <div className="flex items-center">
-                    <UserMenuDropdown
-                        name={user?.full_name}
-                        avatarUrl={user?.avatar_url}
-                    />
+                <div className="flex items-center gap-3">
+                    {!user ? (
+                        <button
+                            onClick={() => navigate("/login")}
+                            className="text-sm font-medium px-4 py-2 rounded-md transition-colors"
+                            style={{
+                                color: "var(--text-primary)",
+                                background: "var(--color-primary)",
+                            }}
+                        >
+                            Login
+                        </button>
+                    ) : (
+                        <UserMenuDropdown
+                            name={user.full_name}
+                            avatarUrl={user.avatar_url}
+                        />
+                    )}
                 </div>
             </div>
         </header>

@@ -22,9 +22,8 @@ export interface NavigationResponse {
 export function fetchNavigation(
     type: string,
     device: "mobile" | "desktop",
-    app = "business",
 ): Promise<NavigationResponse> {
     return httpGet<NavigationResponse>(
-        `/ui/navigation/?type=${type}&app=${app}&device=${device}`,
+        `/ui/navigation/?type=${type}&device=${device}`,
     );
 }

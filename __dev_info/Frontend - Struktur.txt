@@ -1,0 +1,163 @@
+STRUKTUR FRONTEND :
+
+public/
+├── config/
+│   └── app.config.json
+├── branding/
+│   ├── default/
+│   │   ├── logo.svg
+│   │   └── favicon.ico
+│   ├── tenant-a/
+│   │   ├── logo.svg
+│   │   └── favicon.ico
+│   └── tenant-b/
+│       ├── logo.svg
+│       └── favicon.ico
+src/
+├── core/                # PLATFORM CORE UI (WAJIB)
+│   ├── auth/
+│   │   ├── auth.api.ts
+│   │   ├── auth.service.ts
+│   │   ├── auth.types.ts
+│   │   ├── LoginForm.tsx
+│   │   └── LoginPage.tsx
+│   ├── permissions/
+│   │   ├── permission.store.ts
+│   │   ├── permission.types.ts
+│   │   └── usePermission.ts
+│   ├── routing/
+│   │   ├── route.types.ts
+│   │   ├── redirect.ts
+│   │   ├── PermissionGuard.tsx
+│   │   ├── PrivateRoute.tsx
+│   │   └── EntryRedirect.tsx
+│   ├── session/
+│   │   ├── session.store.ts
+│   │   └── session.types.ts
+│   ├── http/
+│   │   └── http.client.ts
+│   ├── feedback/
+│   │   ├── feedback.types.ts
+│   │   ├── feedback.store.ts
+│   │   ├── useFeedback.ts
+│   │   ├── ToastRenderer.tsx
+│   │   └── ErrorBoundary.tsx
+│   ├── vertical/
+│   │   ├── uiOverride.registry.ts
+│   │   ├── uiOverride.types.ts
+│   │   ├── vertical.registry.ts
+│   │   ├── vertical.types.ts
+│   │   └── loadVerticals.ts
+│   ├── audit/
+│   │   ├── audit.types.ts
+│   │   ├── audit.store.ts
+│   │   ├── useAudit.ts
+│   │   ├── AuditLogDrawer.tsx
+│   │   └── AuditBadge.tsx
+│   ├── tenant/
+│   │   ├── tenant.types.ts
+│   │   ├── tenant.api.ts
+│   │   ├── tenant.store.ts
+│   │   ├── TenantSwitcher.tsx
+│   │   └── useTenant.ts
+│   ├── config/
+│   │   └── appConfig.store.ts
+│   │   └── appConfig.types.ts
+│   └── ui/
+│       ├── layout/
+│       │   ├── AppLayout.tsx
+│       │   ├── Sidebar.tsx
+│       │   ├── Topbar.tsx
+│       │   └── layout.types.ts
+│       ├── branding/
+│       │   ├── branding.types.ts
+│       │   ├── branding.store.ts
+│       │   ├── useBranding.ts
+│       │   ├── BrandingProvider.tsx
+│       │   └── applyBranding.ts
+│       │
+│       └── menu/
+│           ├── menu.types.ts
+│           ├── menu.store.ts
+│           └── MenuRenderer.tsx
+│
+├── business/            # BUSINESS UI ENGINE (WAJIB)
+│   ├── actions/
+│   │   ├── action.types.ts
+│   │   ├── action.executor.ts
+│   │   └── ActionRenderer.tsx
+│   ├── schema/
+│   │   ├── ui-schema.types.ts
+│   │   ├── ui-schema.api.ts
+│   │   ├── ui-schema.store.ts
+│   │   └── filter-schema.types.ts
+│   ├── filters/
+│   │   ├── FilterRenderer.tsx
+│   │   └── FilterField.tsx
+│   ├── entities/
+│   │   ├── CoreEntityPage.tsx
+│   │   ├── EntityPage.tsx
+│   │   ├── entity.routes.ts
+│   │   ├── entity.api.ts
+│   │   ├── entity.cache.ts
+│   │   └── product/
+│   │       ├── product.entity.ts
+│   │       ├── product.permissions.ts
+│   │       └── index.ts
+│   ├── forms/
+│   │   ├── form.types.ts           # DEFINISI BAHASA FORM
+│   │   ├── FormRenderer.tsx        # MESIN FORM
+│   │   ├── fields/
+│   │   │   ├── FieldRenderer.tsx  # dispatcher
+│   │   │   ├── TextField.tsx
+│   │   │   ├── NumberField.tsx
+│   │   │   ├── SelectField.tsx
+│   │   │   └── field.types.ts
+│   │   └── validation/
+│   │       └── validation.types.ts
+│   ├── workflows/
+│   │   ├── workflow.types.ts
+│   │   ├── WorkflowBadge.tsx
+│   │   ├── WorkflowActionRenderer.tsx
+│   │   └── WorkflowContainer.tsx
+│   ├── tables/
+│   │   ├── table.types.ts
+│   │   ├── TableRenderer.tsx
+│   │   ├── TableHeader.tsx
+│   │   ├── TableRow.tsx
+│   │   └── TablePagination.tsx
+│   └── products/
+│       ├── ProductPage.tsx        # UI generik
+│       ├── product.action.ts
+│       ├── product.routes.ts     # route metadata
+│       ├── product.table.ts      # column schema
+│       ├── product.form.ts       # form schema
+│       └── product.workflow.ts
+│
+├── verticals/           # UI EXTENSION (SELALU TAMBAHAN)
+│   ├── apotek/
+│   │   ├── module.ts
+│   │   └── products/
+│   │       ├── ApotekProductPage.tsx
+│   │       └── routes.ts
+│   ├── _shared/
+│   │   └── products/
+│   │       ├── ProductPage.tsx
+│   │       └── module.ts
+│   └── ui/
+│       ├── LoadingState.tsx
+│       └── EmptyState.tsx
+│
+├── integrations/        # External UI adapters
+│
+├── shared/              # MURNI UTILITIES
+│   ├── hooks/
+│   ├── utils/
+│   └── types/
+│       └── env.d.ts
+│
+├── App.tsx
+├── main.tsx
+└── index.css
+
+

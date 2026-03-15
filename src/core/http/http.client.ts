@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/http/http.client.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useSessionStore } from "@/core/session/session.store";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
-import { useTenantStore } from "../tenant/tenant.store";
+import { TENANT_CODE } from "@/core/tenant/tenant.config";
 
 /* ===========================
    CONFIG
@@ -48,33 +48,31 @@ async function request<T>(
     input: RequestInfo,
     init: InternalRequestInit = {},
 ): Promise<T> {
-    const tenant = useTenantStore.getState().activeTenant;
     const token = useSessionStore.getState().token;
+    const user = useSessionStore.getState().user;
 
     const headers = new Headers(init.headers);
 
-    // 🔐 AUTH HEADER (OPTIONAL)
+    // 🔐 AUTH
     if (!init.skipAuth && token) {
         headers.set("Authorization", `Bearer ${token}`);
     }
 
-    // 🏢 TENANT HEADER (OPTIONAL, tapi login biasanya belum perlu)
-    if (!init.skipAuth && tenant) {
-        headers.set("X-Tenant-ID", tenant.id);
+    // 🏢 TENANT (STATIC)
+    if (TENANT_CODE) {
+        headers.set("X-Tenant-Code", TENANT_CODE);
     }
 
-    // console.log("http request | tenant:", tenant);
+    // 🧾 ROLE ID HEADER
+    if (!init.skipAuth && user?.role_id) {
+        headers.set("X-Role-Id", user.role_id);
+    }
+
     // Jangan set Content-Type kalau body adalah FormData
     if (!(init.body instanceof FormData)) {
         headers.set("Content-Type", "application/json");
     }
-    // headers.set("Content-Type", "application/json");
-    // console.log({
-    //     url: buildUrl(input),
-    //     method: init.method,
-    //     headers: Array.from(headers.entries()), // array dari key-value
-    //     body: init.body,
-    // });
+
     const res = await fetch(buildUrl(input), {
         ...init,
         headers,
@@ -135,8 +133,14 @@ async function request<T>(
    PUBLIC HTTP API
    =========================== */
 
-export function httpGet<T = any>(url: string): Promise<T> {
-    return request<T>(url, { method: "GET" });
+export function httpGet<T = any>(
+    url: string,
+    options?: { skipAuth?: boolean },
+): Promise<T> {
+    return request<T>(url, {
+        method: "GET",
+        skipAuth: options?.skipAuth,
+    });
 }
 
 export function httpPost<T = any>(

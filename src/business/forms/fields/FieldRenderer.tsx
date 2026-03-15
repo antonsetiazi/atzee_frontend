@@ -1,20 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/forms/fields/FieldRenderer.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import TextField from "./TextField";
-import NumberField from "./NumberField";
-import SelectField from "./SelectField";
 import type { FormFieldSchema } from "./field.types";
-import TextareaField from "./TextareaField";
-import EmailField from "./EmailField";
 import BooleanField from "./BooleanField";
-import DateField from "./DateField";
-import DateTimeField from "./DateTimeField";
 import ViewField from "./ViewField";
-import FileField from "./FileField";
+// import FileField from "./FileField";
 import JsonField from "./JsonField";
 import DurationField from "./DurationField";
-import PasswordField from "./PasswordField";
+
+import {
+    DateField,
+    DateTimeField,
+    EmailField,
+    FileField,
+    NumberField,
+    PasswordField,
+    TextAreaField,
+    TextField,
+    TimeField,
+} from "@/core/ui/components";
+
+import SelectDataField from "./SelectDataField";
 
 interface Props {
     field: FormFieldSchema;
@@ -44,9 +50,13 @@ export default function FieldRenderer({
         case "text":
             return (
                 <TextField
-                    field={field}
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );
@@ -54,9 +64,13 @@ export default function FieldRenderer({
         case "password":
             return (
                 <PasswordField
-                    field={field}
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );
@@ -64,9 +78,13 @@ export default function FieldRenderer({
         case "email":
             return (
                 <EmailField
-                    field={field}
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );
@@ -74,9 +92,13 @@ export default function FieldRenderer({
         case "number":
             return (
                 <NumberField
-                    field={field}
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );
@@ -84,9 +106,27 @@ export default function FieldRenderer({
         case "date":
             return (
                 <DateField
-                    field={field}
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
+                    onChange={onChange}
+                />
+            );
+
+        case "time":
+            return (
+                <TimeField
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    value={value}
+                    error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );
@@ -94,29 +134,42 @@ export default function FieldRenderer({
         case "datetime":
             return (
                 <DateTimeField
-                    field={field}
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );
 
         case "select":
             return (
-                <SelectField
-                    field={field}
+                <SelectDataField
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    disabled={field.disabled}
+                    dataSource={field.data_source}
+                    dataOptions={field.options}
                     onChange={onChange}
                 />
             );
 
         case "textarea":
             return (
-                <TextareaField
-                    field={field}
+                <TextAreaField
+                    name={field.key}
+                    label={field.label}
+                    placeholder={field.placeholder}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );
@@ -134,9 +187,14 @@ export default function FieldRenderer({
         case "file":
             return (
                 <FileField
-                    field={field}
+                    name={field.key}
+                    label={field.label}
                     value={value}
                     error={error}
+                    required={field.required}
+                    disabled={field.disabled}
+                    accept={field.accept}
+                    multiple={field.multiple}
                     onChange={onChange}
                 />
             );

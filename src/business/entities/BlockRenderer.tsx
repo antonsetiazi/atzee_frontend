@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/entities/BlockRenderer.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from "react";
 import WorkflowContainer from "../workflows/WorkflowContainer";
@@ -24,6 +24,7 @@ import BlockListView from "./blocks/BlockListView";
 import { executeWorkflowAction } from "@/business/workflows/workflow.executor";
 import BlockImageGallery from "./blocks/BlockImageGallery";
 import { TransactionWorkspace } from "../transaction_workspace/TransactionWorkspace";
+import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
 interface Props {
     block: any;
@@ -70,6 +71,7 @@ export default function BlockRenderer({
     context,
     id,
 }: Props): React.ReactNode {
+    const { isMobile } = useBreakpoint();
     // console.log(block.type);
     // 🔥 CONTAINER
     if (block.type === "container") {
@@ -81,6 +83,7 @@ export default function BlockRenderer({
                 className={`
                     w-full
                     ${!isColumn ? "grid" : "flex flex-col"}
+                    ${isMobile ? "p-4" : "p-6"}
                 `}
                 style={
                     !isColumn
@@ -154,7 +157,11 @@ export default function BlockRenderer({
         const blockData =
             block.data_key && pageData ? pageData[block.data_key] : pageData;
 
-        return <BlockListView key={idx} block={block} data={blockData} />;
+        return (
+            <div key={idx} className={isMobile ? "p-4" : "p-6"}>
+                <BlockListView key={idx} block={block} data={blockData} />
+            </div>
+        );
     }
 
     // 🔥 CARD LIST
@@ -163,19 +170,21 @@ export default function BlockRenderer({
             block.data_key && pageData ? pageData[block.data_key] : pageData;
 
         return (
-            <BlockCardList
-                key={idx}
-                block={block}
-                data={blockData}
-                context={context}
-                onSelect={(field, value) => {
-                    window.dispatchEvent(
-                        new CustomEvent("form:set-value", {
-                            detail: { field, value },
-                        }),
-                    );
-                }}
-            />
+            <div key={idx} className={isMobile ? "p-4" : "p-6"}>
+                <BlockCardList
+                    key={idx}
+                    block={block}
+                    data={blockData}
+                    context={context}
+                    onSelect={(field, value) => {
+                        window.dispatchEvent(
+                            new CustomEvent("form:set-value", {
+                                detail: { field, value },
+                            }),
+                        );
+                    }}
+                />
+            </div>
         );
     }
 
@@ -268,7 +277,11 @@ export default function BlockRenderer({
         const blockData =
             block.data_key && pageData ? pageData[block.data_key] : pageData;
 
-        return <BlockBanner key={idx} data={blockData} />;
+        return (
+            <div key={idx}>
+                <BlockBanner data={blockData} />
+            </div>
+        );
     }
 
     if (block.type === "image_gallery") {
@@ -295,7 +308,11 @@ export default function BlockRenderer({
     }
 
     if (block.type === "shortcut") {
-        return <BlockShortcut key={idx} block={block} />;
+        return (
+            <div key={idx} className={isMobile ? "p-4" : "p-6"}>
+                <BlockShortcut block={block} />
+            </div>
+        );
     }
 
     if (block.type === "transaction_summary") {

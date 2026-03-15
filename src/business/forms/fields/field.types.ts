@@ -9,6 +9,7 @@ export type FieldType =
     | "email"
     | "boolean"
     | "date"
+    | "time"
     | "datetime"
     | "file"
     | "json"
@@ -45,6 +46,10 @@ export interface NumberFieldSchema extends BaseFieldSchema {
 
 export interface DateFieldSchema extends BaseFieldSchema {
     type: "date";
+}
+
+export interface TimeFieldSchema extends BaseFieldSchema {
+    type: "time";
 }
 
 export interface DateTimeFieldSchema extends BaseFieldSchema {
@@ -102,6 +107,7 @@ export type FormFieldSchema =
     | TextareaFieldSchema
     | BooleanFieldSchema
     | DateFieldSchema
+    | TimeFieldSchema
     | DateTimeFieldSchema
     | FileFieldSchema
     | JsonFieldSchema
