@@ -6,12 +6,28 @@ export { default as Banner } from "./banner/Banner";
 export { default as BottomNavigationBar } from "./bottom_navigation_bar/BottomNavigationBar";
 export { default as Button } from "./button/Button";
 export { default as CircleAvatar } from "./circle_avatar/CircleAvatar";
+export { default as CommandPalette } from "./command_palette/CommandPalette";
+export { default as DataTable } from "./data_table/DataTable";
 export { default as DropdownMenu } from "./dropdown_menu/DropdownMenu";
 export { default as GeoMap } from "./geo_map/GeoMap";
 export { default as Heading } from "./heading/Heading";
 export { default as ProgressIndicator } from "./progress_indicator/ProgressIndicator";
 export { default as SearchBar } from "./search_bar/SearchBar";
 export { default as Slider } from "./slider/Slider";
+export { default as Stepper } from "./stepper/Stepper";
+export { default as WizardFooter } from "./wizard/WizardFooter";
+
+// alert_dialog
+export { default as AlertDialog } from "./alert_dialog/AlertDialog";
+export { default as AlertDialogHeader } from "./alert_dialog/AlertDialogHeader";
+export { default as AlertDialogContent } from "./alert_dialog/AlertDialogContent";
+export { default as AlertDialogFooter } from "./alert_dialog/AlertDialogFooter";
+
+// drawer
+export { default as Drawer } from "./drawer/Drawer";
+export { default as DrawerHeader } from "./drawer/DrawerHeader";
+export { default as DrawerContent } from "./drawer/DrawerContent";
+export { default as DrawerFooter } from "./drawer/DrawerFooter";
 
 // fields
 export { default as DateField } from "./fields/DateField";
