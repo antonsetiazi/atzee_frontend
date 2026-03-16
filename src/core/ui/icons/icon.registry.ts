@@ -12,6 +12,7 @@ import {
     EyeSlashIcon,
     KeyIcon,
     LifebuoyIcon,
+    LockClosedIcon,
     PercentBadgeIcon,
     PlayCircleIcon,
     PlusCircleIcon,
@@ -55,6 +56,7 @@ import {
     WalletIcon,
     PauseCircleIcon,
 } from "@heroicons/react/20/solid";
+import { BellIcon } from "@heroicons/react/24/outline";
 
 export const iconRegistry: Record<string, any> = {
     // Action Icons
@@ -115,4 +117,6 @@ export const iconRegistry: Record<string, any> = {
     "life-buoy": LifebuoyIcon,
     profile: UsersIcon,
     transaction: DocumentCurrencyDollarIcon,
+    login: LockClosedIcon,
+    bell: BellIcon,
 };

@@ -6,6 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Icon from "@/core/ui/icons/Icon";
 import UserMenuDropdown from "./UserMenuDropdown";
 import { useSessionStore } from "@/core/session/session.store";
+import { AuthButton } from "@/core/ui/components";
+import { NotificationBell } from "@/core/ui/components";
 
 interface TopbarProps {
     title?: string;
@@ -91,10 +93,7 @@ export default function AppTopbar({ title }: TopbarProps) {
                                                 : "var(--text-secondary)",
                                         }}
                                     >
-                                        <Icon
-                                            name={item.icon}
-                                            className="w-4 h-4"
-                                        />
+                                        <Icon name={item.icon} size="md" />
                                         <span>{item.label}</span>
 
                                         {/* Active indicator */}
@@ -117,21 +116,34 @@ export default function AppTopbar({ title }: TopbarProps) {
                 {/* RIGHT SIDE */}
                 <div className="flex items-center gap-3">
                     {!user ? (
-                        <button
+                        <AuthButton
+                            variant="primary"
                             onClick={() => navigate("/login")}
-                            className="text-sm font-medium px-4 py-2 rounded-md transition-colors"
-                            style={{
-                                color: "var(--text-primary)",
-                                background: "var(--color-primary)",
-                            }}
                         >
+                            <Icon name="login" size="sm" />
                             Login
-                        </button>
+                        </AuthButton>
                     ) : (
-                        <UserMenuDropdown
-                            name={user.full_name}
-                            avatarUrl={user.avatar_url}
-                        />
+                        <>
+                            <NotificationBell
+                                notifications={[
+                                    {
+                                        id: "1",
+                                        title: "New booking received",
+                                        description: "Ahmad booked a session",
+                                    },
+                                    {
+                                        id: "2",
+                                        title: "Payment confirmed",
+                                        description: "Invoice #1023 paid",
+                                    },
+                                ]}
+                            />
+                            <UserMenuDropdown
+                                name={user.full_name}
+                                avatarUrl={user.avatar_url}
+                            />
+                        </>
                     )}
                 </div>
             </div>

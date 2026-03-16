@@ -1,11 +1,13 @@
 // src/core/ui/icons/Icon.tsx
 
+import clsx from "clsx";
 import type { SVGProps } from "react";
 import { iconRegistry } from "./icon.registry";
 
 interface Props extends SVGProps<SVGSVGElement> {
     name: string;
     size?: "sm" | "md" | "lg";
+    variant?: "default" | "muted" | "primary";
 }
 
 const sizeMap = {
@@ -17,6 +19,7 @@ const sizeMap = {
 export default function Icon({
     name,
     size = "md",
+    variant = "default",
     className = "",
     ...rest
 }: Props) {
@@ -26,12 +29,15 @@ export default function Icon({
 
     return (
         <Component
-            className={`
-                ${sizeMap[size]}
-                shrink-0
-                text-current
-                ${className}
-            `}
+            className={clsx(
+                sizeMap[size],
+                "shrink-0",
+                "transition-all duration-200 ease-out",
+                "text-current",
+                variant === "muted" && "opacity-70",
+                variant === "primary" && "text-[var(--color-primary)]",
+                className,
+            )}
             aria-hidden={rest["aria-label"] ? undefined : true}
             {...rest}
         />
