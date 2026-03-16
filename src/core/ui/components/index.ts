@@ -4,20 +4,25 @@ export { default as AppBar } from "./app_bar/AppBar";
 export { default as Badge } from "./badge/Badge";
 export { default as Banner } from "./banner/Banner";
 export { default as BottomNavigationBar } from "./bottom_navigation_bar/BottomNavigationBar";
+export { default as Breadcrumb } from "./breadcrumb/Breadcrumb";
 export { default as Button } from "./button/Button";
 export { default as CircleAvatar } from "./circle_avatar/CircleAvatar";
 export { default as CommandPalette } from "./command_palette/CommandPalette";
 export { default as DataTable } from "./data_table/DataTable";
+export { default as DateRangePicker } from "./date_range_picker/DateRangePicker";
 export { default as DropdownMenu } from "./dropdown_menu/DropdownMenu";
 export { default as EmptyState } from "./empty_state/EmptyState";
 export { default as GeoMap } from "./geo_map/GeoMap";
 export { default as Heading } from "./heading/Heading";
 export { default as NotificationBell } from "./notifications/NotificationBell";
+export { default as Pagination } from "./pagination/Pagination";
 export { default as ProgressIndicator } from "./progress_indicator/ProgressIndicator";
 export { default as SearchBar } from "./search_bar/SearchBar";
 export { default as Slider } from "./slider/Slider";
+export { default as StatCard } from "./stat_card/StatCard";
 export { default as StatusBadge } from "./status_badge/StatusBadge";
 export { default as Stepper } from "./stepper/Stepper";
+export { default as Tooltip } from "./tooltip/Tooltip";
 export { default as WizardFooter } from "./wizard/WizardFooter";
 
 // alert_dialog
@@ -72,4 +77,5 @@ export { default as TabsList } from "./tabs/TabsList";
 export { default as TabsTrigger } from "./tabs/TabsTrigger";
 export { default as TabsContent } from "./tabs/TabsContent";
 
+export * from "./filter_bar";
 export * from "./skeleton";
