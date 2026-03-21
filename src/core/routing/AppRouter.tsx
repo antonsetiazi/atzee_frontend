@@ -9,26 +9,27 @@ import LoginPage from "@/core/auth/pages/LoginPage";
 import RegisterPage from "@/core/auth/RegisterPage";
 
 import AppLayout from "@/core/ui/layout/AppLayout";
-// import EntryRedirect from "@/core/routing/EntryRedirect";
 
 import { renderRoute } from "@/core/routing/RouteRenderer";
 import { usersRoutes } from "@/core/users/users.routes";
 
-// import { MenuRoutes } from "@/core/routing/MenuRoutes";
-// import PageRoutes from "@/core/routing/PageRoutes";
-
-// import { useMenuStore } from "@/core/ui/menu/menu.store";
-
 import { usePageStore } from "@/core/ui/page/page.store";
 import { buildPageRoutes } from "@/core/routing/PageRoutes";
 import { useSessionStore } from "../session/session.store";
+
+import ListingPage from "@/business/listing/ListingPage";
+import ProductDetailPage from "@/business/product/ProductDetailPage";
+import ServiceDetailPage from "@/business/service/ServiceDetailPage";
+import CartPage from "@/app/pages/cart/CartPage";
+import CheckoutPage from "@/app/pages/checkout/CheckoutPage";
+import OrderPage from "@/app/pages/order/OrderPage";
+import OrderDetailPage from "@/app/pages/order/OrderDetailPage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
     import.meta.env.VITE_DEFAULT_DASHBOARD_ROUTE || "/dashboard";
 
 export default function AppRouter() {
-    // const visibleMenus = useMenuStore((state) => state.visibleItems);
     const pages = usePageStore((s) => s.pages);
     const { isAuthenticated, isHydrated } = useSessionStore();
 
@@ -47,8 +48,29 @@ export default function AppRouter() {
                 {/* APP */}
                 <Route path="/" element={<AppLayout />}>
                     {usersRoutes.map(renderRoute)}
-                    {/* {MenuRoutes(visibleMenus)} */}
                     {buildPageRoutes(pages)}
+
+                    <Route
+                        path="/products"
+                        element={<ListingPage type="product" />}
+                    />
+                    <Route
+                        path="/services"
+                        element={<ListingPage type="service" />}
+                    />
+
+                    <Route
+                        path="/product/:id"
+                        element={<ProductDetailPage />}
+                    />
+                    <Route
+                        path="/service/:id"
+                        element={<ServiceDetailPage />}
+                    />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/orders" element={<OrderPage />} />
+                    <Route path="/orders/:id" element={<OrderDetailPage />} />
                 </Route>
 
                 {/* CATCH-ALL FALLBACK */}

@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import FormRenderer from "../../forms/FormRenderer";
-import { fetchEntityDetail } from "./../entity.api";
+import { fetchEntityDetail } from "./../api/entity.api";
 import { httpPost } from "@/core/http/http.client";
 import LoadingState from "@/shared/ui/LoadingState";
 import type { FormContext } from "@/business/forms/form.context";

@@ -6,7 +6,7 @@ import { lazy } from "react";
 import type { MenuItem } from "@/core/ui/menu/menu.types";
 
 // EntityPage engine (CoreEntityPage wrapper)
-const EntityPage = lazy(() => import("@/business/entities/EntityPage"));
+const EntityPage = lazy(() => import("@/business/entities/pages/EntityPage"));
 
 /**
  * Generate JSX Routes dari menu backend.

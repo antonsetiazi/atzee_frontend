@@ -8,7 +8,7 @@ import { httpDelete } from "@/core/http/http.client";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { useConfirmStore } from "@/core/confirm/confirm.store";
 import { iconRegistry } from "@/core/ui/icons/icon.registry";
-import { clearEntityCacheByPrefix } from "../entities/entity.cache";
+import { clearEntityCacheByPrefix } from "../entities/cache/entity.cache";
 
 interface Props<T> {
     entity: string;

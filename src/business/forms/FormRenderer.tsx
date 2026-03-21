@@ -8,7 +8,7 @@ import { submitForm } from "./form.submit";
 import { useNavigate } from "react-router-dom";
 import type { TableContext } from "../tables/table.context";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
-import { clearEntityCacheByPrefix } from "../entities/entity.cache";
+import { clearEntityCacheByPrefix } from "../entities/cache/entity.cache";
 // import { usePageStore } from "@/core/ui/page/page.store";
 // import { pageKeyToPath } from "@/core/routing/page.utils";
 import type { FormContext } from "./form.context";

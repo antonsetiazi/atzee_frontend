@@ -1,0 +1,127 @@
+patterns/
+│
+├── form/
+│   ├── FormSection.tsx
+│   ├── FormGrid.tsx
+│   ├── FormGroup.tsx
+│   ├── FormActions.tsx
+│   └── index.ts
+│
+├── data_display/
+│   ├── DataSection.tsx
+│   ├── StatSection.tsx
+│   ├── DetailSection.tsx
+│   ├── ListSection.tsx
+│   └── index.ts
+│
+├── layout/
+│   ├── PageContainer.tsx
+│   ├── PageHeader.tsx
+│   ├── PageSection.tsx
+│   └── index.ts
+│
+├── navigation/
+│   ├── SidebarNavigation.tsx
+│   ├── TopNavigation.tsx
+│   ├── BreadcrumbSection.tsx
+│   └── index.ts
+│
+├── feedback/
+│   ├── LoadingSection.tsx
+│   ├── EmptySection.tsx
+│   ├── ErrorSection.tsx
+│   └── index.ts
+│
+├── filters/
+│   ├── FilterSection.tsx
+│   ├── SearchSection.tsx
+│   ├── ActionBar.tsx
+│   └── index.ts
+│
+├── overlay/
+│   ├── ModalSection.tsx
+│   ├── DrawerSection.tsx
+│   └── index.ts
+│
+└── index.ts
+
+
+
+compositions/
+│
+├── forms/
+│   ├── CreateForm.tsx
+│   ├── EditForm.tsx
+│   ├── WizardForm.tsx
+│   ├── AuthForm.tsx
+│   └── index.ts
+│
+├── data/
+│   ├── DataTableView.tsx
+│   ├── DataListView.tsx
+│   ├── DataGridView.tsx
+│   └── index.ts
+│
+├── detail/
+│   ├── DetailView.tsx
+│   ├── ProfileView.tsx
+│   └── index.ts
+│
+├── dashboard/
+│   ├── DashboardOverview.tsx
+│   ├── DashboardAnalytics.tsx
+│   └── index.ts
+│
+├── navigation/
+│   ├── AppLayout.tsx
+│   ├── AuthLayout.tsx
+│   └── index.ts
+│
+├── settings/
+│   ├── SettingsForm.tsx
+│   ├── SettingsSection.tsx
+│   └── index.ts
+│
+├── search/
+│   ├── SearchView.tsx
+│   └── index.ts
+│
+├── feedback/
+│   ├── ErrorView.tsx
+│   ├── EmptyView.tsx
+│   ├── LoadingView.tsx
+│   └── index.ts
+│
+└── index.ts
+
+
+views/
+│
+├── renderer/
+│   ├── ViewRenderer.tsx
+│   ├── PatternRenderer.tsx
+│   ├── CompositionRenderer.tsx
+│   └── index.ts
+│
+├── pages/
+│   ├── DynamicPage.tsx
+│   ├── StaticPage.tsx
+│   └── index.ts
+│
+├── templates/
+│   ├── CrudPageTemplate.tsx
+│   ├── DashboardTemplate.tsx
+│   ├── DetailPageTemplate.tsx
+│   └── index.ts
+│
+├── registry/
+│   ├── patternRegistry.ts
+│   ├── compositionRegistry.ts
+│   └── index.ts
+│
+├── types/
+│   ├── view.types.ts
+│   ├── schema.types.ts
+│   └── index.ts
+│
+└── index.ts

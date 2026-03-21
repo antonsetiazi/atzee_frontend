@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 import { lazy } from "react";
 import PermissionGuard from "@/core/permissions/PermissionGuard";
 
-const EntityPage = lazy(() => import("@/business/entities/EntityPage"));
+const EntityPage = lazy(() => import("@/business/entities/pages/EntityPage"));
 
 export function buildPageRoutes(pages: any) {
     if (!pages || Object.keys(pages).length === 0) {

@@ -2,7 +2,7 @@
 // src/business/entities/blocks/BlockCalendar.tsx
 
 import { useEffect, useState } from "react";
-import { fetchEntityDetail } from "../entity.api";
+import { fetchEntityDetail } from "../api/entity.api";
 import LoadingState from "@/shared/ui/LoadingState";
 
 interface Props {

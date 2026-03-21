@@ -2,7 +2,7 @@
 // src/business/entities/blocks/BlockList.tsx
 
 import { useEffect, useState } from "react";
-import { fetchEntityDetail } from "../entity.api";
+import { fetchEntityDetail } from "../api/entity.api";
 
 interface Props {
     block: any;
