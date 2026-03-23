@@ -1,12 +1,12 @@
-// src/core/auth/auth.service.ts
+// src/app/auth/auth.service.ts
 
 import {
     loginApi,
     loginOtpApi,
     requestOtpApi,
     fetchAuthConfig,
-} from "./auth.api";
-import type { LoginPayload } from "./auth.types";
+} from "@/core/auth/auth.api";
+import type { LoginPayload } from "../../core/auth/auth.types";
 import { useSessionStore } from "@/core/session/session.store";
 import { usePermissionStore } from "@/core/permissions/permission.store";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
@@ -20,9 +20,13 @@ interface JwtPayload {
 }
 
 export function useAuthService() {
-    const clearSession = useSessionStore((s) => s.clearSession);
-    // const setPermissions = usePermissionStore((s) => s.setPermissions);
-    const clearPermissions = usePermissionStore((s) => s.clearPermissions);
+    function clearSession() {
+        useSessionStore.getState().clearSession();
+    }
+
+    function clearPermissions() {
+        usePermissionStore.getState().clearPermissions();
+    }
 
     async function getAuthConfig() {
         return fetchAuthConfig();

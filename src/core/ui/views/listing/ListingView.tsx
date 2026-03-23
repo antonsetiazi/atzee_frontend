@@ -1,5 +1,6 @@
 // src/core/ui/views/listing/ListingView.tsx
 
+import { useState } from "react";
 import ListingCard from "./ListingCard";
 import ListingSidebarFilters from "./ListingSidebarFilters";
 import ListingSortBar from "./ListingSortBar";
@@ -39,6 +40,7 @@ export default function ListingView({
     onItemClick,
 }: Props) {
     const { isMobile } = useBreakpoint();
+    const [showFilter, setShowFilter] = useState(false);
 
     // =============================
     // MOBILE LAYOUT
@@ -62,6 +64,17 @@ export default function ListingView({
 
                 {/* Controls */}
                 <div className="flex gap-2">
+                    <button
+                        onClick={() => setShowFilter(true)}
+                        className="
+                            flex-1 py-2 rounded-lg
+                            bg-[var(--color-surface-alt)]
+                            text-sm
+                        "
+                    >
+                        ⚙️ Filter
+                    </button>
+
                     <select
                         value={sort}
                         onChange={(e) =>
@@ -96,7 +109,7 @@ export default function ListingView({
                 />
 
                 {/* Drawer Filter */}
-                {/* {showFilter && (
+                {showFilter && (
                     <div
                         className="
                             fixed inset-0 z-50
@@ -120,23 +133,23 @@ export default function ListingView({
 
                             <ListingSidebarFilters
                                 filters={filters}
-                                onChange={setFilters}
-                                isMobile={isMobile}
+                                onChange={onChangeFilters}
+                                isMobile={true}
                             />
 
                             <button
                                 onClick={() => setShowFilter(false)}
                                 className="
-                                    mt-4 w-full py-2 rounded-lg
+                                    mt-4 w-full py-3 rounded-xl
                                     bg-[var(--color-primary)]
-                                    text-white
+                                    text-white font-semibold
                                 "
                             >
                                 Terapkan
                             </button>
                         </div>
                     </div>
-                )} */}
+                )}
             </div>
         );
     }
@@ -163,7 +176,7 @@ export default function ListingView({
                             search: e.target.value,
                         })
                     }
-                    className="w-full px-4 py-3 mb-4 rounded-xl"
+                    className="w-full px-4 py-3 rounded-xl bg-[var(--color-surface-alt)] mb-4"
                 />
 
                 <ListingSortBar

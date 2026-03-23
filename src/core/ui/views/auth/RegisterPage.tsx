@@ -1,7 +1,7 @@
-// src/core/auth/RegisterPage.tsx
+// src/core/ui/views/auth/RegisterPage.tsx
 
-import { useDocumentTitle } from "../ui/document/useDocumentTitle";
-import { useBreakpoint } from "../ui/layout/hooks/useBreakpoint";
+import { useDocumentTitle } from "../../document/useDocumentTitle";
+import { useBreakpoint } from "../../layout/hooks/useBreakpoint";
 import { RegisterForm } from "./RegisterForm";
 import { Link } from "react-router-dom";
 

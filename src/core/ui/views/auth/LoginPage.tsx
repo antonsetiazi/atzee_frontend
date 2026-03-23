@@ -1,4 +1,4 @@
-// src/core/auth/pages/LoginPage.tsx
+// src/core/ui/views/auth/LoginPage.tsx
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 import { useDocumentTitle } from "@/core/ui/document/useDocumentTitle";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
-import { useAuthService } from "../auth.service";
-import type { AuthMethod } from "../auth.types";
+import { useAuthService } from "@/app/auth/auth.service";
+import type { AuthMethod } from "../../../auth/auth.types";
 
-import LoginMethodSwitcher from "../components/LoginMethodSwitcher";
-import { PasswordLoginForm } from "../components/PasswordLoginForm";
-import OtpLoginForm from "../components/OtpLoginForm";
+import LoginMethodSwitcher from "./LoginMethodSwitcher";
+import { PasswordLoginForm } from "./PasswordLoginForm";
+import OtpLoginForm from "./OtpLoginForm";
 
 export default function LoginPage() {
     useDocumentTitle("Login");

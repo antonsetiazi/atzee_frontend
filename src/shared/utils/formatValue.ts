@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/shared/utils/formatValue.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface FormatConfig {
     format?: string;

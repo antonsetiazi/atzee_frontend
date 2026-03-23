@@ -2,17 +2,17 @@
 
 import type { OrderStatus } from "@/business/order/order.types";
 
-const steps = ["pending", "paid", "completed"];
+const steps: OrderStatus[] = ["pending", "paid", "completed"];
 
 export default function OrderTimeline({ status }: { status: OrderStatus }) {
+    const currentIndex = steps.indexOf(status);
+
     return (
         <div className="space-y-3">
             <h3 className="font-semibold">Status</h3>
 
-            {steps.map((step) => {
-                const isActive =
-                    step === status ||
-                    (step === "pending" && status !== "failed");
+            {steps.map((step, index) => {
+                const isActive = index <= currentIndex;
 
                 return (
                     <div key={step} className="flex items-center gap-3">

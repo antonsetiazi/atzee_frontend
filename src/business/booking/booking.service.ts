@@ -24,6 +24,15 @@ function generateDummySlots(date: string): BookingSlot[] {
 }
 
 export const bookingService = {
+    selectService(serviceId: string) {
+        bookingStore.setState({
+            serviceId,
+            selectedDate: null,
+            selectedSlotId: null,
+            slots: [],
+        });
+    },
+
     selectDate(date: string) {
         bookingStore.setState({
             selectedDate: date,
@@ -51,13 +60,18 @@ export const bookingService = {
     confirmBooking() {
         const state = bookingStore.getState();
 
-        if (!state.selectedDate || !state.selectedSlotId) {
+        if (!state.serviceId || !state.selectedDate || !state.selectedSlotId) {
             throw new Error("Booking belum lengkap");
         }
 
         const slot = state.slots.find((s) => s.id === state.selectedSlotId);
 
+        if (!slot) {
+            throw new Error("Slot tidak ditemukan");
+        }
+
         return {
+            serviceId: state.serviceId, // 🔥 penting
             date: state.selectedDate,
             slot,
         };
@@ -65,6 +79,7 @@ export const bookingService = {
 
     reset() {
         bookingStore.setState({
+            serviceId: null,
             selectedDate: null,
             selectedSlotId: null,
             slots: [],

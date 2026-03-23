@@ -1,8 +1,8 @@
-// src/core/auth/LoginForm.tsx
+// src/core/ui/views/auth/PasswordLoginForm.tsx
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthService } from "@/core/auth/auth.service";
+import { useAuthService } from "@/app/auth/auth.service";
 import { Button, EmailField, PasswordField } from "@/core/ui/components";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;

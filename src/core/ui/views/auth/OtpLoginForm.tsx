@@ -1,8 +1,8 @@
-// src/core/auth/components/OtpLoginForm.tsx
+// src/core/ui/views/auth/OtpLoginForm.tsx
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthService } from "../auth.service";
+import { useAuthService } from "../../../../app/auth/auth.service";
 import { Button, TelField, TextField } from "@/core/ui/components";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;

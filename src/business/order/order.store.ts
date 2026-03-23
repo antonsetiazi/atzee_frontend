@@ -1,11 +1,12 @@
 // src/business/order/order.store.ts
 
 import type { Order } from "./order.types";
+import { loadFromStorage, saveToStorage } from "@/core/storage/localStorage";
 
-type Listener = () => void;
+type Listener = (orders: Order[]) => void;
 
 class OrderStore {
-    private orders: Order[] = [];
+    private orders: Order[] = loadFromStorage<Order[]>("orders", []);
 
     private listeners: Listener[] = [];
 
@@ -18,8 +19,20 @@ class OrderStore {
         this.emit();
     }
 
+    updateStatus(id: string, status: Order["status"]) {
+        const order = this.orders.find((o) => o.id === id);
+        if (order) {
+            order.status = status;
+            this.emit();
+        }
+    }
+
     subscribe(listener: Listener) {
         this.listeners.push(listener);
+
+        // 🔥 langsung kirim data awal
+        listener(this.orders);
+
         return () => {
             this.listeners = this.listeners.filter((l) => l !== listener);
         };
@@ -30,7 +43,9 @@ class OrderStore {
     }
 
     private emit() {
-        this.listeners.forEach((l) => l());
+        saveToStorage("orders", this.orders);
+
+        this.listeners.forEach((l) => l(this.orders));
     }
 }
 

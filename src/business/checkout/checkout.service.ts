@@ -5,6 +5,7 @@ import type { CheckoutItem } from "./checkout.types";
 
 import { cartStore } from "@/business/cart/cart.store";
 import { bookingStore } from "@/business/booking/booking.store";
+import { eventBus } from "@/core/event/event.bus";
 
 export const checkoutService = {
     // 🛒 dari cart
@@ -13,16 +14,23 @@ export const checkoutService = {
 
         const items: CheckoutItem[] = cartItems.map((item) => ({
             id: item.id,
+            entityId: item.productId, // 🔥 FIX
+            entityType: "product",
             name: item.name,
             price: item.price,
             quantity: item.quantity,
-            type: "product",
         }));
 
         checkoutStore.setState({
             items,
             paymentStatus: "idle",
             selectedPaymentMethodId: null,
+        });
+
+        // 🔥 optional event
+        eventBus.emit("checkout.initialized", {
+            source: "cart",
+            itemsCount: items.length,
         });
     },
 
@@ -43,10 +51,12 @@ export const checkoutService = {
         const items: CheckoutItem[] = [
             {
                 id: "booking",
+                entityId: booking.serviceId || "service-1", // 🔥 WAJIB (sesuaikan!)
+                entityType: "service",
                 name: "Service Booking",
                 price: 50000, // nanti dari backend/service
                 quantity: 1,
-                type: "service",
+
                 meta: {
                     date: booking.selectedDate,
                     slotLabel: slot.label,
@@ -58,6 +68,12 @@ export const checkoutService = {
             items,
             paymentStatus: "idle",
             selectedPaymentMethodId: null,
+        });
+
+        // 🔥 optional event
+        eventBus.emit("checkout.initialized", {
+            source: "booking",
+            itemsCount: items.length,
         });
     },
 
@@ -71,10 +87,16 @@ export const checkoutService = {
         const state = checkoutStore.getState();
 
         if (!state.items.length) {
+            eventBus.emit("order.failed", {
+                reason: "Tidak ada item",
+            });
             throw new Error("Tidak ada item");
         }
 
         if (!state.selectedPaymentMethodId) {
+            eventBus.emit("order.failed", {
+                reason: "Pilih metode pembayaran",
+            });
             throw new Error("Pilih metode pembayaran");
         }
 
@@ -83,13 +105,35 @@ export const checkoutService = {
             paymentStatus: "pending",
         });
 
+        eventBus.emit("checkout.payment.started", {
+            methodId: state.selectedPaymentMethodId,
+        });
+
         // simulasi API payment
         setTimeout(() => {
             const success = Math.random() > 0.2;
 
-            checkoutStore.setState({
-                paymentStatus: success ? "paid" : "failed",
-            });
+            if (success) {
+                checkoutStore.setState({
+                    paymentStatus: "paid",
+                });
+
+                // 🔥 SUCCESS → ORDER CREATED
+                eventBus.emit("order.created", {
+                    orderId: generateOrderId(),
+                    total: calculateTotal(state.items),
+                    itemsCount: state.items.length,
+                });
+            } else {
+                checkoutStore.setState({
+                    paymentStatus: "failed",
+                });
+
+                // 🔥 FAILED
+                eventBus.emit("order.failed", {
+                    reason: "Pembayaran gagal",
+                });
+            }
         }, 1500);
     },
 
@@ -101,3 +145,12 @@ export const checkoutService = {
         });
     },
 };
+
+// helper
+function generateOrderId() {
+    return "ORD-" + Math.floor(Math.random() * 10000);
+}
+
+function calculateTotal(items: CheckoutItem[]) {
+    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+}

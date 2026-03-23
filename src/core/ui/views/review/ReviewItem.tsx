@@ -2,6 +2,7 @@
 
 import { StarRating } from "@/core/ui/components";
 import type { Review } from "./review.types";
+import { formatValue } from "@/shared/utils/formatValue";
 
 interface Props {
     review: Review;
@@ -50,7 +51,7 @@ export default function ReviewItem({ review }: Props) {
                             className="text-sm"
                             style={{ color: "var(--text-muted)" }}
                         >
-                            {new Date(review.createdAt).toLocaleDateString()}
+                            {formatValue(review.createdAt, { format: "date" })}
                         </div>
                     </div>
 

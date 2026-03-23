@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
 import { TenantBootstrap } from "@/core/bootstrap/services/tenant.bootstrap";
+import { registerNotificationListeners } from "@/core/notification/notification.listener";
+import { registerOrderListeners } from "@/business/order/order.service";
 
 export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
     const [ready, setReady] = useState(false);
@@ -11,6 +13,10 @@ export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
         async function init() {
             await TenantBootstrap();
             await runUserBootstrap();
+
+            registerNotificationListeners();
+            registerOrderListeners();
+
             setReady(true);
         }
 

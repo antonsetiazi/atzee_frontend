@@ -3,14 +3,23 @@
 import { useMemo } from "react";
 import ReviewSummary from "./ReviewSummary";
 import ReviewList from "./ReviewList";
-import type { Review, ReviewSummaryData } from "./review.types";
+import ReviewActionSection from "./ReviewActionSection";
+import { useReviews } from "@/business/review/hooks/useReviews";
 
 interface Props {
-    reviews: Review[];
+    entityType: "product" | "service";
+    entityId: string;
+    canReview?: boolean;
 }
 
-export default function ReviewSection({ reviews }: Props) {
-    const summary: ReviewSummaryData = useMemo(() => {
+export default function ReviewSection({
+    entityType,
+    entityId,
+    canReview = true,
+}: Props) {
+    const reviews = useReviews(entityType, entityId);
+
+    const summary = useMemo(() => {
         const total = reviews.length;
 
         const breakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
@@ -38,6 +47,15 @@ export default function ReviewSection({ reviews }: Props) {
             </h2>
 
             <ReviewSummary summary={summary} />
+
+            {/* ✅ Action (Form) */}
+            <ReviewActionSection
+                canReview={canReview}
+                entityType={entityType}
+                entityId={entityId}
+            />
+
+            {/* ✅ List */}
             <ReviewList reviews={reviews} />
         </div>
     );

@@ -4,11 +4,13 @@ export type PaymentStatus = "idle" | "pending" | "paid" | "failed";
 
 export interface CheckoutItem {
     id: string;
+
+    entityId: string; // 🔥 WAJIB (ini kunci)
+    entityType: "product" | "service";
+
     name: string;
     price: number;
     quantity: number;
-
-    type: "product" | "service";
 
     meta?: {
         date?: string;

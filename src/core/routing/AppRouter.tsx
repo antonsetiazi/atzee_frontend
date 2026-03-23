@@ -5,8 +5,8 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import ToastRenderer from "@/core/feedback/ToastRenderer";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
 
-import LoginPage from "@/core/auth/pages/LoginPage";
-import RegisterPage from "@/core/auth/RegisterPage";
+import LoginPage from "@/core/ui/views/auth/LoginPage";
+import RegisterPage from "@/core/ui/views/auth/RegisterPage";
 
 import AppLayout from "@/core/ui/layout/AppLayout";
 

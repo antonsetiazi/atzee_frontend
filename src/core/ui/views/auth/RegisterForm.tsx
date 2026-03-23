@@ -1,5 +1,5 @@
+// src/core/ui/views/auth/RegisterForm.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// src/core/auth/RegisterForm.tsx
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

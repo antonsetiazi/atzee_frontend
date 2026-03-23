@@ -1,11 +1,12 @@
 // src/business/cart/cart.store.ts
 
+import { loadFromStorage, saveToStorage } from "@/core/storage/localStorage";
 import type { CartItem } from "./cart.types";
 
 type Listener = () => void;
 
 class CartStore {
-    private items: CartItem[] = [];
+    private items: CartItem[] = loadFromStorage<CartItem[]>("cart", []);
     private listeners: Listener[] = [];
 
     getItems() {
@@ -25,6 +26,8 @@ class CartStore {
     }
 
     private emit() {
+        saveToStorage("cart", this.items);
+
         this.listeners.forEach((l) => l());
     }
 }

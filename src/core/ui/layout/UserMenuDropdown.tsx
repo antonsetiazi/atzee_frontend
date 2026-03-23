@@ -1,7 +1,7 @@
 // src/core/ui/layout/UserMenuDropdown.tsx
 
 import { useState, useRef, useEffect } from "react";
-import { useAuthService } from "@/core/auth/auth.service";
+import { useAuthService } from "@/app/auth/auth.service";
 import { useNavigate } from "react-router-dom";
 import Icon from "@/core/ui/icons/Icon";
 

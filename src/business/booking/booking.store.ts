@@ -1,16 +1,18 @@
 // src/business/booking/booking.store.ts
 
+import { loadFromStorage, saveToStorage } from "@/core/storage/localStorage";
 import type { BookingState } from "./booking.types";
 
 type Listener = () => void;
 
 class BookingStore {
-    private state: BookingState = {
+    private state: BookingState = loadFromStorage<BookingState>("booking", {
+        serviceId: null,
         selectedDate: null,
         selectedSlotId: null,
         slots: [],
         isLoadingSlots: false,
-    };
+    });
 
     private listeners: Listener[] = [];
 
@@ -31,6 +33,8 @@ class BookingStore {
     }
 
     private emit() {
+        saveToStorage("booking", this.state);
+
         this.listeners.forEach((l) => l());
     }
 }

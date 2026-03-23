@@ -9,6 +9,8 @@ export interface BookingSlot {
 }
 
 export interface BookingState {
+    serviceId: string | null;
+
     selectedDate: string | null; // YYYY-MM-DD
     selectedSlotId: string | null;
 
