@@ -3,7 +3,12 @@
 import OrderSummary from "./OrderSummary";
 import PaymentMethod from "./PaymentMethod";
 
-import type { CheckoutItem, PaymentMethodType } from "./checkout.types";
+import type { CheckoutItem } from "@/business/checkout/checkout.types";
+
+type PaymentMethodType = {
+    id: string;
+    label: string;
+};
 
 interface Props {
     items: CheckoutItem[];

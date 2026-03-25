@@ -9,8 +9,6 @@ import BlockRenderer from "../renderers/BlockRenderer";
 import { useEntityData } from "../hooks/useEntityData";
 import { useEntityContext } from "../hooks/useEntityContext";
 import { useEntitySchema } from "../hooks/useEntitySchema";
-// import ListingView from "@/core/ui/views/listing/ListingView";
-// import { dummyListings } from "@/core/ui/views/listing/listing.dummy";
 
 interface Props {
     entityKey: string;
@@ -19,7 +17,7 @@ interface Props {
 export default function CoreEntityPage({ entityKey }: Props) {
     const { id } = useParams<{ id: string }>();
     const { isMobile } = useBreakpoint();
-    // const navigate = useNavigate();
+
     const { schema, loading: loadingSchema } = useEntitySchema(entityKey);
 
     const context = useEntityContext(schema?.accept_context);
@@ -31,53 +29,64 @@ export default function CoreEntityPage({ entityKey }: Props) {
         id,
     });
 
+    /**
+     * =========================================
+     * 🔐 GUARD
+     * =========================================
+     */
     if (!entityKey) {
         return <Navigate to="/dashboard" replace />;
     }
 
+    /**
+     * =========================================
+     * ⏳ LOADING STATE
+     * =========================================
+     */
     if (loadingSchema || loadingData) {
         return <LoadingState />;
     }
 
+    /**
+     * =========================================
+     * 🚀 MAIN RENDER
+     * =========================================
+     */
     return (
-        <div className="w-full bg-[var(--color-background)]">
+        <>
+            {/* 🔥 HEADER */}
             <PageHeader
                 title={schema.title}
                 description={schema.description}
                 isMobile={isMobile}
+                // variant={
+                //     entityKey === "ustadzku.guest.home" ? "home" : "default"
+                // }
+                variant="home"
             />
 
-            {/* <ListingView
-                data={dummyListings}
-                defaultSort="rating"
-                perPage={8}
-                onItemClick={(item) => {
-                    if (item.type === "product") {
-                        navigate(`/product/${item.id}`);
-                    } else {
-                        navigate(`/service/${item.id}`);
-                    }
-                }}
-            /> */}
-
+            {/* 🔥 CONTENT WRAPPER (IMPROVED) */}
             <div
                 className={`mx-auto w-full ${
                     isMobile ? "px-4 py-4 space-y-3" : "px-6 py-6 space-y-4"
                 }`}
             >
-                {schema.blocks?.map((block: any, idx: number) => (
-                    <BlockRenderer
-                        key={idx}
-                        block={block}
-                        idx={idx}
-                        entityKey={entityKey}
-                        schema={schema}
-                        pageData={pageData}
-                        context={context}
-                        id={id}
-                    />
-                ))}
+                {/* 🔥 BLOCK STACK (CENTRALIZED SPACING) */}
+                <div className="w-full space-y-6">
+                    {schema.blocks?.map((block: any, idx: number) => (
+                        <BlockRenderer
+                            key={idx}
+                            block={block}
+                            idx={idx}
+                            entityKey={entityKey}
+                            schema={schema}
+                            pageData={pageData}
+                            context={context}
+                            id={id}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
+        </>
     );
 }

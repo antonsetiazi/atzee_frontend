@@ -23,6 +23,7 @@ export type BrandingConfig = {
         textPrimary: string;
         textSecondary: string;
         textMuted: string;
+        textBrandSoft: string;
 
         // ================= State Colors =================
         success: string;

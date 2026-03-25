@@ -15,7 +15,7 @@ export default function MobileShell({
 
     return (
         <div
-            className="relative flex h-screen flex-col"
+            className="relative flex h-screen flex-col overflow-hidden"
             style={{
                 background: "var(--color-background)",
                 color: "var(--text-primary)",
@@ -49,8 +49,10 @@ export default function MobileShell({
             </div>
 
             {/* 🔥 Main Area */}
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col overflow-hidden">
+                {/* 🔥 SCROLL CONTAINER */}
                 <main
+                    id="main-scroll"
                     className="flex-1 overflow-y-auto"
                     style={{
                         paddingBottom: bottomNavHeight,
@@ -62,12 +64,9 @@ export default function MobileShell({
 
                 {/* 🔥 Bottom Navigation */}
                 <div
-                    className="fixed bottom-0 left-0 w-full z-30"
+                    className="flex-shrink-0"
                     style={{
                         height: bottomNavHeight,
-                        // background: "var(--color-surface)",
-                        // borderTop: "1px solid var(--color-border)",
-                        // boxShadow: "0 -2px 8px rgba(0,0,0,0.04)",
                     }}
                 >
                     <BottomNavigation />

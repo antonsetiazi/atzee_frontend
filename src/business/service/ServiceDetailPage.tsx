@@ -9,6 +9,8 @@ import BookingView from "@/core/ui/views/booking/BookingView";
 import { useBooking } from "@/business/booking/booking.hooks";
 import { useCheckout } from "@/business/checkout/checkout.hooks";
 
+import { chatService } from "@/business/chat/chat.service";
+
 import type { ListingDetail } from "@/core/ui/views/listing_detail/listingDetail.types";
 
 export default function ServiceDetailPage() {
@@ -49,6 +51,21 @@ export default function ServiceDetailPage() {
         },
     };
 
+    // ================================
+    // 🔥 NEW: HANDLE CHAT
+    // ================================
+    function handleChatNow() {
+        const room = chatService.getOrCreateRoom({
+            currentUserId: "user_1", // 🔥 nanti ambil dari auth
+            targetUserId: "ustadz_1", // 🔥 nanti dari data owner/service
+
+            context_type: "service",
+            context_id: data.id,
+        });
+
+        navigate(`/chat/${room.id}`);
+    }
+
     return (
         <div className="space-y-6">
             {/* DETAIL */}
@@ -58,6 +75,30 @@ export default function ServiceDetailPage() {
                     setShowBooking(true); // 🔥 trigger booking flow
                 }}
             />
+
+            {/* ================================ */}
+            {/* 🔥 NEW: CHAT BUTTON */}
+            {/* ================================ */}
+            <div
+                className="
+                    flex gap-3
+                    px-2
+                "
+            >
+                <button
+                    onClick={handleChatNow}
+                    className="
+                        flex-1 py-3 my-1 rounded-xl font-medium
+                        border transition-all
+                    "
+                    style={{
+                        borderColor: "var(--color-border)",
+                        background: "var(--color-surface)",
+                    }}
+                >
+                    Chat Sekarang
+                </button>
+            </div>
 
             {/* BOOKING SECTION */}
             {showBooking && (

@@ -1,7 +1,7 @@
 // src/business/entities/blocks/BlockShortcut.tsx
 
-import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import type { ShortcutBlock, ShortcutItem } from "../shortcut/shortcut.types";
 import Icon from "@/core/ui/icons/Icon";
 
@@ -9,98 +9,90 @@ interface Props {
     block: ShortcutBlock;
 }
 
+function getColor(index: number) {
+    const colors = [
+        "#3B82F6", // blue
+        "#10B981", // green
+        "#F59E0B", // yellow
+        "#EF4444", // red
+        "#8B5CF6", // purple
+        "#EC4899", // pink
+        "#06B6D4", // cyan
+        "#F97316", // orange
+    ];
+    return colors[index % colors.length];
+}
+
 export default function BlockShortcut({ block }: Props) {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [isOverflowing, setIsOverflowing] = useState(false);
+    const items = block.items || [];
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        const checkOverflow = () => {
-            if (!containerRef.current) return;
-            const { scrollWidth, clientWidth } = containerRef.current;
-            setIsOverflowing(scrollWidth > clientWidth);
-        };
+        const t = setTimeout(() => setVisible(true), 50);
+        return () => clearTimeout(t);
+    }, []);
 
-        checkOverflow();
-        window.addEventListener("resize", checkOverflow);
-        return () => window.removeEventListener("resize", checkOverflow);
-    }, [block.items]);
-
-    if (!block.items?.length) {
+    if (!items.length) {
         return (
-            <div
-                className="py-6 text-sm text-center"
-                style={{ color: "var(--text-muted)" }}
-            >
-                No shortcuts available
+            <div className="py-6 text-sm text-center text-[var(--text-muted)]">
+                Belum ada shortcut
             </div>
         );
     }
 
     return (
-        <div>
-            <div
-                ref={containerRef}
-                className={`
-                    flex gap-5 py-6
-                    ${
-                        isOverflowing
-                            ? "overflow-x-auto snap-x snap-mandatory scrollbar-hide"
-                            : "justify-between"
-                    }
-                `}
-            >
-                {block.items.map((item: ShortcutItem) => (
-                    <Link
-                        key={item.key}
-                        to={item.to || "#"}
-                        className={`
-                            flex flex-col items-center justify-center
-                            min-w-36
-                            ${isOverflowing ? "w-32 shrink-0" : "flex-1"}
-                            py-6 px-4
-                            rounded-2xl
-                            transition-all duration-300
-                            snap-start
-                        `}
-                        style={{
-                            background: "var(--color-surface)",
-                            border: "1px solid var(--color-border)",
-                            boxShadow: "var(--shadow-sm)",
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform =
-                                "translateY(-4px)";
-                            e.currentTarget.style.boxShadow = "var(--shadow)";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = "translateY(0)";
-                            e.currentTarget.style.boxShadow =
-                                "var(--shadow-sm)";
-                        }}
-                    >
-                        {/* Icon Circle */}
-                        <div
-                            className="flex items-center justify-center w-14 h-14 rounded-full mb-4"
+        <div className="w-full">
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-y-6 gap-x-2">
+                {items.map((item: ShortcutItem, index: number) => {
+                    const color = getColor(index);
+
+                    return (
+                        <Link
+                            key={item.key}
+                            to={item.to || "#"}
+                            className={`
+                                flex flex-col items-center justify-center gap-2
+                                transition-all duration-500
+                                active:scale-90
+                                ${
+                                    visible
+                                        ? "opacity-100 translate-y-0"
+                                        : "opacity-0 translate-y-4"
+                                }
+                            `}
                             style={{
-                                background: "var(--color-surface-alt)",
+                                transitionDelay: `${index * 60}ms`,
                             }}
                         >
-                            <Icon
-                                name={item.icon || "home"}
-                                size="lg"
-                                className="text-primary"
-                            />
-                        </div>
+                            {/* ICON */}
+                            <div
+                                className="
+                                    flex items-center justify-center
+                                    w-14 h-14 rounded-full
+                                    transition-all duration-300
+                                    hover:scale-110
+                                "
+                                style={{
+                                    background: `${color}15`,
+                                }}
+                            >
+                                <Icon
+                                    name={item.icon || "home"}
+                                    size="lg"
+                                    style={{ color }}
+                                />
+                            </div>
 
-                        {/* Label */}
-                        <span
-                            className="text-sm font-medium text-center"
-                            style={{ color: "var(--text-secondary)" }}
-                        >
-                            {item.label}
-                        </span>
-                    </Link>
-                ))}
+                            {/* LABEL */}
+                            <span
+                                className="text-xs sm:text-sm text-center leading-tight"
+                                style={{ color: "var(--color-primary)" }}
+                            >
+                                {item.label}
+                            </span>
+                        </Link>
+                    );
+                })}
             </div>
         </div>
     );

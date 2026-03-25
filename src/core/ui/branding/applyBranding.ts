@@ -39,6 +39,9 @@ export function applyBranding(branding: BrandingConfig) {
     setVar(root, "--color-warning", theme.warning);
     setVar(root, "--color-error", theme.error);
 
+    setVar(root, "--text-brand", theme.primary);
+    setVar(root, "--text-brand-soft", theme.textBrandSoft);
+
     // ==============================
     // Border
     // ==============================

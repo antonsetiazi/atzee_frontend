@@ -63,6 +63,9 @@
   /* --font-family: 'Inter', sans-serif; */
   --font-size: 16px;
   --font-weight: 400;
+
+  --text-brand: var(--color-primary);
+  --text-brand-soft: #334155;
 }
 
 body {
@@ -178,4 +181,15 @@ a:hover {
 
 .animate-slideIn {
   animation: slideIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

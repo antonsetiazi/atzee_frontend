@@ -24,6 +24,7 @@ import CartPage from "@/app/pages/cart/CartPage";
 import CheckoutPage from "@/app/pages/checkout/CheckoutPage";
 import OrderPage from "@/app/pages/order/OrderPage";
 import OrderDetailPage from "@/app/pages/order/OrderDetailPage";
+import ChatView from "@/core/ui/views/chat/ChatView";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -49,6 +50,9 @@ export default function AppRouter() {
                 <Route path="/" element={<AppLayout />}>
                     {usersRoutes.map(renderRoute)}
                     {buildPageRoutes(pages)}
+
+                    <Route path="/chat" element={<ChatView />} />
+                    <Route path="/chat/:roomId" element={<ChatView />} />
 
                     <Route
                         path="/products"

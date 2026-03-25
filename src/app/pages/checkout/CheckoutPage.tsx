@@ -5,10 +5,10 @@ import CheckoutView from "@/core/ui/views/checkout/CheckoutView";
 import PaymentResultView from "@/core/ui/views/checkout/PaymentResultView";
 import { useCheckout } from "@/business/checkout/checkout.hooks";
 import { useNavigate } from "react-router-dom";
-import { useOrders } from "@/business/order/order.hooks";
+import { eventBus } from "@/core/event/event.bus";
+
 export default function CheckoutPage() {
     const navigate = useNavigate();
-    const { createFromCheckout } = useOrders();
 
     const {
         items,
@@ -23,10 +23,15 @@ export default function CheckoutPage() {
     // ✅ FIX: effect harus di atas
     useEffect(() => {
         if (paymentStatus === "paid" && !hasCreatedRef.current) {
-            createFromCheckout();
+            eventBus.emit("order.created", {
+                orderId: `order_${Date.now()}`,
+                total: items.reduce((sum, i) => sum + i.price, 0),
+                itemsCount: items.length,
+            });
+
             hasCreatedRef.current = true;
         }
-    }, [paymentStatus, createFromCheckout]);
+    }, [paymentStatus, items]);
 
     // ✅ baru conditional render
     if (paymentStatus !== "idle") {

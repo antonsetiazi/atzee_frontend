@@ -11,18 +11,8 @@ import { TransactionWorkspace } from "../../transaction_workspace/TransactionWor
 
 import { blockRegistry } from "./blockRegistry";
 
-interface Props {
-    block: any;
-    idx: number;
-    entityKey: string;
-    schema: any;
-    pageData: any;
-    context: Record<string, any>;
-    id?: string;
-}
-
 /**
- * 🔥 Premium Surface Wrapper (tetap dipakai)
+ * 🔥 Premium Surface Wrapper
  */
 function Surface({
     children,
@@ -53,6 +43,26 @@ function Surface({
 function resolveBlockData(block: any, pageData: any) {
     if (!pageData) return pageData;
     return block.data_key ? pageData[block.data_key] : pageData;
+}
+
+/**
+ * 🔥 Helper: detect empty data (centralized)
+ */
+function isEmpty(data: any) {
+    if (data === null || data === undefined) return true;
+    if (Array.isArray(data)) return data.length === 0;
+    if (typeof data === "object") return Object.keys(data).length === 0;
+    return false;
+}
+
+interface Props {
+    block: any;
+    idx: number;
+    entityKey: string;
+    schema: any;
+    pageData: any;
+    context: Record<string, any>;
+    id?: string;
 }
 
 export default function BlockRenderer(props: Props): React.ReactNode {
@@ -142,10 +152,20 @@ export default function BlockRenderer(props: Props): React.ReactNode {
 
     /**
      * =========================================
-     * 🔥 NORMAL BLOCK (via registry)
+     * 🔥 RESOLVE COMPONENT (UPGRADED)
      * =========================================
      */
-    const Component = blockRegistry[block.type];
+    let Component = blockRegistry[block.type];
+
+    // 🔥 HERO BANNER (future ready, SAFE)
+    if (block.type === "banner" && block.config?.variant === "hero") {
+        Component = blockRegistry["banner"]; // nanti diganti HeroBanner
+    }
+
+    // 🔥 SHORTCUT GRID (future ready, SAFE)
+    if (block.type === "shortcut" && block.variant === "primary") {
+        Component = blockRegistry["shortcut"]; // nanti diganti ShortcutGrid
+    }
 
     if (!Component) {
         console.warn(`Unknown block type: ${block.type}`);
@@ -156,43 +176,69 @@ export default function BlockRenderer(props: Props): React.ReactNode {
 
     /**
      * =========================================
-     * 🔥 WRAPPER LOGIC (biar tetap kaya sebelumnya)
+     * 🔥 EMPTY STATE (CENTRALIZED)
+     * =========================================
+     */
+    if (block.empty_state && isEmpty(blockData)) {
+        // sementara fallback simple (nanti kita bikin component)
+        return (
+            <div
+                key={idx}
+                className="text-sm text-[var(--color-text-secondary)] px-4 py-6"
+            >
+                {block.empty_state?.message || "Belum ada data"}
+            </div>
+        );
+    }
+
+    /**
+     * =========================================
+     * 🔥 UI CONFIG
+     * =========================================
+     */
+    const useSurface = block.ui?.surface;
+
+    /**
+     * =========================================
+     * 🔥 SPECIAL HANDLING
      * =========================================
      */
 
-    // LIST / CARD LIST → ada onSelect + Surface
-    if (block.type === "list" || block.type === "card_list") {
-        return (
-            <Surface key={idx}>
-                <Component
-                    {...props}
-                    data={blockData}
-                    onSelect={(field: string, value: any) => {
-                        window.dispatchEvent(
-                            new CustomEvent("form:set-value", {
-                                detail: { field, value },
-                            }),
-                        );
-                    }}
-                />
-            </Surface>
+    // LIST / CARD LIST → selectable
+    if (["list", "card_list"].includes(block.type)) {
+        const content = (
+            <Component
+                {...props}
+                data={blockData}
+                onSelect={(field: string, value: any) => {
+                    window.dispatchEvent(
+                        new CustomEvent("form:set-value", {
+                            detail: { field, value },
+                        }),
+                    );
+                }}
+            />
+        );
+
+        return useSurface ? (
+            <Surface key={idx}>{content}</Surface>
+        ) : (
+            <div key={idx}>{content}</div>
         );
     }
 
-    // FILES / TAGS / AVAILABILITY → pakai Surface
-    if (
-        block.type === "files" ||
-        block.type === "tags" ||
-        block.type === "availability"
-    ) {
-        return (
-            <Surface key={idx}>
-                <Component {...props} />
-            </Surface>
+    // FILE-LIKE BLOCKS
+    if (["files", "tags", "availability"].includes(block.type)) {
+        const content = <Component {...props} />;
+
+        return useSurface ? (
+            <Surface key={idx}>{content}</Surface>
+        ) : (
+            <div key={idx}>{content}</div>
         );
     }
 
-    // TABLE → handle items & total
+    // TABLE
     if (block.type === "table") {
         return (
             <Component
@@ -204,19 +250,21 @@ export default function BlockRenderer(props: Props): React.ReactNode {
         );
     }
 
-    // SHORTCUT / LIST VIEW / CARD LIST → spacing mobile
-    if (
-        block.type === "shortcut" ||
-        block.type === "list_view" ||
-        block.type === "card_list"
-    ) {
+    // SHORTCUT / LIST VIEW → spacing wrapper (FIXED, no duplicate)
+    if (["shortcut", "list_view"].includes(block.type)) {
         return (
-            <div key={idx} className={isMobile ? "p-4" : "p-6"}>
+            <div key={idx} className={isMobile ? "" : "p-2"}>
                 <Component {...props} data={blockData} />
             </div>
         );
     }
 
-    // DEFAULT
-    return <Component key={idx} {...props} data={blockData} />;
+    /**
+     * =========================================
+     * 🔥 DEFAULT RENDER
+     * =========================================
+     */
+    const content = <Component key={idx} {...props} data={blockData} />;
+
+    return useSurface ? <Surface key={idx}>{content}</Surface> : content;
 }
