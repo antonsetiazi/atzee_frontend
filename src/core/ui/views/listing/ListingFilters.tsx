@@ -86,7 +86,7 @@ export default function ListingFilters({ filters, onChange }: Props) {
                 <input
                     type="text"
                     placeholder="📍 Lokasi"
-                    value={filters.location}
+                    value={filters.location[0] || ""}
                     onChange={(e) =>
                         update(
                             "location",

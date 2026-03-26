@@ -2,7 +2,16 @@
 
 import { useNavigate } from "react-router-dom";
 import ListingView from "@/core/ui/views/listing/ListingView";
-import { useListing } from "./listing.hooks";
+import { useProductListing, useServiceListing } from "./listing.hooks";
+import type {
+    ProductListing,
+    ServiceListing,
+} from "@/core/ui/views/listing/listing.types";
+
+/* ===========================
+   UNION TYPE
+   =========================== */
+type ListingItem = ProductListing | ServiceListing;
 
 interface Props {
     type?: "product" | "service";
@@ -10,6 +19,9 @@ interface Props {
 
 export default function ListingPage({ type }: Props) {
     const navigate = useNavigate();
+
+    const productData = useProductListing();
+    const serviceData = useServiceListing();
 
     const {
         listings,
@@ -20,7 +32,19 @@ export default function ListingPage({ type }: Props) {
         page,
         setPage,
         totalPages,
-    } = useListing(type);
+    } = type === "product" ? productData : serviceData;
+
+    /* ===========================
+       HANDLE CLICK (TYPE SAFE)
+       =========================== */
+    function handleItemClick(item: ListingItem) {
+        if (item.type === "product") {
+            navigate(`/product/${item.id}`);
+            return;
+        }
+
+        navigate(`/service/${item.id}`);
+    }
 
     return (
         <ListingView
@@ -32,13 +56,7 @@ export default function ListingPage({ type }: Props) {
             page={page}
             totalPages={totalPages}
             onChangePage={setPage}
-            onItemClick={(item) => {
-                navigate(
-                    item.type === "product"
-                        ? `/product/${item.id}`
-                        : `/service/${item.id}`,
-                );
-            }}
+            onItemClick={handleItemClick}
         />
     );
 }

@@ -1,6 +1,6 @@
 // src/business/service/ServiceDetailPage.tsx
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import ListingDetailView from "@/core/ui/views/listing_detail/ListingDetailView";
@@ -9,15 +9,29 @@ import BookingView from "@/core/ui/views/booking/BookingView";
 import { useBooking } from "@/business/booking/booking.hooks";
 import { useCheckout } from "@/business/checkout/checkout.hooks";
 
+import { serviceApi } from "@/business/service/service.api";
+import { mapServiceDetailToListingDetail } from "@/business/service/service.mapper";
+
 import { chatService } from "@/business/chat/chat.service";
 
 import type { ListingDetail } from "@/core/ui/views/listing_detail/listingDetail.types";
 
 export default function ServiceDetailPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [showBooking, setShowBooking] = useState(false);
 
+    // ================================
+    // 🔥 NEW: ASYNC STATE
+    // ================================
+    const [data, setData] = useState<ListingDetail | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // ================================
+    // 🔥 BOOKING + CHECKOUT
+    // ================================
     const {
         selectedDate,
         selectedSlotId,
@@ -28,36 +42,41 @@ export default function ServiceDetailPage() {
         confirmBooking,
     } = useBooking();
 
-    const navigate = useNavigate();
     const { initFromBooking } = useCheckout();
 
-    const data: ListingDetail = {
-        id: id || "1",
-        type: "service",
-        name: "Ustadz Ahmad - Tahsin & Tahfidz",
-        images: [
-            "https://placehold.co/600x400",
-            "https://placehold.co/600x400",
-        ],
-        category: "Religi",
-        location: "Bekasi",
-        rating: 4.9,
-        sold: 320,
-        priceLabel: "Rp 50.000 / sesi",
-        description: "Belajar tahsin dan tahfidz dengan metode mudah.",
-        meta: {
-            specialization: "Tahsin, Tahfidz",
-            experience: "5 tahun",
-        },
-    };
+    useEffect(() => {
+        async function fetchDetail() {
+            try {
+                setLoading(true);
+
+                if (!id) return;
+
+                const res = await serviceApi.getDetail(id);
+                // console.log("res:", res);
+
+                const mapped = mapServiceDetailToListingDetail(res);
+                // console.log("mapped:", mapped);
+                setData(mapped);
+            } catch (err) {
+                console.error(err);
+                setError("Gagal memuat data");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchDetail();
+    }, [id]);
 
     // ================================
-    // 🔥 NEW: HANDLE CHAT
+    // 🔥 CHAT HANDLER
     // ================================
     function handleChatNow() {
+        if (!data) return;
+
         const room = chatService.getOrCreateRoom({
-            currentUserId: "user_1", // 🔥 nanti ambil dari auth
-            targetUserId: "ustadz_1", // 🔥 nanti dari data owner/service
+            currentUserId: "user_1", // 🔥 nanti dari auth
+            targetUserId: data.meta?.owner_id || "unknown",
 
             context_type: "service",
             context_id: data.id,
@@ -66,30 +85,51 @@ export default function ServiceDetailPage() {
         navigate(`/chat/${room.id}`);
     }
 
+    // ================================
+    // 🔥 LOADING STATE
+    // ================================
+    if (loading) {
+        return (
+            <div className="p-6 text-center text-[var(--text-muted)]">
+                Memuat detail layanan...
+            </div>
+        );
+    }
+
+    // ================================
+    // 🔥 ERROR STATE
+    // ================================
+    if (error || !data) {
+        return (
+            <div className="p-6 text-center text-red-500">
+                {error || "Data tidak ditemukan"}
+            </div>
+        );
+    }
+
+    // ================================
+    // 🔥 MAIN RENDER
+    // ================================
     return (
         <div className="space-y-6">
             {/* DETAIL */}
             <ListingDetailView
                 data={data}
                 onPrimaryAction={() => {
-                    setShowBooking(true); // 🔥 trigger booking flow
+                    setShowBooking(true);
                 }}
             />
 
             {/* ================================ */}
-            {/* 🔥 NEW: CHAT BUTTON */}
+            {/* 🔥 CHAT BUTTON */}
             {/* ================================ */}
-            <div
-                className="
-                    flex gap-3
-                    px-2
-                "
-            >
+            <div className="flex gap-3 px-2">
                 <button
                     onClick={handleChatNow}
                     className="
                         flex-1 py-3 my-1 rounded-xl font-medium
                         border transition-all
+                        hover:bg-[var(--color-hover)]
                     "
                     style={{
                         borderColor: "var(--color-border)",
@@ -100,7 +140,9 @@ export default function ServiceDetailPage() {
                 </button>
             </div>
 
-            {/* BOOKING SECTION */}
+            {/* ================================ */}
+            {/* 🔥 BOOKING SECTION */}
+            {/* ================================ */}
             {showBooking && (
                 <div
                     className="
@@ -127,10 +169,7 @@ export default function ServiceDetailPage() {
 
                             console.log("BOOKING CONFIRMED:", result);
 
-                            // 🔥 init checkout dari booking
                             initFromBooking();
-
-                            // 🔥 redirect ke checkout page
                             navigate("/checkout");
                         }}
                     />

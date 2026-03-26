@@ -1,27 +1,50 @@
 // src/core/ui/views/listing/listing.types.ts
 
-export type ListingType = "product" | "service";
+// ==============================
+// PRODUCT
+// ==============================
+export interface ProductListing {
+    type: "product";
 
-export interface Listing {
     id: string;
-    type: ListingType;
     name: string;
-    category: string;
-    location: string;
     image: string;
-
-    rating: number; // 0 - 5
-    sold: number; // jumlah terjual
-
     price: number;
-    priceLabel?: string;
 
-    isNew?: boolean;
+    category?: string;
+    location?: string;
+
     isPromo?: boolean;
+    isNew?: boolean;
 
-    meta?: Record<string, unknown>;
+    sold?: number;
+    rating?: number;
 }
 
+// ==============================
+// SERVICE
+// ==============================
+export interface ServiceListing {
+    type: "service";
+
+    id: string;
+    name: string;
+    image: string;
+
+    startingPrice: number;
+    priceLabel: string;
+    serviceCount: number;
+
+    location: string;
+
+    category?: string;
+
+    rating?: number;
+}
+
+// ==============================
+// SHARED
+// ==============================
 export interface ListingFiltersState {
     search: string;
     category: string[];

@@ -1,19 +1,27 @@
 // src/core/ui/views/listing/ListingView.tsx
 
 import { useState } from "react";
-import ListingCard from "./ListingCard";
+import ProductCard from "./ProductCard";
+import ServiceCard from "./ServiceCard";
 import ListingSidebarFilters from "./ListingSidebarFilters";
 import ListingSortBar from "./ListingSortBar";
 import ListingPagination from "./ListingPagination";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import type {
-    Listing,
+    ProductListing,
+    ServiceListing,
     ListingFiltersState,
     ListingSort,
 } from "./listing.types";
 
+/* ===========================
+   UNION TYPE
+   =========================== */
+
+type ListingItem = ProductListing | ServiceListing;
+
 interface Props {
-    listings: Listing[];
+    listings: ListingItem[];
 
     filters: ListingFiltersState;
     onChangeFilters: (filters: ListingFiltersState) => void;
@@ -25,7 +33,7 @@ interface Props {
     totalPages: number;
     onChangePage: (page: number) => void;
 
-    onItemClick?: (listing: Listing) => void;
+    onItemClick?: (listing: ListingItem) => void;
 }
 
 export default function ListingView({
@@ -41,6 +49,29 @@ export default function ListingView({
 }: Props) {
     const { isMobile } = useBreakpoint();
     const [showFilter, setShowFilter] = useState(false);
+
+    /* ===========================
+       RENDER CARD (TYPE SAFE)
+       =========================== */
+    function renderItem(item: ListingItem, index: number) {
+        if (item.type === "product") {
+            return (
+                <ProductCard
+                    key={`product-${item.id}`}
+                    item={item}
+                    onClick={onItemClick}
+                />
+            );
+        }
+
+        return (
+            <ServiceCard
+                key={`service-${item.id}-${index}`}
+                item={item}
+                onClick={onItemClick}
+            />
+        );
+    }
 
     // =============================
     // MOBILE LAYOUT
@@ -92,13 +123,7 @@ export default function ListingView({
 
                 {/* Grid */}
                 <div className="grid grid-cols-2 gap-3">
-                    {listings.map((p) => (
-                        <ListingCard
-                            key={p.id}
-                            listing={p}
-                            onClick={onItemClick}
-                        />
-                    ))}
+                    {listings.map((item, index) => renderItem(item, index))}
                 </div>
 
                 {/* Pagination */}
@@ -185,13 +210,7 @@ export default function ListingView({
                 />
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {listings.map((p) => (
-                        <ListingCard
-                            key={p.id}
-                            listing={p}
-                            onClick={onItemClick}
-                        />
-                    ))}
+                    {listings.map((item, index) => renderItem(item, index))}
                 </div>
 
                 <ListingPagination

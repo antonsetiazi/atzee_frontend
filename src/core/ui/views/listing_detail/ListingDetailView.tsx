@@ -1,4 +1,5 @@
 // src/core/ui/views/listing_detail/ListingDetailView.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
 import type { ListingDetail } from "./listingDetail.types";
@@ -144,6 +145,42 @@ export default function ListingDetailView({
                     <p className="text-sm text-[var(--text-muted)] leading-relaxed">
                         {data.description}
                     </p>
+                </div>
+            )}
+
+            {/* ================= SERVICES LIST ================= */}
+            {data.type === "service" && data.meta?.offerings && (
+                <div className="space-y-3">
+                    <h2 className="text-lg font-semibold">Daftar Layanan</h2>
+
+                    <div className="space-y-2">
+                        {data.meta.offerings.map((item: any) => (
+                            <div
+                                key={item.product_id}
+                                className="
+                        p-3 rounded-xl border
+                        border-[var(--color-border)]
+                        bg-[var(--color-surface)]
+                        flex justify-between items-center
+                    "
+                            >
+                                <div>
+                                    <p className="font-medium">
+                                        {item.product_name}
+                                    </p>
+                                    <p className="text-sm text-[var(--text-muted)]">
+                                        {item.duration_minutes} menit
+                                    </p>
+                                </div>
+
+                                <div className="text-right">
+                                    <p className="font-semibold text-[var(--color-primary)]">
+                                        Rp {item.price.toLocaleString()}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>
