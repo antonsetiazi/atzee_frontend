@@ -1,5 +1,7 @@
 // src/core/ui/views/listing/listing.types.ts
 
+export type ListingType = "product" | "service";
+
 // ==============================
 // PRODUCT
 // ==============================

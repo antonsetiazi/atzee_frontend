@@ -37,6 +37,8 @@ export function mapServiceDetailToListingDetail(data: any): ListingDetail {
             offerings: data.offerings, // 🔥 kita simpan full di meta
             specialization: data.specialization,
             experience_years: data.experience_years,
+            resource_id: data.resource_id,
+            working_hours: data.working_hours,
         },
     };
 }

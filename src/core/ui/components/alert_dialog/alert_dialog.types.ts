@@ -6,6 +6,7 @@ export interface AlertDialogProps {
     open: boolean;
     onClose?: () => void;
     children: ReactNode;
+    className?: string;
 }
 
 export interface AlertDialogSectionProps {

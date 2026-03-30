@@ -1,12 +1,13 @@
 // src/core/ui/views/checkout/OrderSummary.tsx
 
-import type { CheckoutItem } from "./checkout.types";
+import type { CheckoutItem } from "@/business/checkout/checkout.types";
 
 interface Props {
     items: CheckoutItem[];
+    detailed?: boolean;
 }
 
-export default function OrderSummary({ items }: Props) {
+export default function OrderSummary({ items, detailed }: Props) {
     const total = items.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0,
@@ -25,18 +26,35 @@ export default function OrderSummary({ items }: Props) {
 
             <div className="space-y-3">
                 {items.map((item) => (
-                    <div key={item.id} className="flex justify-between text-sm">
-                        <div>
+                    <div
+                        key={item.id}
+                        className="
+                            flex justify-between gap-3 text-sm 
+                            border-b border-[var(--color-border)]
+                            pb-3
+                        "
+                    >
+                        <div className="space-y-1">
                             <p className="font-medium">{item.name}</p>
 
-                            {item.type === "service" && item.meta && (
-                                <p className="text-xs text-gray-500">
-                                    {item.meta.date} • {item.meta.slotLabel}
-                                </p>
-                            )}
+                            {detailed &&
+                                item.entityType === "service" &&
+                                item.meta && (
+                                    <>
+                                        <p className="text-xs text-gray-500">
+                                            📅 {item.meta.date}
+                                        </p>
+
+                                        {item.meta.duration && (
+                                            <p className="text-xs text-gray-500">
+                                                ⏱ {item.meta.duration} menit
+                                            </p>
+                                        )}
+                                    </>
+                                )}
 
                             <p className="text-xs text-gray-500">
-                                x{item.quantity}
+                                Qty: {item.quantity}
                             </p>
                         </div>
 
@@ -47,10 +65,17 @@ export default function OrderSummary({ items }: Props) {
                 ))}
             </div>
 
-            <div className="border-t pt-3 flex justify-between font-semibold">
-                <span>Total</span>
-                <span>Rp {total.toLocaleString()}</span>
-            </div>
+            {detailed && (
+                <div
+                    className="
+                    border-t border-[var(--color-border)]
+                    pt-3 flex justify-between font-semibold
+                "
+                >
+                    <span>Total</span>
+                    <span>Rp {total.toLocaleString()}</span>
+                </div>
+            )}
         </div>
     );
 }

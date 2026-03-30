@@ -25,6 +25,7 @@ import CheckoutPage from "@/app/pages/checkout/CheckoutPage";
 import OrderPage from "@/app/pages/order/OrderPage";
 import OrderDetailPage from "@/app/pages/order/OrderDetailPage";
 import ChatView from "@/core/ui/views/chat/ChatView";
+import ServiceBookingPage from "@/business/booking/ServiceBookingPage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -71,6 +72,12 @@ export default function AppRouter() {
                         path="/service/:id"
                         element={<ServiceDetailPage />}
                     />
+
+                    <Route
+                        path="/service/:id/booking"
+                        element={<ServiceBookingPage />}
+                    />
+
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/orders" element={<OrderPage />} />

@@ -1,11 +1,9 @@
 // src/app/pages/checkout/CheckoutPage.tsx
 
-import { useEffect, useRef } from "react";
 import CheckoutView from "@/core/ui/views/checkout/CheckoutView";
 import PaymentResultView from "@/core/ui/views/checkout/PaymentResultView";
 import { useCheckout } from "@/business/checkout/checkout.hooks";
 import { useNavigate } from "react-router-dom";
-import { eventBus } from "@/core/event/event.bus";
 
 export default function CheckoutPage() {
     const navigate = useNavigate();
@@ -18,21 +16,6 @@ export default function CheckoutPage() {
         paymentStatus,
     } = useCheckout();
 
-    const hasCreatedRef = useRef(false);
-
-    // ✅ FIX: effect harus di atas
-    useEffect(() => {
-        if (paymentStatus === "paid" && !hasCreatedRef.current) {
-            eventBus.emit("order.created", {
-                orderId: `order_${Date.now()}`,
-                total: items.reduce((sum, i) => sum + i.price, 0),
-                itemsCount: items.length,
-            });
-
-            hasCreatedRef.current = true;
-        }
-    }, [paymentStatus, items]);
-
     // ✅ baru conditional render
     if (paymentStatus !== "idle") {
         return (
@@ -41,6 +24,12 @@ export default function CheckoutPage() {
                 onBackHome={() => navigate("/")}
             />
         );
+    }
+
+    // tambahan:
+    if (!items.length) {
+        navigate("/");
+        return null;
     }
 
     return (

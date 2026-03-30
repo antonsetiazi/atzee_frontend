@@ -1,89 +1,186 @@
 // src/business/booking/booking.service.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { bookingStore } from "./booking.store";
-import type { BookingSlot } from "./booking.types";
-
-function generateDummySlots(date: string): BookingSlot[] {
-    // simulasi slot jam 09:00 - 17:00
-    const slots: BookingSlot[] = [];
-
-    for (let hour = 9; hour < 17; hour++) {
-        const start = `${date}T${String(hour).padStart(2, "0")}:00:00`;
-        const end = `${date}T${String(hour + 1).padStart(2, "0")}:00:00`;
-
-        slots.push({
-            id: `${hour}`,
-            label: `${hour}:00 - ${hour + 1}:00`,
-            start,
-            end,
-            isAvailable: Math.random() > 0.3, // random availability
-        });
-    }
-
-    return slots;
-}
+import { bookingApi } from "./booking.api";
 
 export const bookingService = {
-    selectService(serviceId: string) {
+    /* ===========================
+       🎯 SELECT RESOURCE
+       =========================== */
+    selectResource(resourceId: string) {
         bookingStore.setState({
-            serviceId,
+            resourceId,
             selectedDate: null,
             selectedSlotId: null,
             slots: [],
         });
     },
 
+    /* ===========================
+       📅 SELECT DATE
+       =========================== */
     selectDate(date: string) {
         bookingStore.setState({
             selectedDate: date,
             selectedSlotId: null,
-            isLoadingSlots: true,
+            slots: [],
         });
 
-        // simulate async fetch
-        setTimeout(() => {
-            const slots = generateDummySlots(date);
-
-            bookingStore.setState({
-                slots,
-                isLoadingSlots: false,
-            });
-        }, 500);
+        bookingService.fetchAvailability(); // 🔥 AUTO LOAD
     },
 
+    /* ===========================
+       🕒 SELECT SLOT
+       =========================== */
     selectSlot(slotId: string) {
         bookingStore.setState({
             selectedSlotId: slotId,
         });
     },
 
-    confirmBooking() {
+    setOfferings(offerings: any[]) {
+        bookingStore.setState({
+            offerings,
+            selectedSlotId: null,
+            slots: [], // reset slot karena durasi berubah
+        });
+    },
+
+    /* ===========================
+       🧠 CALCULATE DURATION (CORE)
+       =========================== */
+    getTotalDuration(): number {
         const state = bookingStore.getState();
 
-        if (!state.serviceId || !state.selectedDate || !state.selectedSlotId) {
-            throw new Error("Booking belum lengkap");
+        // 🔥 ambil dari offerings (harus sudah disimpan di store)
+        const offerings = state.offerings || [];
+
+        if (!offerings.length) return 0;
+
+        return offerings.reduce(
+            (acc: number, item: any) => acc + (item.duration || 0),
+            0,
+        );
+    },
+
+    /* ===========================
+       🚀 CONFIRM BOOKING
+       =========================== */
+    async confirmBooking() {
+        const state = bookingStore.getState();
+
+        if (!state.resourceId) {
+            throw new Error("Resource belum dipilih");
+        }
+
+        if (!state.selectedDate) {
+            throw new Error("Tanggal belum dipilih");
+        }
+
+        if (!state.selectedSlotId) {
+            throw new Error("Slot belum dipilih");
         }
 
         const slot = state.slots.find((s) => s.id === state.selectedSlotId);
 
         if (!slot) {
-            throw new Error("Slot tidak ditemukan");
+            throw new Error("Slot tidak valid");
         }
 
+        const res = await bookingApi.hold({
+            resource_type: "service",
+            resource_id: state.resourceId,
+            start_time: slot.start,
+            end_time: slot.end,
+        });
+
         return {
-            serviceId: state.serviceId, // 🔥 penting
+            ...res,
+            resourceId: state.resourceId,
             date: state.selectedDate,
-            slot,
         };
     },
 
+    /* ===========================
+       📡 FETCH AVAILABILITY (FIXED)
+       =========================== */
+    async fetchAvailability() {
+        const state = bookingStore.getState();
+
+        if (!state.resourceId || !state.selectedDate) {
+            console.warn("❌ Missing resourceId or selectedDate");
+            return;
+        }
+
+        const duration = bookingService.getTotalDuration();
+
+        if (!duration || duration <= 0) {
+            console.warn("❌ Duration tidak valid");
+            bookingStore.setState({ slots: [] });
+            return;
+        }
+
+        bookingStore.setState({ isLoadingSlots: true });
+
+        try {
+            const res = await bookingApi.getAvailability({
+                resource_type: "service",
+                resource_id: state.resourceId,
+                date: state.selectedDate,
+                duration: duration, // 🔥 FIX UTAMA
+            });
+
+            // console.log(res);
+
+            const rawSlots = res;
+
+            if (!Array.isArray(rawSlots)) {
+                console.error("❌ Invalid availability format:", res);
+                bookingStore.setState({ slots: [] });
+                return;
+            }
+
+            const formatTime = (iso: string) => {
+                const date = new Date(iso);
+                return date.toLocaleTimeString("id-ID", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+            };
+
+            const slots = rawSlots.map((slot: any, idx: number) => ({
+                id: String(idx),
+                label: `${formatTime(slot.start_time)} - ${formatTime(slot.end_time)}`,
+                start: slot.start_time,
+                end: slot.end_time,
+                isAvailable: slot.is_available,
+            }));
+
+            bookingStore.setState({
+                slots,
+                selectedSlotId: null,
+            });
+        } catch (err) {
+            console.error("❌ fetchAvailability error:", err);
+
+            bookingStore.setState({
+                slots: [],
+            });
+        } finally {
+            bookingStore.setState({ isLoadingSlots: false });
+        }
+    },
+
+    /* ===========================
+       🔄 RESET
+       =========================== */
     reset() {
         bookingStore.setState({
-            serviceId: null,
+            resourceId: null,
             selectedDate: null,
             selectedSlotId: null,
             slots: [],
-            isLoadingSlots: false,
         });
     },
 };

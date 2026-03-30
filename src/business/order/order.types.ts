@@ -1,27 +1,26 @@
 // src/business/order/order.types.ts
 
-import type { CheckoutItem } from "@/business/checkout/checkout.types";
+export type OrderStatus = "pending" | "paid" | "completed" | "failed";
 
-export type OrderStatus =
-    | "pending"
-    | "paid"
-    | "completed"
-    | "failed"
-    | "cancelled";
+export interface OrderItem {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number;
+}
 
 export interface Order {
     id: string;
+    order_number: string;
 
-    userId: string;
-    userName: string;
-
-    items: CheckoutItem[];
+    items: OrderItem[];
 
     total: number;
-
-    paymentMethod: string;
 
     status: OrderStatus;
 
     createdAt: string;
+
+    // 🔥 SESSION-BASED
+    bookingId?: string | null;
 }

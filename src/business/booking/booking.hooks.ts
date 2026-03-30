@@ -19,6 +19,7 @@ export function useBooking() {
         selectDate: bookingService.selectDate,
         selectSlot: bookingService.selectSlot,
         confirmBooking: bookingService.confirmBooking,
+        fetchAvailability: bookingService.fetchAvailability,
         reset: bookingService.reset,
     };
 }

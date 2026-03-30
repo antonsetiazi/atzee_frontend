@@ -17,6 +17,11 @@ export default function ListingDetailView({
 }: Props) {
     const [activeImage, setActiveImage] = useState(0);
 
+    function formatHour(hour?: number) {
+        if (hour === undefined) return "-";
+        return `${hour.toString().padStart(2, "0")}:00`;
+    }
+
     return (
         <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
             {/* ================= IMAGE GALLERY ================= */}
@@ -79,6 +84,16 @@ export default function ListingDetailView({
                     {/* ================= SERVICE META ================= */}
                     {data.type === "service" && data.meta && (
                         <div className="space-y-1 text-sm">
+                            {data.meta.working_hours && (
+                                <p className="flex items-center gap-1">
+                                    🕒{" "}
+                                    <span className="font-medium">
+                                        Jam Operasional:
+                                    </span>
+                                    {formatHour(data.meta.working_hours.start)}{" "}
+                                    - {formatHour(data.meta.working_hours.end)}
+                                </p>
+                            )}
                             {data.meta.specialization && (
                                 <p>
                                     📘 Spesialisasi: {data.meta.specialization}

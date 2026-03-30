@@ -57,7 +57,7 @@ export default function Modal({
                     border-[var(--color-border)]
                     rounded-[var(--radius)]
                     shadow-[var(--shadow)]
-                    w-full
+                    w-[90%] sm:w-full
                     max-w-lg
                     animate-[fadeIn_.15s_ease-out]
                     ${className}

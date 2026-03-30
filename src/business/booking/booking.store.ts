@@ -7,10 +7,11 @@ type Listener = () => void;
 
 class BookingStore {
     private state: BookingState = loadFromStorage<BookingState>("booking", {
-        serviceId: null,
+        resourceId: null,
         selectedDate: null,
         selectedSlotId: null,
         slots: [],
+        offerings: [],
         isLoadingSlots: false,
     });
 

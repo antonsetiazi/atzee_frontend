@@ -1,6 +1,6 @@
 // src/core/ui/views/checkout/PaymentMethod.tsx
 
-import type { PaymentMethodType } from "./checkout.types";
+import type { PaymentMethodType } from "@/business/checkout/checkout.types";
 
 interface Props {
     methods: PaymentMethodType[];
@@ -30,20 +30,36 @@ export default function PaymentMethod({
                     const isSelected = method.id === selectedMethodId;
 
                     return (
-                        <button
+                        <div
                             key={method.id}
                             onClick={() => onSelect(method.id)}
                             className={`
-                                w-full text-left p-3 rounded-xl border
+                                cursor-pointer p-4 rounded-xl border transition
+                                flex justify-between items-center
                                 ${
                                     isSelected
                                         ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10"
-                                        : "border-[var(--color-border)]"
+                                        : "border-[var(--color-border)] hover:border-[var(--color-primary)]"
                                 }
                             `}
                         >
-                            {method.label}
-                        </button>
+                            <span>{method.label}</span>
+
+                            <div
+                                className={`
+                                    w-5 h-5 rounded-full border flex items-center justify-center
+                                    ${
+                                        isSelected
+                                            ? "bg-[var(--color-primary)] border-[var(--color-primary)]"
+                                            : ""
+                                    }
+                                `}
+                            >
+                                {isSelected && (
+                                    <div className="w-2 h-2 bg-white rounded-full" />
+                                )}
+                            </div>
+                        </div>
                     );
                 })}
             </div>

@@ -1,5 +1,12 @@
 // src/business/booking/booking.types.ts
 
+export interface BookingOffering {
+    id: number;
+    name?: string;
+    duration: number;
+    price?: number;
+}
+
 export interface BookingSlot {
     id: string;
     label: string;
@@ -9,11 +16,14 @@ export interface BookingSlot {
 }
 
 export interface BookingState {
-    serviceId: string | null;
+    resourceId: string | null; // ✅ UUID
 
-    selectedDate: string | null; // YYYY-MM-DD
+    selectedDate: string | null;
     selectedSlotId: string | null;
 
     slots: BookingSlot[];
+
+    offerings: BookingOffering[];
+
     isLoadingSlots: boolean;
 }

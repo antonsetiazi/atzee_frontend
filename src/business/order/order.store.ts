@@ -5,8 +5,20 @@ import { loadFromStorage, saveToStorage } from "@/core/storage/localStorage";
 
 type Listener = (orders: Order[]) => void;
 
+function deduplicateOrders(orders: Order[]): Order[] {
+    const map = new Map<string, Order>();
+
+    for (const o of orders) {
+        map.set(o.id, o); // 🔥 last write wins
+    }
+
+    return Array.from(map.values());
+}
+
 class OrderStore {
-    private orders: Order[] = loadFromStorage<Order[]>("orders", []);
+    private orders: Order[] = deduplicateOrders(
+        loadFromStorage<Order[]>("orders", []),
+    );
 
     private listeners: Listener[] = [];
 
@@ -14,23 +26,39 @@ class OrderStore {
         return this.orders;
     }
 
+    setOrders(orders: Order[]) {
+        // 🔥 pastikan tidak ada duplicate dari API
+        this.orders = deduplicateOrders(orders);
+        this.emit();
+    }
+
     addOrder(order: Order) {
-        this.orders = [order, ...this.orders];
+        const exists = this.orders.find((o) => o.id === order.id);
+
+        if (exists) {
+            // 🔥 update existing (merge)
+            this.orders = this.orders.map((o) =>
+                o.id === order.id ? { ...o, ...order } : o,
+            );
+        } else {
+            this.orders = [order, ...this.orders];
+        }
+
         this.emit();
     }
 
     updateStatus(id: string, status: Order["status"]) {
-        const order = this.orders.find((o) => o.id === id);
-        if (order) {
-            order.status = status;
-            this.emit();
-        }
+        this.orders = this.orders.map((o) =>
+            o.id === id ? { ...o, status } : o,
+        );
+
+        this.emit();
     }
 
     subscribe(listener: Listener) {
         this.listeners.push(listener);
 
-        // 🔥 langsung kirim data awal
+        // 🔥 kirim initial state
         listener(this.orders);
 
         return () => {

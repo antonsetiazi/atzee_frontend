@@ -4,25 +4,46 @@ import { checkoutStore } from "./checkout.store";
 import type { CheckoutItem } from "./checkout.types";
 
 import { cartStore } from "@/business/cart/cart.store";
-import { bookingStore } from "@/business/booking/booking.store";
 import { eventBus } from "@/core/event/event.bus";
+import { createOrderApi } from "@/business/order/order.api";
+
+type BookingResult = {
+    booking_id: string; // 🔥 dari backend
+    expires_at?: string; // optional (UX)
+
+    serviceId: string;
+    date: string;
+
+    offerings: {
+        id: number;
+        name: string;
+        price: number;
+        duration: number;
+    }[];
+};
 
 export const checkoutService = {
-    // 🛒 dari cart
+    /* ===========================
+       🛒 INIT FROM CART (PRODUCT)
+       =========================== */
     initFromCart() {
         const cartItems = cartStore.getItems();
 
         const items: CheckoutItem[] = cartItems.map((item) => ({
             id: item.id,
-            entityId: item.productId, // 🔥 FIX
+            entityId: item.listingId, // 🔥 FIX
             entityType: "product",
             name: item.name,
             price: item.price,
             quantity: item.quantity,
+            meta: {
+                type: "product",
+            },
         }));
 
         checkoutStore.setState({
             items,
+            bookingId: null,
             paymentStatus: "idle",
             selectedPaymentMethodId: null,
         });
@@ -34,38 +55,29 @@ export const checkoutService = {
         });
     },
 
-    // 📅 dari booking
-    initFromBooking() {
-        const booking = bookingStore.getState();
+    /* ===========================
+       📅 INIT FROM BOOKING (SERVICE)
+       =========================== */
+    initFromBooking(booking: BookingResult) {
+        const items: CheckoutItem[] = booking.offerings.map((off) => ({
+            id: `service-${off.id}`,
+            entityId: String(off.id),
+            entityType: "service",
 
-        if (!booking.selectedDate || !booking.selectedSlotId) {
-            throw new Error("Booking belum lengkap");
-        }
+            name: off.name,
+            price: off.price,
+            quantity: 1,
 
-        const slot = booking.slots.find((s) => s.id === booking.selectedSlotId);
-
-        if (!slot) {
-            throw new Error("Slot tidak ditemukan");
-        }
-
-        const items: CheckoutItem[] = [
-            {
-                id: "booking",
-                entityId: booking.serviceId || "service-1", // 🔥 WAJIB (sesuaikan!)
-                entityType: "service",
-                name: "Service Booking",
-                price: 50000, // nanti dari backend/service
-                quantity: 1,
-
-                meta: {
-                    date: booking.selectedDate,
-                    slotLabel: slot.label,
-                },
+            meta: {
+                type: "service",
+                date: booking.date,
+                duration: off.duration,
             },
-        ];
+        }));
 
         checkoutStore.setState({
             items,
+            bookingId: booking.booking_id,
             paymentStatus: "idle",
             selectedPaymentMethodId: null,
         });
@@ -77,14 +89,22 @@ export const checkoutService = {
         });
     },
 
+    /* ===========================
+       💳 SELECT PAYMENT
+       =========================== */
     selectPaymentMethod(id: string) {
         checkoutStore.setState({
             selectedPaymentMethodId: id,
         });
     },
 
-    confirmPayment() {
+    /* ===========================
+       🚀 CONFIRM PAYMENT
+       =========================== */
+    async confirmPayment() {
         const state = checkoutStore.getState();
+
+        /* ---------- VALIDATION ---------- */
 
         if (!state.items.length) {
             eventBus.emit("order.failed", {
@@ -100,7 +120,8 @@ export const checkoutService = {
             throw new Error("Pilih metode pembayaran");
         }
 
-        // 🔥 set pending dulu
+        /* ---------- SET PENDING ---------- */
+
         checkoutStore.setState({
             paymentStatus: "pending",
         });
@@ -109,48 +130,53 @@ export const checkoutService = {
             methodId: state.selectedPaymentMethodId,
         });
 
-        // simulasi API payment
-        setTimeout(() => {
-            const success = Math.random() > 0.2;
+        try {
+            /* ---------- BUILD PAYLOAD ---------- */
+            const payload = {
+                items: state.items.map((i) => ({
+                    id: Number(i.entityId),
+                    qty: i.quantity,
+                })),
+                payment_method: state.selectedPaymentMethodId,
+                booking_id: state.bookingId,
+            };
 
-            if (success) {
-                checkoutStore.setState({
-                    paymentStatus: "paid",
-                });
+            /* ---------- API CALL ---------- */
+            const order = await createOrderApi(payload);
 
-                // 🔥 SUCCESS → ORDER CREATED
-                eventBus.emit("order.created", {
-                    orderId: generateOrderId(),
-                    total: calculateTotal(state.items),
-                    itemsCount: state.items.length,
-                });
-            } else {
-                checkoutStore.setState({
-                    paymentStatus: "failed",
-                });
+            /* ---------- SUCCESS ---------- */
+            checkoutStore.setState({
+                paymentStatus: "paid",
+            });
 
-                // 🔥 FAILED
-                eventBus.emit("order.failed", {
-                    reason: "Pembayaran gagal",
-                });
-            }
-        }, 1500);
+            // 🔥 tetap emit untuk ecosystem lain (chat, dll)
+            eventBus.emit("order.created", {
+                orderId: String(order.id),
+                total: order.total,
+                itemsCount: order.items?.length || state.items.length,
+            });
+        } catch (err) {
+            console.error(err);
+
+            checkoutStore.setState({
+                paymentStatus: "failed",
+            });
+
+            eventBus.emit("order.failed", {
+                reason: "API error",
+            });
+        }
     },
 
+    /* ===========================
+       🔄 RESET
+       =========================== */
     reset() {
         checkoutStore.setState({
             items: [],
+            bookingId: null,
             paymentStatus: "idle",
             selectedPaymentMethodId: null,
         });
     },
 };
-
-// helper
-function generateOrderId() {
-    return "ORD-" + Math.floor(Math.random() * 10000);
-}
-
-function calculateTotal(items: CheckoutItem[]) {
-    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-}

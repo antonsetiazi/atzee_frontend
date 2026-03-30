@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import ListingDetailView from "@/core/ui/views/listing_detail/ListingDetailView";
-import BookingView from "@/core/ui/views/booking/BookingView";
-
-import { useBooking } from "@/business/booking/booking.hooks";
-import { useCheckout } from "@/business/checkout/checkout.hooks";
 
 import { serviceApi } from "@/business/service/service.api";
 import { mapServiceDetailToListingDetail } from "@/business/service/service.mapper";
@@ -15,12 +11,15 @@ import { mapServiceDetailToListingDetail } from "@/business/service/service.mapp
 import { chatService } from "@/business/chat/chat.service";
 
 import type { ListingDetail } from "@/core/ui/views/listing_detail/listingDetail.types";
+import { useSessionStore } from "@/core/session/session.store";
+import { useRequireLogin } from "@/core/auth/useRequireLogin";
+import LoginRequiredDialog from "@/core/auth/LoginRequiredDialog";
 
 export default function ServiceDetailPage() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [showBooking, setShowBooking] = useState(false);
+    const { user } = useSessionStore();
 
     // ================================
     // 🔥 NEW: ASYNC STATE
@@ -29,20 +28,8 @@ export default function ServiceDetailPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // ================================
-    // 🔥 BOOKING + CHECKOUT
-    // ================================
-    const {
-        selectedDate,
-        selectedSlotId,
-        slots,
-        isLoadingSlots,
-        selectDate,
-        selectSlot,
-        confirmBooking,
-    } = useBooking();
-
-    const { initFromBooking } = useCheckout();
+    const { open, handleClose, handleLogin, triggerLoginRequired } =
+        useRequireLogin();
 
     useEffect(() => {
         async function fetchDetail() {
@@ -52,10 +39,9 @@ export default function ServiceDetailPage() {
                 if (!id) return;
 
                 const res = await serviceApi.getDetail(id);
-                // console.log("res:", res);
 
                 const mapped = mapServiceDetailToListingDetail(res);
-                // console.log("mapped:", mapped);
+
                 setData(mapped);
             } catch (err) {
                 console.error(err);
@@ -71,18 +57,26 @@ export default function ServiceDetailPage() {
     // ================================
     // 🔥 CHAT HANDLER
     // ================================
+    // handler chat
     function handleChatNow() {
-        if (!data) return;
+        triggerLoginRequired(() => {
+            if (!data || !user) return;
 
-        const room = chatService.getOrCreateRoom({
-            currentUserId: "user_1", // 🔥 nanti dari auth
-            targetUserId: data.meta?.owner_id || "unknown",
-
-            context_type: "service",
-            context_id: data.id,
+            const room = chatService.getOrCreateRoom({
+                currentUserId: user.id,
+                targetUserId: data.meta?.owner_id || "unknown",
+                context_type: "service",
+                context_id: data.id,
+            });
+            navigate(`/chat/${room.id}`);
         });
+    }
 
-        navigate(`/chat/${room.id}`);
+    // handler booking
+    function handleBooking() {
+        triggerLoginRequired(() => {
+            navigate(`/service/${id}/booking`);
+        });
     }
 
     // ================================
@@ -113,12 +107,7 @@ export default function ServiceDetailPage() {
     return (
         <div className="space-y-6">
             {/* DETAIL */}
-            <ListingDetailView
-                data={data}
-                onPrimaryAction={() => {
-                    setShowBooking(true);
-                }}
-            />
+            <ListingDetailView data={data} onPrimaryAction={handleBooking} />
 
             {/* ================================ */}
             {/* 🔥 CHAT BUTTON */}
@@ -140,41 +129,11 @@ export default function ServiceDetailPage() {
                 </button>
             </div>
 
-            {/* ================================ */}
-            {/* 🔥 BOOKING SECTION */}
-            {/* ================================ */}
-            {showBooking && (
-                <div
-                    className="
-                        m-2
-                        p-4 rounded-2xl space-y-4
-                        border border-[var(--color-border)]
-                        bg-[var(--color-surface)]
-                        shadow-[var(--shadow)]
-                    "
-                >
-                    <h2 className="text-lg font-semibold">
-                        Pilih Jadwal Booking
-                    </h2>
-
-                    <BookingView
-                        selectedDate={selectedDate}
-                        selectedSlotId={selectedSlotId}
-                        slots={slots}
-                        isLoadingSlots={isLoadingSlots}
-                        onSelectDate={selectDate}
-                        onSelectSlot={selectSlot}
-                        onConfirm={() => {
-                            const result = confirmBooking();
-
-                            console.log("BOOKING CONFIRMED:", result);
-
-                            initFromBooking();
-                            navigate("/checkout");
-                        }}
-                    />
-                </div>
-            )}
+            <LoginRequiredDialog
+                open={open}
+                onClose={handleClose}
+                onLogin={handleLogin}
+            />
         </div>
     );
 }

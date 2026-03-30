@@ -13,6 +13,15 @@ interface ServiceDetailResponse {
         price: number;
         duration_minutes: number;
     }[];
+
+    specialization?: string;
+    experience_years?: number;
+    bio?: string;
+
+    working_hours?: {
+        start: number;
+        end: number;
+    };
 }
 
 export const serviceApi = {

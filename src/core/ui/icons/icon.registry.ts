@@ -56,6 +56,7 @@ import {
     WalletIcon,
     PauseCircleIcon,
 } from "@heroicons/react/20/solid";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
 
 export const iconRegistry: Record<string, any> = {
@@ -119,4 +120,5 @@ export const iconRegistry: Record<string, any> = {
     transaction: DocumentCurrencyDollarIcon,
     login: LockClosedIcon,
     bell: BellIcon,
+    order: ShoppingBagIcon,
 };

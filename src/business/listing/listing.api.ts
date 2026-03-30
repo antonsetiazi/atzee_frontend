@@ -115,7 +115,7 @@ export const listingApi = {
             skipAuth: true,
             query: buildQuery(params),
         });
-        console.log(res.data);
+
         return {
             listings: res.data.map(
                 (item): ServiceListing => ({

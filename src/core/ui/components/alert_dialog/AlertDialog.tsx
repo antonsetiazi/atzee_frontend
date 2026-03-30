@@ -7,9 +7,10 @@ export default function AlertDialog({
     open,
     onClose,
     children,
+    className,
 }: AlertDialogProps) {
     return (
-        <Modal open={open} onClose={onClose} className="max-w-md">
+        <Modal open={open} onClose={onClose} className={className}>
             {children}
         </Modal>
     );
