@@ -161,3 +161,38 @@ src/
 └── index.css
 
 
+
+src/
+
+  modules/
+    payment/
+    order/
+    booking/
+    listing/
+    review/
+
+  core/
+    http/
+    auth/
+    config/
+
+src/modules/
+
+  payment/
+    api/
+    services/
+    hooks/
+    components/
+    types/
+
+  order/
+    api/
+    services/
+    hooks/
+    components/
+
+  booking/
+    api/
+    services/
+    hooks/
+    components/    

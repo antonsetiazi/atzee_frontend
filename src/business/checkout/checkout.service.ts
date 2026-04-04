@@ -5,7 +5,8 @@ import type { CheckoutItem } from "./checkout.types";
 
 import { cartStore } from "@/business/cart/cart.store";
 import { eventBus } from "@/core/event/event.bus";
-import { createOrderApi } from "@/business/order/order.api";
+import { orderService } from "@/business/order/order.service";
+import { paymentService } from "../payment/payment.service";
 
 type BookingResult = {
     booking_id: string; // 🔥 dari backend
@@ -120,7 +121,7 @@ export const checkoutService = {
             throw new Error("Pilih metode pembayaran");
         }
 
-        /* ---------- SET PENDING ---------- */
+        /* ---------- SET STATE ---------- */
 
         checkoutStore.setState({
             paymentStatus: "pending",
@@ -131,40 +132,32 @@ export const checkoutService = {
         });
 
         try {
-            /* ---------- BUILD PAYLOAD ---------- */
-            const payload = {
+            /* -------------------------
+           1. CREATE ORDER
+        ------------------------- */
+            const order = await orderService.createOrder({
                 items: state.items.map((i) => ({
                     id: Number(i.entityId),
                     qty: i.quantity,
                 })),
-                payment_method: state.selectedPaymentMethodId,
                 booking_id: state.bookingId,
-            };
-
-            /* ---------- API CALL ---------- */
-            const order = await createOrderApi(payload);
-
-            /* ---------- SUCCESS ---------- */
-            checkoutStore.setState({
-                paymentStatus: "paid",
             });
 
-            // 🔥 tetap emit untuk ecosystem lain (chat, dll)
-            eventBus.emit("order.created", {
-                orderId: String(order.id),
-                total: order.total,
-                itemsCount: order.items?.length || state.items.length,
+            /* -------------------------
+           2. CREATE PAYMENT
+        ------------------------- */
+            const payment = await paymentService.startPayment({
+                order_id: String(order.id), // 🔥 ini kunci
+                payment_method: state.selectedPaymentMethodId,
             });
+
+            return payment;
         } catch (err) {
-            console.error(err);
-
             checkoutStore.setState({
                 paymentStatus: "failed",
             });
 
-            eventBus.emit("order.failed", {
-                reason: "API error",
-            });
+            throw err;
         }
     },
 

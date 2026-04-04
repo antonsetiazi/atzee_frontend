@@ -17,15 +17,18 @@ import { usePageStore } from "@/core/ui/page/page.store";
 import { buildPageRoutes } from "@/core/routing/PageRoutes";
 import { useSessionStore } from "../session/session.store";
 
-import ListingPage from "@/business/listing/ListingPage";
-import ProductDetailPage from "@/business/product/ProductDetailPage";
-import ServiceDetailPage from "@/business/service/ServiceDetailPage";
+import SessionExpiredPage from "@/core/ui/views/auth/SessionExpiredPage";
 import CartPage from "@/app/pages/cart/CartPage";
-import CheckoutPage from "@/app/pages/checkout/CheckoutPage";
-import OrderPage from "@/app/pages/order/OrderPage";
-import OrderDetailPage from "@/app/pages/order/OrderDetailPage";
-import ChatView from "@/core/ui/views/chat/ChatView";
-import ServiceBookingPage from "@/business/booking/ServiceBookingPage";
+import OrderPage from "@/modules/order/pages/OrderPage";
+import OrderDetailPage from "@/modules/order/pages/OrderDetailPage";
+import ListingPage from "@/modules/listing/pages/ListingPage";
+import ProductDetailPage from "@/modules/listing_detail/pages/ProductDetailPage";
+import ServiceDetailPage from "@/modules/listing_detail/pages/ServiceDetailPage";
+import ServiceBookingPage from "@/modules/booking/pages/ServiceBookingPage";
+import CheckoutPage from "@/modules/checkout/pages/CheckoutPage";
+import ChatPage from "@/modules/chat/ChatPage";
+import BookingListPage from "@/modules/booking/pages/BookingListPage";
+import BookingDetailPage from "@/modules/booking/pages/BookingDetailPage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -52,8 +55,8 @@ export default function AppRouter() {
                     {usersRoutes.map(renderRoute)}
                     {buildPageRoutes(pages)}
 
-                    <Route path="/chat" element={<ChatView />} />
-                    <Route path="/chat/:roomId" element={<ChatView />} />
+                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/chat/:roomId" element={<ChatPage />} />
 
                     <Route
                         path="/products"
@@ -82,7 +85,18 @@ export default function AppRouter() {
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/orders" element={<OrderPage />} />
                     <Route path="/orders/:id" element={<OrderDetailPage />} />
+
+                    <Route path="/bookings" element={<BookingListPage />} />
+                    <Route
+                        path="/bookings/:id"
+                        element={<BookingDetailPage />}
+                    />
                 </Route>
+
+                <Route
+                    path="/session-expired"
+                    element={<SessionExpiredPage />}
+                />
 
                 {/* CATCH-ALL FALLBACK */}
                 <Route

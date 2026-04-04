@@ -11,9 +11,16 @@ export interface SessionUser {
 }
 
 export interface SessionState {
-    token: string | null;
+    accessToken: string | null;
+    refreshToken: string | null;
     user: SessionUser | null;
     isAuthenticated: boolean;
     vertical: string | null;
     isHydrated: boolean;
+    isBootstrapped: boolean;
+}
+
+export interface SessionTokens {
+    access: string;
+    refresh: string;
 }

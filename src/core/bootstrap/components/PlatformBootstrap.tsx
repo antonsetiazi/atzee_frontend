@@ -5,13 +5,18 @@ import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
 import { TenantBootstrap } from "@/core/bootstrap/services/tenant.bootstrap";
 import { registerNotificationListeners } from "@/core/notification/notification.listener";
 import { registerOrderListeners } from "@/business/order/order.service";
+import { useSessionStore } from "@/core/session/session.store";
+import { AuthBootstrap } from "@/core/bootstrap/services/auth.bootstrap";
 
 export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
     const [ready, setReady] = useState(false);
 
+    const { isBootstrapped } = useSessionStore();
+
     useEffect(() => {
         async function init() {
             await TenantBootstrap();
+            await AuthBootstrap();
             await runUserBootstrap();
 
             registerNotificationListeners();
@@ -23,7 +28,7 @@ export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
         init();
     }, []);
 
-    if (!ready) return <PlatformLoader />;
+    if (!ready || !isBootstrapped) return <PlatformLoader />;
 
     return <>{children}</>;
 }

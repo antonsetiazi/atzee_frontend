@@ -1,6 +1,6 @@
 // src/core/ui/views/review/review.dummy.ts
 
-import type { Review } from "./review.types";
+import type { Review } from "../../../../modules/review/types/review.types";
 
 export const dummyReviews: Review[] = [
     {

@@ -1,6 +1,7 @@
 // src/business/order/order.store.ts
 
 import type { Order } from "./order.types";
+import type { OrderStatus } from "./order.types";
 import { loadFromStorage, saveToStorage } from "@/core/storage/localStorage";
 
 type Listener = (orders: Order[]) => void;
@@ -68,6 +69,14 @@ class OrderStore {
 
     getOrderById(id: string) {
         return this.orders.find((o) => o.id === id);
+    }
+
+    completeOrder(orderId: string) {
+        const updated = this.getOrders().map((o) =>
+            o.id === orderId ? { ...o, status: "completed" as OrderStatus } : o,
+        );
+
+        this.setOrders(updated);
     }
 
     private emit() {

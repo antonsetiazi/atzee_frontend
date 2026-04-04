@@ -19,6 +19,10 @@ export async function getOrderDetailApi(id: string): Promise<Order> {
     return mapOrder(item);
 }
 
+export async function completeOrderApi(orderId: string) {
+    return httpPost(`/marketplace/orders/${orderId}/complete/`, {});
+}
+
 /* =========================
    🔥 CENTRALIZED MAPPER
    ========================= */

@@ -4,8 +4,62 @@ import { orderStore } from "./order.store";
 import { eventBus } from "@/core/event/event.bus";
 import { chatStore } from "@/business/chat/chat.store";
 
+import { createOrderApi } from "./order.api";
+import { paymentService } from "@/business/payment/payment.service";
+
+export const orderService = {
+    /* ===========================
+       🚀 CREATE ORDER
+    =========================== */
+    async createOrder(payload: {
+        items: { id: number; qty: number }[];
+        booking_id?: string | null;
+    }) {
+        const order = await createOrderApi(payload);
+
+        eventBus.emit("order.created", {
+            orderId: String(order.id),
+            total: order.total,
+            itemsCount: order.items?.length || payload.items.length,
+        });
+
+        return order;
+    },
+
+    /* ===========================
+       💳 CREATE ORDER + PAYMENT
+    =========================== */
+    async createOrderWithPayment(payload: {
+        items: { id: number; qty: number }[];
+        booking_id?: string | null;
+        payment_method: string;
+    }) {
+        /* ---------- 1. ORDER ---------- */
+        const order = await this.createOrder({
+            items: payload.items,
+            booking_id: payload.booking_id,
+        });
+
+        /* ---------- 2. PAYMENT ---------- */
+        const payment = await paymentService.startPayment({
+            order_id: String(order.id),
+            payment_method: payload.payment_method,
+        });
+
+        return {
+            order_id: String(order.id),
+            payment_url: payment.payment_url,
+            payment_token: payment.payment_token,
+        };
+    },
+};
+
+/* =====================================================
+   🔁 EVENT LISTENERS (SIDE EFFECTS)
+===================================================== */
+
 export function registerOrderListeners() {
-    // 🔥 ketika order berhasil dibuat (dari checkout)
+    // 🔥 ketika order berhasil dibuat
     eventBus.on("order.created", (data) => {
         const { orderId, total, itemsCount } = data;
 
@@ -15,7 +69,7 @@ export function registerOrderListeners() {
             id: orderIdStr,
             order_number: orderIdStr.slice(0, 8),
 
-            items: [], // 🔥 biarkan kosong (akan sync dari API)
+            items: [], // akan sync dari API
 
             total: total,
             status: "pending",
@@ -23,7 +77,7 @@ export function registerOrderListeners() {
         });
 
         // ====================================
-        // 🔥 CHAT INTEGRATION START
+        // 💬 CHAT INTEGRATION
         // ====================================
 
         const roomId = `room_order_${orderIdStr}`;
@@ -40,14 +94,12 @@ export function registerOrderListeners() {
             last_timestamp: new Date().toISOString(),
         });
 
-        // 🔥 system message pertama
         chatStore.addSystemMessage(
             roomId,
             `Pesanan berhasil dibuat (${itemsCount} item)`,
         );
     });
 
-    // 🔥 gagal (opsional logging)
     eventBus.on("order.failed", ({ reason }) => {
         console.warn("Order gagal:", reason);
     });

@@ -1,20 +1,45 @@
 // src/core/bootstrap/services/auth.bootstrap.ts
 
+import { refreshTokenApi } from "@/core/auth/auth.api";
+import { isTokenExpired } from "@/core/auth/token.utils";
 import { useSessionStore } from "@/core/session/session.store";
 
 export async function AuthBootstrap() {
-    const { hydrate, reloadSession } = useSessionStore.getState();
+    const store = useSessionStore.getState();
 
-    // 1. Pastikan session di-hydrate dulu
-    hydrate(); // ambil token dari localStorage
+    // 1. hydrate dulu
+    store.hydrate();
 
-    const hydratedToken = useSessionStore.getState().token;
+    let { accessToken } = useSessionStore.getState();
+    const { refreshToken } = useSessionStore.getState();
 
-    if (!hydratedToken) {
-        // user guest, tidak perlu login
-        return;
+    // 🔥 STEP 1: cek expiry
+    if (accessToken && isTokenExpired(accessToken)) {
+        try {
+            const res = await refreshTokenApi(refreshToken!);
+
+            // 🔥 update access token baru
+            useSessionStore.setState({
+                accessToken: res.access,
+            });
+
+            accessToken = res.access;
+        } catch {
+            // refresh gagal → logout
+            store.clearSession();
+            useSessionStore.setState({ isBootstrapped: true });
+            return;
+        }
     }
 
-    // 2. Token ada → fetch user dari backend
-    await reloadSession();
+    // 🔥 STEP 2: baru fetch user
+    if (accessToken) {
+        try {
+            await store.reloadSession();
+        } catch {
+            // ignore (sudah aman)
+        }
+    }
+
+    useSessionStore.setState({ isBootstrapped: true });
 }

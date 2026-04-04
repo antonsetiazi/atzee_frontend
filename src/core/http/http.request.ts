@@ -8,7 +8,38 @@ import { TENANT_CODE } from "@/core/tenant/tenant.config";
 import { buildUrl, parseResponse } from "./http.utils";
 import { HttpError } from "./http.error";
 
+import { refreshTokenApi } from "@/core/auth/auth.api";
+
 const DEFAULT_TIMEOUT = 30000;
+
+/**
+ * Prevent multiple redirects when many requests return 401 at once
+ */
+let isRedirecting = false;
+let isRefreshing = false;
+let pendingRequests: ((token: string) => void)[] = [];
+
+function subscribe(cb: (token: string) => void) {
+    pendingRequests.push(cb);
+}
+
+function notify(token: string) {
+    pendingRequests.forEach((cb) => cb(token));
+    pendingRequests = [];
+}
+
+function handleUnauthorized() {
+    if (isRedirecting) return;
+    isRedirecting = true;
+
+    const { clearSession } = useSessionStore.getState();
+
+    // clear auth state
+    clearSession();
+
+    // redirect to session expired page
+    window.location.href = "/session-expired";
+}
 
 interface InternalRequestInit extends RequestInit {
     skipAuth?: boolean;
@@ -22,7 +53,7 @@ export async function request<T>(
 ): Promise<T> {
     const { skipAuth, query, timeout = DEFAULT_TIMEOUT, ...rest } = init;
 
-    const token = useSessionStore.getState().token;
+    const accessToken = useSessionStore.getState().accessToken;
     const user = useSessionStore.getState().user;
 
     const controller = new AbortController();
@@ -30,8 +61,8 @@ export async function request<T>(
 
     const headers = new Headers(rest.headers || {});
 
-    if (!skipAuth && token) {
-        headers.set("Authorization", `Bearer ${token}`);
+    if (!skipAuth && accessToken) {
+        headers.set("Authorization", `Bearer ${accessToken}`);
     }
 
     if (TENANT_CODE) {
@@ -55,6 +86,79 @@ export async function request<T>(
 
         clearTimeout(timer);
 
+        /**
+         * 🔥 GLOBAL AUTH HANDLER
+         * Handle expired session / invalid token
+         */
+        if (res.status === 401) {
+            const { refreshToken, clearSession } = useSessionStore.getState();
+
+            if (!refreshToken) {
+                handleUnauthorized();
+                throw new HttpError(401, "Session expired", "UNAUTHORIZED");
+            }
+
+            // =========================
+            // 🔥 QUEUE SYSTEM
+            // =========================
+            if (isRefreshing) {
+                return new Promise<T>((resolve, reject) => {
+                    subscribe(async (newToken: string) => {
+                        try {
+                            headers.set("Authorization", `Bearer ${newToken}`);
+
+                            const retryRes = await fetch(
+                                buildUrl(input, query),
+                                {
+                                    ...rest,
+                                    headers,
+                                    signal: controller.signal,
+                                },
+                            );
+
+                            const data = await parseResponse<T>(retryRes);
+                            resolve(data);
+                        } catch (err) {
+                            reject(err);
+                        }
+                    });
+                });
+            }
+
+            isRefreshing = true;
+
+            try {
+                const tokens = await refreshTokenApi(refreshToken);
+
+                useSessionStore.setState({
+                    accessToken: tokens.access,
+                    refreshToken: tokens.refresh,
+                });
+
+                notify(tokens.access);
+
+                headers.set("Authorization", `Bearer ${tokens.access}`);
+
+                const retryRes = await fetch(buildUrl(input, query), {
+                    ...rest,
+                    headers,
+                    signal: controller.signal,
+                });
+
+                return await parseResponse<T>(retryRes);
+            } catch (err) {
+                pendingRequests = [];
+                clearSession();
+                handleUnauthorized();
+                throw err;
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+        /**
+         * ✅ SUCCESS RESPONSE
+         */
         if (res.ok) {
             if (res.status === 204 || res.status === 205) {
                 return undefined as T;

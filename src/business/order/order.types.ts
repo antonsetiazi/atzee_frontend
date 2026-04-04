@@ -7,6 +7,9 @@ export interface OrderItem {
     name: string;
     quantity: number;
     price: number;
+
+    // entityId: string;
+    // entityType: "product" | "service";
 }
 
 export interface Order {
@@ -20,6 +23,10 @@ export interface Order {
     status: OrderStatus;
 
     createdAt: string;
+
+    paymentMethod?: string;
+    userId?: string;
+    userName?: string;
 
     // 🔥 SESSION-BASED
     bookingId?: string | null;

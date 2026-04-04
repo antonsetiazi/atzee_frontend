@@ -43,22 +43,17 @@ export function useAuthService() {
             tenant_code,
         });
 
-        localStorage.setItem("token", res.tokens.access);
-
         const jwt = jwtDecode<JwtPayload>(res.tokens.access);
         const userWithRole = {
             ...res.user,
             role_id: jwt.role_id,
         };
 
-        useSessionStore.getState().setSession(res.tokens.access, userWithRole);
+        useSessionStore.getState().setSession(res.tokens, userWithRole);
     }
 
     async function loginPassword(payload: LoginPayload) {
-        localStorage.removeItem("token");
         const res = await loginApi(payload);
-
-        localStorage.setItem("token", res.tokens.access);
 
         // 🔥 decode token untuk ambil role_id
         const jwt = jwtDecode<JwtPayload>(res.tokens.access);
@@ -67,7 +62,7 @@ export function useAuthService() {
             role_id: jwt.role_id,
         };
 
-        useSessionStore.getState().setSession(res.tokens.access, userWithRole);
+        useSessionStore.getState().setSession(res.tokens, userWithRole);
 
         // 🔥 reload User state
         await runUserBootstrap();
@@ -77,12 +72,11 @@ export function useAuthService() {
         clearSession();
         clearPermissions();
 
-        localStorage.removeItem("token");
         window.location.href = "/login";
     }
 
     function isAuthenticated(): boolean {
-        return !!useSessionStore.getState().token;
+        return !!useSessionStore.getState().accessToken;
     }
 
     return {

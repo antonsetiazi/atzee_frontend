@@ -42,3 +42,7 @@ verticals/ import business/
 verticals/ register module
 backend mengontrol struktur UI
 frontend hanya mengeksekusi
+
+
+
+✅ “module adalah boundary utama”

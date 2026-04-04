@@ -9,6 +9,13 @@ import type {
 } from "./auth.types";
 import { httpPost, httpGet } from "@/core/http/http.client";
 
+export async function refreshTokenApi(refresh: string): Promise<{
+    access: string;
+    refresh: string;
+}> {
+    return httpPost("/auth/refresh/", { refresh }, { skipAuth: true });
+}
+
 export async function loginApi(payload: LoginPayload): Promise<LoginResponse> {
     return httpPost<LoginResponse>("/auth/login/", payload, { skipAuth: true });
 }

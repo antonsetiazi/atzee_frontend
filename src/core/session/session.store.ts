@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { create } from "zustand";
-import type { SessionState, SessionUser } from "./session.types";
+import type { SessionState, SessionTokens, SessionUser } from "./session.types";
 import { fetchSession } from "./session.api";
 
 interface SessionActions {
-    setSession: (token: string, user: SessionUser | null) => void;
+    setSession: (tokens: SessionTokens, user: SessionUser | null) => void;
     clearSession: () => void;
     hydrate: () => void;
     updateUser: (user: Partial<SessionUser>) => void;
@@ -14,41 +14,53 @@ interface SessionActions {
 }
 
 export const useSessionStore = create<SessionState & SessionActions>((set) => ({
-    token: null,
+    accessToken: null,
+    refreshToken: null,
     user: null,
     isAuthenticated: false,
     vertical: null,
     isHydrated: false,
+    isBootstrapped: false,
 
-    setSession: (token, user) => {
-        localStorage.setItem("token", token);
+    setSession: (tokens: SessionTokens, user: SessionUser | null) => {
+        localStorage.setItem("access", tokens.access);
+        localStorage.setItem("refresh", tokens.refresh);
+
         set({
-            token,
-            user,
+            accessToken: tokens.access,
+            refreshToken: tokens.refresh,
+            user: user,
             isAuthenticated: true,
         });
     },
 
     clearSession: () => {
-        localStorage.removeItem("token");
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+
         set({
-            token: null,
+            accessToken: null,
+            refreshToken: null,
             user: null,
             isAuthenticated: false,
         });
     },
 
     hydrate: () => {
-        const token = localStorage.getItem("token");
-        if (token) {
+        const access = localStorage.getItem("access");
+        const refresh = localStorage.getItem("refresh");
+
+        if (access && refresh) {
             set({
-                token,
+                accessToken: access,
+                refreshToken: refresh,
                 isAuthenticated: true,
                 isHydrated: true,
             });
         } else {
             set({
-                token: null,
+                accessToken: null,
+                refreshToken: null,
                 user: null,
                 isAuthenticated: false,
                 isHydrated: true,
@@ -74,12 +86,7 @@ export const useSessionStore = create<SessionState & SessionActions>((set) => ({
 
             // Jika token invalid → hapus token & reset session
             if (error.status === 401) {
-                localStorage.removeItem("token");
-                set({
-                    token: null,
-                    user: null,
-                    isAuthenticated: false,
-                });
+                useSessionStore.getState().clearSession();
             }
         }
     },
