@@ -7,6 +7,7 @@ import { cartStore } from "@/business/cart/cart.store";
 import { eventBus } from "@/core/event/event.bus";
 import { orderService } from "@/business/order/order.service";
 import { paymentService } from "../payment/payment.service";
+import type { PaymentExecution } from "@/business/payment/payment.types";
 
 type BookingResult = {
     booking_id: string; // 🔥 dari backend
@@ -46,7 +47,6 @@ export const checkoutService = {
             items,
             bookingId: null,
             paymentStatus: "idle",
-            selectedPaymentMethodId: null,
         });
 
         // 🔥 optional event
@@ -80,7 +80,6 @@ export const checkoutService = {
             items,
             bookingId: booking.booking_id,
             paymentStatus: "idle",
-            selectedPaymentMethodId: null,
         });
 
         // 🔥 optional event
@@ -93,16 +92,16 @@ export const checkoutService = {
     /* ===========================
        💳 SELECT PAYMENT
        =========================== */
-    selectPaymentMethod(id: string) {
-        checkoutStore.setState({
-            selectedPaymentMethodId: id,
-        });
-    },
+    // selectPaymentMethod(id: string) {
+    //     checkoutStore.setState({
+    //         selectedPaymentMethodId: id,
+    //     });
+    // },
 
     /* ===========================
        🚀 CONFIRM PAYMENT
        =========================== */
-    async confirmPayment() {
+    async confirmPayment(): Promise<PaymentExecution> {
         const state = checkoutStore.getState();
 
         /* ---------- VALIDATION ---------- */
@@ -114,12 +113,12 @@ export const checkoutService = {
             throw new Error("Tidak ada item");
         }
 
-        if (!state.selectedPaymentMethodId) {
-            eventBus.emit("order.failed", {
-                reason: "Pilih metode pembayaran",
-            });
-            throw new Error("Pilih metode pembayaran");
-        }
+        // if (!state.selectedPaymentMethodId) {
+        //     eventBus.emit("order.failed", {
+        //         reason: "Pilih metode pembayaran",
+        //     });
+        //     throw new Error("Pilih metode pembayaran");
+        // }
 
         /* ---------- SET STATE ---------- */
 
@@ -127,9 +126,9 @@ export const checkoutService = {
             paymentStatus: "pending",
         });
 
-        eventBus.emit("checkout.payment.started", {
-            methodId: state.selectedPaymentMethodId,
-        });
+        // eventBus.emit("checkout.payment.started", {
+        //     methodId: state.selectedPaymentMethodId,
+        // });
 
         try {
             /* -------------------------
@@ -146,12 +145,12 @@ export const checkoutService = {
             /* -------------------------
            2. CREATE PAYMENT
         ------------------------- */
-            const payment = await paymentService.startPayment({
-                order_id: String(order.id), // 🔥 ini kunci
-                payment_method: state.selectedPaymentMethodId,
+            const execution = await paymentService.startPaymentExecution({
+                order_id: String(order.id),
+                payment_method: "",
             });
 
-            return payment;
+            return execution;
         } catch (err) {
             checkoutStore.setState({
                 paymentStatus: "failed",
@@ -169,7 +168,6 @@ export const checkoutService = {
             items: [],
             bookingId: null,
             paymentStatus: "idle",
-            selectedPaymentMethodId: null,
         });
     },
 };

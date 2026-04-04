@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import CheckoutView from "../components/CheckoutView";
 import { useCheckout } from "../hooks/useCheckout";
 
-import { usePaymentMethods } from "@/modules/payment/hooks/usePaymentMethods";
 import { useSnapPayment } from "@/core/payment/useSnapPayment";
 
 const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
@@ -14,14 +13,7 @@ const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 export default function CheckoutPage() {
     const navigate = useNavigate();
 
-    const {
-        items,
-        selectedPaymentMethodId,
-        selectPaymentMethod,
-        confirmPayment,
-    } = useCheckout();
-
-    const { methods, loading: paymentMethodsLoading } = usePaymentMethods();
+    const { items, confirmPayment } = useCheckout();
 
     const { pay, loading: snapLoading } = useSnapPayment({
         clientKey: CLIENT_KEY,
@@ -52,17 +44,14 @@ export default function CheckoutPage() {
                 throw new Error("No response from payment API");
             }
 
-            const { payment_token, order_id } = res;
-
-            // 🔥 PRIORITAS: SNAP POPUP
-            if (payment_token) {
-                pay(payment_token, {
+            // 🔥 NEW: generic handler
+            if (res.type === "popup" && res.payload.token) {
+                pay(res.payload.token, {
                     onSuccess: () => {
-                        // ⚠️ jangan percaya penuh, tapi boleh UX
-                        navigate(`/payment?order_id=${order_id}`);
+                        navigate(`/payment?order_id=${res.payment_id}`);
                     },
                     onPending: () => {
-                        navigate(`/payment?order_id=${order_id}`);
+                        navigate(`/payment?order_id=${res.payment_id}`);
                     },
                     onError: () => {
                         alert("Pembayaran gagal. Silakan coba lagi.");
@@ -75,13 +64,17 @@ export default function CheckoutPage() {
                 return;
             }
 
-            // 🔥 FALLBACK (kalau token tidak ada)
-            if (order_id) {
-                navigate(`/payment?order_id=${order_id}`);
+            if (res.type === "redirect" && res.payload.url) {
+                window.location.href = res.payload.url;
                 return;
             }
 
-            throw new Error("Invalid payment response");
+            if (res.type === "instruction") {
+                navigate(`/payment?order_id=${res.payment_id}`);
+                return;
+            }
+
+            throw new Error("Invalid payment execution");
         } catch (err) {
             console.error("Payment error:", err);
             alert("Gagal memulai pembayaran. Silakan coba lagi.");
@@ -93,10 +86,6 @@ export default function CheckoutPage() {
     return (
         <CheckoutView
             items={items}
-            paymentMethods={methods}
-            paymentMethodsLoading={paymentMethodsLoading}
-            selectedPaymentMethodId={selectedPaymentMethodId}
-            onSelectPayment={selectPaymentMethod}
             onPay={handlePay}
             isSubmitting={isSubmitting || snapLoading}
         />

@@ -18,7 +18,7 @@ export function useCheckout() {
 
         initFromCart: checkoutService.initFromCart,
         initFromBooking: checkoutService.initFromBooking,
-        selectPaymentMethod: checkoutService.selectPaymentMethod,
+        // selectPaymentMethod: checkoutService.selectPaymentMethod,
         confirmPayment: checkoutService.confirmPayment,
         reset: checkoutService.reset,
         paymentStatus: state.paymentStatus,

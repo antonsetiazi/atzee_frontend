@@ -8,7 +8,6 @@ class CheckoutStore {
     private state: CheckoutState = {
         items: [],
         bookingId: null,
-        selectedPaymentMethodId: null,
         paymentStatus: "idle",
     };
 

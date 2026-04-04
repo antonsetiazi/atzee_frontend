@@ -28,11 +28,5 @@ export interface CheckoutItem {
 export interface CheckoutState {
     items: CheckoutItem[];
     bookingId: string | null;
-    selectedPaymentMethodId: string | null;
     paymentStatus: PaymentStatus;
 }
-
-export type PaymentMethodType = {
-    id: string;
-    label: string;
-};

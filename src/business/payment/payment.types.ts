@@ -1,4 +1,5 @@
 // src/business/payment/payment.types.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type PaymentStatus =
     | "idle"
@@ -25,4 +26,22 @@ export interface PaymentState {
 
     status: PaymentStatus;
     error?: string;
+}
+
+// 🔥 NEW: normalized execution (future-proof)
+export type PaymentExecutionType =
+    | "popup"
+    | "redirect"
+    | "instruction"
+    | "direct";
+
+export interface PaymentExecution {
+    payment_id: string;
+    type: PaymentExecutionType;
+
+    payload: {
+        token?: string;
+        url?: string;
+        data?: any;
+    };
 }
