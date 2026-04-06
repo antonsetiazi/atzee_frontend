@@ -8,6 +8,12 @@ export interface UIBlock {
     data_source?: string;
 }
 
+export interface UIPageMeta {
+    showBottomNav?: boolean;
+    showHeader?: boolean;
+    fullscreen?: boolean;
+}
+
 export interface UIPage {
     key: string;
     // page_key: string;
@@ -18,4 +24,6 @@ export interface UIPage {
     path: string;
     permissions: string[];
     blocks: UIBlock[];
+
+    meta?: UIPageMeta;
 }

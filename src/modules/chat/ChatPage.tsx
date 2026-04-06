@@ -8,6 +8,7 @@ import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
 import ChatList from "./components/ChatList";
 import ChatWindow from "./components/ChatWindow";
+import { HeaderPage } from "@/core/ui/components";
 
 export default function ChatPage() {
     const { roomId } = useParams();
@@ -29,53 +30,31 @@ export default function ChatPage() {
     // ================================
     if (isMobile) {
         return (
-            <div className="h-[calc(100vh-64px)] flex flex-col min-h-0 bg-[var(--color-background)]">
-                {/* ===================== */}
-                {/* HEADER */}
-                {/* ===================== */}
-                <div
-                    className="px-4 py-3 font-semibold text-lg border-b"
-                    style={{ borderColor: "var(--color-border)" }}
-                >
-                    {activeRoom ? (
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => {
-                                    setActiveRoom(undefined);
-                                    navigate("/chat");
+            <>
+                <HeaderPage title="Chat" />
+                <div className="h-[calc(100vh-64px)] flex flex-col min-h-0 bg-[var(--color-background)]">
+                    {/* ===================== */}
+                    {/* CONTENT */}
+                    {/* ===================== */}
+                    <div className="flex-1 overflow-hidden">
+                        {!activeRoom ? (
+                            <ChatList
+                                rooms={rooms}
+                                activeRoom={activeRoom}
+                                onSelect={(id) => {
+                                    setActiveRoom(id);
+                                    navigate(`/chat/${id}`);
                                 }}
-                                className="text-sm"
-                            >
-                                ←
-                            </button>
-                            Chat
-                        </div>
-                    ) : (
-                        "Chat"
-                    )}
+                                getUnread={getUnread}
+                                getPresence={getPresence}
+                                currentUserId="user_1"
+                            />
+                        ) : (
+                            <ChatWindow roomId={activeRoom} />
+                        )}
+                    </div>
                 </div>
-
-                {/* ===================== */}
-                {/* CONTENT */}
-                {/* ===================== */}
-                <div className="flex-1 overflow-hidden">
-                    {!activeRoom ? (
-                        <ChatList
-                            rooms={rooms}
-                            activeRoom={activeRoom}
-                            onSelect={(id) => {
-                                setActiveRoom(id);
-                                navigate(`/chat/${id}`);
-                            }}
-                            getUnread={getUnread}
-                            getPresence={getPresence}
-                            currentUserId="user_1"
-                        />
-                    ) : (
-                        <ChatWindow roomId={activeRoom} />
-                    )}
-                </div>
-            </div>
+            </>
         );
     }
 

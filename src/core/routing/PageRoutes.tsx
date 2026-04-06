@@ -4,6 +4,7 @@
 import { Route } from "react-router-dom";
 import { lazy } from "react";
 import PermissionGuard from "@/core/permissions/PermissionGuard";
+import PageMetaWrapper from "./PageMetaWrapper";
 
 const EntityPage = lazy(() => import("@/business/entities/pages/EntityPage"));
 
@@ -18,7 +19,9 @@ export function buildPageRoutes(pages: any) {
             path={page.path}
             element={
                 <PermissionGuard permission={page.permissions?.[0]}>
-                    <EntityPage entityKey={page.key} />
+                    <PageMetaWrapper meta={page.meta}>
+                        <EntityPage entityKey={page.key} />
+                    </PageMetaWrapper>
                 </PermissionGuard>
             }
         />

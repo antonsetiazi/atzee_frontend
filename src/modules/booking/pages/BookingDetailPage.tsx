@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { bookingApi, type BookingItem } from "../api/booking.api";
 import BookingTimeline from "../components/BookingTimeline";
+import { HeaderPage } from "@/core/ui/components";
 
 export default function BookingDetailPage() {
     const { id } = useParams();
@@ -78,62 +79,61 @@ export default function BookingDetailPage() {
     };
 
     return (
-        <div className="p-4 space-y-6">
-            {/* 🔹 HEADER */}
-            <div className="space-y-1">
-                <h1 className="text-xl font-semibold">Detail Booking</h1>
-                <p className="text-sm text-[var(--text-muted)]">
-                    ID #{data.id}
-                </p>
-            </div>
-
-            {/* 🔥 HERO STATUS CARD */}
-            <div
-                className={`
+        <>
+            <HeaderPage title="Detail Booking" subtitle={`#${data.id}`} />
+            <div className="p-4 space-y-6">
+                {/* 🔥 HERO STATUS CARD */}
+                <div
+                    className={`
                     p-5 rounded-2xl text-white
                     shadow-md
                     ${statusConfig.className}
-                `}
-            >
-                <p className="text-sm opacity-80">Status</p>
-                <p className="text-lg font-semibold">{statusConfig.label}</p>
-            </div>
+                    `}
+                >
+                    <p className="text-sm opacity-80">Status</p>
+                    <p className="text-lg font-semibold">
+                        {statusConfig.label}
+                    </p>
+                </div>
 
-            {/* 🕒 TIME CARD */}
-            <div
-                className="
-                    p-5 rounded-2xl
-                    border border-[var(--color-border)]
-                    bg-[var(--color-surface)]
-                    shadow-sm
+                {/* 🕒 TIME CARD */}
+                <div
+                    className="
+                p-5 rounded-2xl
+                border border-[var(--color-border)]
+                bg-[var(--color-surface)]
+                shadow-sm
                 "
-            >
-                <p className="text-sm text-[var(--text-muted)] mb-1">Jadwal</p>
+                >
+                    <p className="text-sm text-[var(--text-muted)] mb-1">
+                        Jadwal
+                    </p>
 
-                <p className="font-semibold text-[var(--text-primary)]">
-                    {formatDate(start)}
-                </p>
+                    <p className="font-semibold text-[var(--text-primary)]">
+                        {formatDate(start)}
+                    </p>
 
-                <p className="text-sm text-[var(--text-muted)] mt-1">
-                    {formatTime(start)} - {formatTime(end)}
-                </p>
-            </div>
+                    <p className="text-sm text-[var(--text-muted)] mt-1">
+                        {formatTime(start)} - {formatTime(end)}
+                    </p>
+                </div>
 
-            {/* 🔄 TIMELINE CARD */}
-            <div
-                className="
-                    p-5 rounded-2xl
-                    border border-[var(--color-border)]
-                    bg-[var(--color-surface)]
-                    shadow-sm
+                {/* 🔄 TIMELINE CARD */}
+                <div
+                    className="
+                p-5 rounded-2xl
+                border border-[var(--color-border)]
+                bg-[var(--color-surface)]
+                shadow-sm
                 "
-            >
-                <p className="text-sm text-[var(--text-muted)] mb-3">
-                    Progress Booking
-                </p>
+                >
+                    <p className="text-sm text-[var(--text-muted)] mb-3">
+                        Progress Booking
+                    </p>
 
-                <BookingTimeline status={data.status} />
+                    <BookingTimeline status={data.status} />
+                </div>
             </div>
-        </div>
+        </>
     );
 }

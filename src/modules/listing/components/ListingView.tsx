@@ -1,6 +1,8 @@
 // src/modules/listing/components/ListingView.tsx
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import ProductCard from "./ProductCard";
 import ServiceCard from "./ServiceCard";
@@ -13,6 +15,7 @@ import type {
     ListingFiltersState,
     ListingSort,
 } from "../types/listing.types";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 /* ===========================
    UNION TYPE
@@ -47,6 +50,7 @@ export default function ListingView({
     onChangePage,
     onItemClick,
 }: Props) {
+    const navigate = useNavigate();
     const { isMobile } = useBreakpoint();
     const [showFilter, setShowFilter] = useState(false);
 
@@ -78,103 +82,148 @@ export default function ListingView({
     // =============================
     if (isMobile) {
         return (
-            <div className="p-4 space-y-4">
-                {/* Search */}
-                <input
-                    type="text"
-                    placeholder="Cari..."
-                    value={filters.search}
-                    onChange={(e) =>
-                        onChangeFilters({
-                            ...filters,
-                            search: e.target.value,
-                        })
-                    }
-                    className="w-full px-4 py-3 rounded-xl bg-[var(--color-surface-alt)]"
-                />
-
-                {/* Controls */}
-                <div className="flex gap-2">
+            <div className="flex flex-col h-full">
+                {/* 🔥 STICKY HEADER */}
+                <div
+                    className="
+                        sticky top-0 z-20
+                        flex items-center gap-2
+                        p-4
+                        bg-[var(--color-background)]
+                        border-b border-[var(--color-border)]
+                    "
+                >
+                    {/* Back Button */}
                     <button
-                        onClick={() => setShowFilter(true)}
+                        onClick={() => navigate(-1)}
                         className="
+                            group
+                            w-10 h-10 flex items-center justify-center
+                            rounded-full
+                            bg-[var(--color-surface-alt)]
+                            border border-[var(--color-border)]
+                            shadow-sm
+                            transition-all duration-200
+
+                            hover:bg-[var(--color-surface)]
+                            active:scale-95
+                        "
+                    >
+                        <ArrowLeftIcon
+                            className="
+                                w-5 h-5
+                                text-[var(--text-primary)]
+                                transition-transform duration-200
+                                group-hover:-translate-x-0.5
+                            "
+                        />
+                    </button>
+
+                    {/* Search */}
+                    <input
+                        type="text"
+                        placeholder="Cari..."
+                        value={filters.search}
+                        onChange={(e) =>
+                            onChangeFilters({
+                                ...filters,
+                                search: e.target.value,
+                            })
+                        }
+                        className="
+                            flex-1 px-4 py-3 rounded-xl
+                            bg-[var(--color-surface-alt)]
+                        "
+                    />
+                </div>
+
+                {/* 🔥 CONTENT */}
+                <div className="p-4 space-y-4">
+                    {/* Controls */}
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setShowFilter(true)}
+                            className="
                             flex-1 py-2 rounded-lg
                             bg-[var(--color-surface-alt)]
                             text-sm
                         "
-                    >
-                        ⚙️ Filter
-                    </button>
+                        >
+                            ⚙️ Filter
+                        </button>
 
-                    <select
-                        value={sort}
-                        onChange={(e) =>
-                            onChangeSort(e.target.value as ListingSort)
-                        }
-                        className="flex-1 py-2 rounded-lg text-sm"
-                    >
-                        <option value="latest">Terbaru</option>
-                        <option value="price_asc">Termurah</option>
-                        <option value="price_desc">Termahal</option>
-                        <option value="sold">Terlaris</option>
-                        <option value="rating">Rating</option>
-                    </select>
-                </div>
+                        <select
+                            value={sort}
+                            onChange={(e) =>
+                                onChangeSort(e.target.value as ListingSort)
+                            }
+                            className="flex-1 py-2 rounded-lg text-sm"
+                        >
+                            <option value="latest">Terbaru</option>
+                            <option value="price_asc">Termurah</option>
+                            <option value="price_desc">Termahal</option>
+                            <option value="sold">Terlaris</option>
+                            <option value="rating">Rating</option>
+                        </select>
+                    </div>
 
-                {/* Grid */}
-                <div className="grid grid-cols-2 gap-3">
-                    {listings.map((item, index) => renderItem(item, index))}
-                </div>
+                    {/* Grid */}
+                    <div className="grid grid-cols-2 gap-3">
+                        {listings.map((item, index) => renderItem(item, index))}
+                    </div>
 
-                {/* Pagination */}
-                <ListingPagination
-                    page={page}
-                    totalPages={totalPages}
-                    onChange={onChangePage}
-                />
+                    {/* Pagination */}
+                    <ListingPagination
+                        page={page}
+                        totalPages={totalPages}
+                        onChange={onChangePage}
+                    />
 
-                {/* Drawer Filter */}
-                {showFilter && (
-                    <div
-                        className="
+                    {/* Drawer Filter */}
+                    {showFilter && (
+                        <div
+                            className="
                             fixed inset-0 z-50
                             bg-black/40
                             flex items-end
                         "
-                    >
-                        <div
-                            className="
+                        >
+                            <div
+                                className="
                                 w-full bg-[var(--color-surface)]
                                 rounded-t-2xl p-4
                                 max-h-[80vh] overflow-auto
                             "
-                        >
-                            <div className="flex justify-between mb-4">
-                                <h3 className="font-semibold">Filter</h3>
-                                <button onClick={() => setShowFilter(false)}>
-                                    ✕
-                                </button>
-                            </div>
+                            >
+                                <div className="flex justify-between mb-4">
+                                    <h3 className="font-semibold">Filter</h3>
+                                    <button
+                                        onClick={() => setShowFilter(false)}
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
 
-                            <ListingSidebarFilters
-                                filters={filters}
-                                onChange={onChangeFilters}
-                                isMobile={true}
-                            />
+                                <ListingSidebarFilters
+                                    filters={filters}
+                                    onChange={onChangeFilters}
+                                    isMobile={true}
+                                />
 
-                            <button
-                                onClick={() => setShowFilter(false)}
-                                className="
+                                <button
+                                    onClick={() => setShowFilter(false)}
+                                    className="
                                     mt-4 w-full py-3 rounded-xl
                                     bg-[var(--color-primary)]
                                     text-white font-semibold
                                 "
-                            >
-                                Terapkan
-                            </button>
+                                >
+                                    Terapkan
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         );
     }

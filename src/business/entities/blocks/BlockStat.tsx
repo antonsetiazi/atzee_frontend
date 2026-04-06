@@ -25,7 +25,7 @@ function getStatColor(key?: string) {
 
 export default function BlockStat({ block, data }: Props) {
     // console.log(block.meta);
-    const value = block.value ?? data?.[block.key] ?? null;
+    const value = block.value ?? data ?? null;
     const color = getStatColor(block.key);
 
     const isEmpty = value === null || value === 0;
@@ -84,14 +84,12 @@ export default function BlockStat({ block, data }: Props) {
             </div>
 
             {/* 🔥 EMPTY STATE MESSAGE */}
-            {isEmpty && (
-                <div
-                    className="mt-2 text-xs"
-                    style={{ color: "var(--text-muted)" }}
-                >
-                    Belum ada data
-                </div>
-            )}
+            {/* <div
+                className="mt-2 text-xs"
+                style={{ color: "var(--text-muted)" }}
+            >
+                {isEmpty ? "Belum ada data" : "\u00A0"}
+            </div> */}
         </div>
     );
 }

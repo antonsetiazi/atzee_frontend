@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { bookingApi, type BookingItem } from "../api/booking.api";
 import BookingCard from "../components/BookingCard";
+import { HeaderPage } from "@/core/ui/components";
 
 export default function BookingListPage() {
     const [data, setData] = useState<BookingItem[]>([]);
@@ -32,20 +33,24 @@ export default function BookingListPage() {
     }
 
     return (
-        <div className="p-4 space-y-4">
-            <h1 className="text-xl font-semibold">Booking Saya</h1>
-
-            {data.length === 0 ? (
-                <p className="text-sm text-gray-500">Belum ada booking</p>
-            ) : (
-                data.map((b) => (
-                    <BookingCard
-                        key={b.id}
-                        booking={b}
-                        onClick={() => navigate(`/bookings/${b.id}`)}
-                    />
-                ))
-            )}
-        </div>
+        <>
+            <HeaderPage
+                title="Booking Saya"
+                subtitle="Riwayat transaksi booking Anda"
+            />
+            <div className="p-4 space-y-4">
+                {data.length === 0 ? (
+                    <p className="text-sm text-gray-500">Belum ada booking</p>
+                ) : (
+                    data.map((b) => (
+                        <BookingCard
+                            key={b.id}
+                            booking={b}
+                            onClick={() => navigate(`/bookings/${b.id}`)}
+                        />
+                    ))
+                )}
+            </div>
+        </>
     );
 }

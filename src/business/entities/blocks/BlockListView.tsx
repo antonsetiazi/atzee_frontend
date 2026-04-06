@@ -60,19 +60,8 @@ export default function BlockListView({
         }
     }
 
-    // console.log(data);
-
     return (
         <div className="w-full space-y-4">
-            {block.title && (
-                <h3
-                    className="text-xl font-semibold tracking-tight"
-                    style={{ color: "var(--text-primary)" }}
-                >
-                    {block.title}
-                </h3>
-            )}
-
             {safeData.length === 0 ? (
                 <div className="w-full space-y-4">
                     <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-10 text-center">

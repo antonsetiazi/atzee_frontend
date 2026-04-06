@@ -84,5 +84,9 @@ export { default as TabsList } from "./tabs/TabsList";
 export { default as TabsTrigger } from "./tabs/TabsTrigger";
 export { default as TabsContent } from "./tabs/TabsContent";
 
+// header
+export { default as HeaderPage } from "./header_page/HeaderPage";
+export { default as MobileHeader } from "./mobile_header/MobileHeader";
+
 export * from "./filter_bar";
 export * from "./skeleton";

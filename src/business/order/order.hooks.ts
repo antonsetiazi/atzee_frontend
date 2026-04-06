@@ -49,7 +49,7 @@ export function useOrders() {
                     console.error("Polling error:", err);
                 }
             }
-        }, 5000);
+        }, 50000000);
 
         return () => {
             clearInterval(interval);

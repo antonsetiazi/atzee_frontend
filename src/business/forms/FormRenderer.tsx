@@ -135,34 +135,6 @@ export default function FormRenderer({
                 border: "1px solid var(--color-border)",
             }}
         >
-            {/* HEADER */}
-            <div
-                className="px-6 py-5"
-                style={{
-                    borderBottom: "1px solid var(--color-border)",
-                }}
-            >
-                <h2
-                    className="text-lg font-semibold tracking-tight"
-                    style={{
-                        color: "var(--text-primary)",
-                    }}
-                >
-                    {schema.title ?? "Form"}
-                </h2>
-
-                {schema.description && (
-                    <p
-                        className="text-sm mt-1"
-                        style={{
-                            color: "var(--text-secondary)",
-                        }}
-                    >
-                        {schema.description}
-                    </p>
-                )}
-            </div>
-
             {/* FIELDS */}
             <div className="px-6 py-6 space-y-4">
                 {schema.fields.map((field, idx) => {

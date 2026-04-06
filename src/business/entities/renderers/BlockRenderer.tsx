@@ -6,36 +6,26 @@ import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
 import WorkflowContainer from "../../workflows/WorkflowContainer";
 import { executeWorkflowAction } from "@/business/workflows/workflow.executor";
-
 import { TransactionWorkspace } from "../../transaction_workspace/TransactionWorkspace";
 
-import { blockRegistry } from "./blockRegistry";
-
-/**
- * 🔥 Premium Surface Wrapper
- */
-function Surface({
-    children,
-    padded = true,
-}: {
-    children: React.ReactNode;
-    padded?: boolean;
-}) {
-    return (
-        <div
-            className={`w-full rounded-2xl ${
-                padded ? "p-6" : ""
-            } transition-all duration-300`}
-            style={{
-                background: "var(--color-surface)",
-                border: "1px solid var(--color-border)",
-                boxShadow: "var(--shadow-sm)",
-            }}
-        >
-            {children}
-        </div>
-    );
-}
+import BlockStat from "../blocks/BlockStat";
+import BlockHeader from "../blocks/BlockHeader";
+import BlockBanner from "../blocks/BlockBanner";
+import BlockShortcut from "../blocks/BlockShortcut";
+import BlockChart from "../blocks/BlockChart";
+import BlockListView from "../blocks/BlockListView";
+import BlockForm from "../blocks/BlockForm";
+import BlockActionGroup from "../blocks/BlockActionGroup";
+import BlockTable from "../blocks/BlockTable";
+import BlockList from "../blocks/BlockList";
+import BlockCardList from "../blocks/BlockCardList";
+import BlockText from "../blocks/BlockText";
+import BlockTags from "../blocks/BlockTags";
+import BlockInfo from "../blocks/BlockInfo";
+import BlockMap from "../blocks/BlockMap";
+import BlockImageGallery from "../blocks/BlockImageGallery";
+import BlockTransactionSummary from "../blocks/BlockTransactionSummary";
+import BlockFiles from "../blocks/BlockFiles";
 
 /**
  * 🔥 Helper: ambil data dari pageData
@@ -43,16 +33,6 @@ function Surface({
 function resolveBlockData(block: any, pageData: any) {
     if (!pageData) return pageData;
     return block.data_key ? pageData[block.data_key] : pageData;
-}
-
-/**
- * 🔥 Helper: detect empty data (centralized)
- */
-function isEmpty(data: any) {
-    if (data === null || data === undefined) return true;
-    if (Array.isArray(data)) return data.length === 0;
-    if (typeof data === "object") return Object.keys(data).length === 0;
-    return false;
 }
 
 interface Props {
@@ -125,89 +105,101 @@ export default function BlockRenderer(props: Props): React.ReactNode {
 
     /**
      * =========================================
-     * 🔥 SPECIAL BLOCK: WORKFLOW
+     * 🔥 BLOCK RENDERING (MANUAL)
      * =========================================
      */
-    if (block.type === "workflow") {
+
+    if (block.type === "header") {
+        return <BlockHeader key={idx} {...props} />;
+    }
+
+    if (block.type === "banner") {
+        const blockData = resolveBlockData(block, pageData);
+        return <BlockBanner key={idx} {...props} data={blockData} />;
+    }
+
+    if (block.type === "form") {
+        return <BlockForm {...props} />;
+    }
+
+    if (block.type === "transaction_summary") {
+        return <BlockTransactionSummary key={idx} {...props} />;
+    }
+
+    if (block.type === "action") {
+        return <BlockActionGroup {...props} />;
+    }
+
+    if (block.type === "table") {
+        const blockData = resolveBlockData(block, pageData);
         return (
-            <WorkflowContainer
+            <BlockTable
                 key={idx}
-                workflow={block}
-                entityData={pageData}
-                onAction={(action) => executeWorkflowAction(action, id)}
+                {...props}
+                data={blockData?.items || blockData || []}
+                total={blockData?.total}
             />
         );
     }
 
-    /**
-     * =========================================
-     * 🔥 SPECIAL BLOCK: TRANSACTION
-     * =========================================
-     */
-    if (block.type === "transaction") {
+    if (block.type === "list") {
         return (
-            <TransactionWorkspace key={idx} block={block} pageData={pageData} />
+            <BlockList
+                {...props}
+                onSelect={(field: string, value: any) => {
+                    window.dispatchEvent(
+                        new CustomEvent("form:set-value", {
+                            detail: { field, value },
+                        }),
+                    );
+                }}
+            />
         );
     }
 
-    /**
-     * =========================================
-     * 🔥 RESOLVE COMPONENT (UPGRADED)
-     * =========================================
-     */
-    let Component = blockRegistry[block.type];
-
-    // 🔥 HERO BANNER (future ready, SAFE)
-    if (block.type === "banner" && block.config?.variant === "hero") {
-        Component = blockRegistry["banner"]; // nanti diganti HeroBanner
-    }
-
-    // 🔥 SHORTCUT GRID (future ready, SAFE)
-    if (block.type === "shortcut" && block.variant === "primary") {
-        Component = blockRegistry["shortcut"]; // nanti diganti ShortcutGrid
-    }
-
-    if (!Component) {
-        console.warn(`Unknown block type: ${block.type}`);
-        return null;
-    }
-
-    const blockData = resolveBlockData(block, pageData);
-
-    /**
-     * =========================================
-     * 🔥 EMPTY STATE (CENTRALIZED)
-     * =========================================
-     */
-    if (block.empty_state && isEmpty(blockData)) {
-        // sementara fallback simple (nanti kita bikin component)
+    if (block.type === "shortcut") {
         return (
-            <div
-                key={idx}
-                className="text-sm text-[var(--color-text-secondary)] px-4 py-6"
-            >
-                {block.empty_state?.message || "Belum ada data"}
+            <div key={idx} className={isMobile ? "px-4 py-4" : "p-2"}>
+                <BlockShortcut block={block} />
             </div>
         );
     }
 
-    /**
-     * =========================================
-     * 🔥 UI CONFIG
-     * =========================================
-     */
-    const useSurface = block.ui?.surface;
+    if (block.type === "stat") {
+        const blockData = resolveBlockData(block, pageData);
+        return <BlockStat {...props} data={blockData} />;
+    }
 
-    /**
-     * =========================================
-     * 🔥 SPECIAL HANDLING
-     * =========================================
-     */
+    if (block.type === "info") {
+        const blockData = resolveBlockData(block, pageData);
+        return <BlockInfo {...props} data={blockData} />;
+    }
 
-    // LIST / CARD LIST → selectable
-    if (["list", "card_list"].includes(block.type)) {
-        const content = (
-            <Component
+    if (block.type === "chart") {
+        return <BlockChart block={block} />;
+    }
+
+    if (block.type === "map") {
+        return <BlockMap key={idx} {...props} />;
+    }
+
+    if (block.type === "image_gallery") {
+        return <BlockImageGallery key={idx} {...props} />;
+    }
+
+    if (block.type === "list_view") {
+        const blockData = resolveBlockData(block, pageData);
+        return (
+            <div key={idx} className={isMobile ? "px-4 py-4" : "p-2"}>
+                <BlockListView {...props} data={blockData} />
+            </div>
+        );
+    }
+
+    if (block.type === "card_list") {
+        const blockData = resolveBlockData(block, pageData);
+        return (
+            <BlockCardList
                 {...props}
                 data={blockData}
                 onSelect={(field: string, value: any) => {
@@ -219,52 +211,34 @@ export default function BlockRenderer(props: Props): React.ReactNode {
                 }}
             />
         );
-
-        return useSurface ? (
-            <Surface key={idx}>{content}</Surface>
-        ) : (
-            <div key={idx}>{content}</div>
-        );
     }
 
-    // FILE-LIKE BLOCKS
-    if (["files", "tags", "availability"].includes(block.type)) {
-        const content = <Component {...props} />;
-
-        return useSurface ? (
-            <Surface key={idx}>{content}</Surface>
-        ) : (
-            <div key={idx}>{content}</div>
-        );
+    if (block.type === "text") {
+        return <BlockText key={idx} {...props} />;
     }
 
-    // TABLE
-    if (block.type === "table") {
+    if (block.type === "tags") {
+        return <BlockTags {...props} />;
+    }
+
+    if (block.type === "files") {
+        return <BlockFiles {...props} />;
+    }
+
+    if (block.type === "workflow") {
         return (
-            <Component
+            <WorkflowContainer
                 key={idx}
-                {...props}
-                data={blockData?.items || blockData || []}
-                total={blockData?.total}
+                workflow={block}
+                entityData={pageData}
+                onAction={(action) => executeWorkflowAction(action, id)}
             />
         );
     }
 
-    // SHORTCUT / LIST VIEW → spacing wrapper (FIXED, no duplicate)
-    if (["shortcut", "list_view"].includes(block.type)) {
+    if (block.type === "transaction") {
         return (
-            <div key={idx} className={isMobile ? "" : "p-2"}>
-                <Component {...props} data={blockData} />
-            </div>
+            <TransactionWorkspace key={idx} block={block} pageData={pageData} />
         );
     }
-
-    /**
-     * =========================================
-     * 🔥 DEFAULT RENDER
-     * =========================================
-     */
-    const content = <Component key={idx} {...props} data={blockData} />;
-
-    return useSurface ? <Surface key={idx}>{content}</Surface> : content;
 }

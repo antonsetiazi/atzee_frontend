@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import type { ListingFiltersState } from "../types/listing.types";
+import { useCategories } from "../hooks/useCategories";
 
 interface Props {
     filters: ListingFiltersState;
@@ -110,7 +111,6 @@ function Section({
 // ==============================
 // 🔥 MAIN COMPONENT
 // ==============================
-const categories = ["Elektronik", "Furniture", "Fashion"];
 const locations = ["Jakarta", "Bandung", "Surabaya", "Bekasi", "Bogor"];
 
 export default function ListingSidebarFilters({
@@ -119,6 +119,8 @@ export default function ListingSidebarFilters({
     isMobile,
 }: Props) {
     const [openSection, setOpenSection] = useState<string | null>("category");
+
+    const { categories, loading } = useCategories("partners.service_category"); // scope yang sesuai
 
     function toggleSection(name: string) {
         setOpenSection((prev) => (prev === name ? null : name));
@@ -165,19 +167,27 @@ export default function ListingSidebarFilters({
                 isMobile={isMobile}
                 count={categoryCount}
             >
-                {categories.map((cat) => (
-                    <label
-                        key={cat}
-                        className="flex items-center gap-2 text-sm"
-                    >
-                        <input
-                            type="checkbox"
-                            checked={(filters.category as any)?.includes(cat)}
-                            onChange={() => toggleArray("category", cat)}
-                        />
-                        {cat}
-                    </label>
-                ))}
+                {loading ? (
+                    <div className="text-sm text-gray-500">Loading...</div>
+                ) : (
+                    categories.map((cat) => (
+                        <label
+                            key={cat.id}
+                            className="flex items-center gap-2 text-sm"
+                        >
+                            <input
+                                type="checkbox"
+                                checked={(filters.category as any)?.includes(
+                                    cat.name,
+                                )}
+                                onChange={() =>
+                                    toggleArray("category", cat.name)
+                                }
+                            />
+                            {cat.name}
+                        </label>
+                    ))
+                )}
             </Section>
 
             <hr className="border-[var(--color-border)]" />

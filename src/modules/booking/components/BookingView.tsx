@@ -20,6 +20,7 @@ interface Props {
     selectedSlotId: string | null;
     onSelectSlot: (id: string) => void;
     isLoadingSlots?: boolean;
+    hideCTA?: boolean;
 }
 
 export default function BookingView({
@@ -33,6 +34,7 @@ export default function BookingView({
     slots,
     onSelectSlot,
     isLoadingSlots,
+    hideCTA,
 }: Props) {
     const isValid =
         selectedDate &&
@@ -147,20 +149,22 @@ export default function BookingView({
             />
 
             {/* CTA */}
-            <button
-                onClick={onConfirm}
-                disabled={!isValid}
-                className="
-                    w-full py-3 rounded-xl
-                    bg-[var(--color-primary)]
-                    text-white font-semibold
-                    shadow-[var(--shadow)]
-                    hover:opacity-90 transition
-                    disabled:opacity-50
-                "
-            >
-                Konfirmasi Booking
-            </button>
+            {!hideCTA && (
+                <button
+                    onClick={onConfirm}
+                    disabled={!isValid}
+                    className="
+                        w-full py-3 rounded-xl
+                        bg-[var(--color-primary)]
+                        text-white font-semibold
+                        shadow-[var(--shadow)]
+                        hover:opacity-90 transition
+                        disabled:opacity-50
+                    "
+                >
+                    Konfirmasi Booking
+                </button>
+            )}
         </div>
     );
 }

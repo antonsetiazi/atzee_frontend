@@ -4,11 +4,13 @@
 import { useParams, Navigate } from "react-router-dom";
 import LoadingState from "@/shared/ui/LoadingState";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
-import PageHeader from "@/core/ui/layout/PageHeader";
 import BlockRenderer from "../renderers/BlockRenderer";
 import { useEntityData } from "../hooks/useEntityData";
 import { useEntityContext } from "../hooks/useEntityContext";
 import { useEntitySchema } from "../hooks/useEntitySchema";
+import { HeaderPage } from "@/core/ui/components";
+import { usePageStore } from "@/core/ui/page/page.store";
+import { useEffect, useState } from "react";
 
 interface Props {
     entityKey: string;
@@ -17,6 +19,9 @@ interface Props {
 export default function CoreEntityPage({ entityKey }: Props) {
     const { id } = useParams<{ id: string }>();
     const { isMobile } = useBreakpoint();
+    const [isScrolled, setIsScrolled] = useState(false);
+    const showHeader = usePageStore((s) => s.showHeader);
+    const headerMode = usePageStore((s) => s.headerMode);
 
     const { schema, loading: loadingSchema } = useEntitySchema(entityKey);
 
@@ -28,6 +33,18 @@ export default function CoreEntityPage({ entityKey }: Props) {
         context,
         id,
     });
+
+    useEffect(() => {
+        const el = document.getElementById("main-scroll");
+        if (!el) return;
+
+        const handleScroll = () => {
+            setIsScrolled(el.scrollTop > 60);
+        };
+
+        el.addEventListener("scroll", handleScroll);
+        return () => el.removeEventListener("scroll", handleScroll);
+    }, []);
 
     /**
      * =========================================
@@ -47,28 +64,31 @@ export default function CoreEntityPage({ entityKey }: Props) {
         return <LoadingState />;
     }
 
-    /**
-     * =========================================
-     * 🚀 MAIN RENDER
-     * =========================================
-     */
+    // console.log(schema);
     return (
         <>
-            {/* 🔥 HEADER */}
-            <PageHeader
-                title={schema.title}
-                description={schema.description}
-                isMobile={isMobile}
-                // variant={
-                //     entityKey === "ustadzku.guest.home" ? "home" : "default"
-                // }
-                variant="home"
-            />
+            {/* DEFAULT HEADER */}
+            {showHeader && headerMode === "default" && (
+                <HeaderPage
+                    title={schema.title}
+                    subtitle={schema.description}
+                />
+            )}
+
+            {/* OVERLAY HEADER (scroll-based) */}
+            {headerMode === "overlay" && isMobile && isScrolled && (
+                <div className="sticky top-0 z-50">
+                    <HeaderPage
+                        title={schema.title}
+                        subtitle={schema.description}
+                    />
+                </div>
+            )}
 
             {/* 🔥 CONTENT WRAPPER (IMPROVED) */}
             <div
                 className={`mx-auto w-full ${
-                    isMobile ? "px-4 py-4 space-y-3" : "px-6 py-6 space-y-4"
+                    isMobile ? "space-y-3" : "px-6 py-6 space-y-4"
                 }`}
             >
                 {/* 🔥 BLOCK STACK (CENTRALIZED SPACING) */}

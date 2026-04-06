@@ -1,5 +1,6 @@
 // src/core/ui/layout/shell/MobileShell.tsx
 
+import { usePageStore } from "../../page/page.store";
 import Sidebar from "../Sidebar";
 import { useShell } from "./ShellContext";
 import BottomNavigation from "@/core/ui/navigation/components/BottomNavigation";
@@ -10,7 +11,7 @@ export default function MobileShell({
     children: React.ReactNode;
 }) {
     const { drawerOpen, closeDrawer } = useShell();
-
+    const { showBottomNav } = usePageStore();
     const bottomNavHeight = 64; // px
 
     return (
@@ -55,7 +56,7 @@ export default function MobileShell({
                     id="main-scroll"
                     className="flex-1 overflow-y-auto"
                     style={{
-                        paddingBottom: bottomNavHeight,
+                        paddingBottom: showBottomNav ? bottomNavHeight : 0,
                         background: "var(--color-background)",
                     }}
                 >
@@ -63,14 +64,16 @@ export default function MobileShell({
                 </main>
 
                 {/* 🔥 Bottom Navigation */}
-                <div
-                    className="flex-shrink-0"
-                    style={{
-                        height: bottomNavHeight,
-                    }}
-                >
-                    <BottomNavigation />
-                </div>
+                {showBottomNav && (
+                    <div
+                        className="flex-shrink-0"
+                        style={{
+                            height: bottomNavHeight,
+                        }}
+                    >
+                        <BottomNavigation />
+                    </div>
+                )}
             </div>
         </div>
     );

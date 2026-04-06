@@ -29,6 +29,7 @@ import CheckoutPage from "@/modules/checkout/pages/CheckoutPage";
 import ChatPage from "@/modules/chat/ChatPage";
 import BookingListPage from "@/modules/booking/pages/BookingListPage";
 import BookingDetailPage from "@/modules/booking/pages/BookingDetailPage";
+import PageMetaWrapper from "./PageMetaWrapper";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -82,8 +83,33 @@ export default function AppRouter() {
                     />
 
                     <Route path="/cart" element={<CartPage />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/orders" element={<OrderPage />} />
+
+                    <Route
+                        path="/checkout"
+                        element={
+                            <PageMetaWrapper
+                                meta={{
+                                    showBottomNav: false,
+                                    showHeader: false,
+                                }}
+                            >
+                                <CheckoutPage />
+                            </PageMetaWrapper>
+                        }
+                    />
+
+                    <Route
+                        path="/orders"
+                        element={
+                            <PageMetaWrapper
+                                meta={{
+                                    showBottomNav: true,
+                                }}
+                            >
+                                <OrderPage />
+                            </PageMetaWrapper>
+                        }
+                    />
                     <Route path="/orders/:id" element={<OrderDetailPage />} />
 
                     <Route path="/bookings" element={<BookingListPage />} />

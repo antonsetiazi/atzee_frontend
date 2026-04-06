@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import type { ListingDetail } from "../types/listingDetail.types";
+import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
 interface Props {
     data: ListingDetail;
@@ -16,6 +17,7 @@ export default function ListingDetailView({
     onBuyNow,
 }: Props) {
     const [activeImage, setActiveImage] = useState(0);
+    const { isMobile } = useBreakpoint();
 
     function formatHour(hour?: number) {
         if (hour === undefined) return "-";
@@ -23,18 +25,31 @@ export default function ListingDetailView({
     }
 
     return (
-        <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+        <div
+            className={`
+                max-w-6xl mx-auto space-y-6
+                ${isMobile ? "" : "p-4 md:p-6"}
+            `}
+        >
             {/* ================= IMAGE GALLERY ================= */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className={isMobile ? "" : "grid md:grid-cols-2 gap-6"}>
                 {/* Main Image */}
                 <div>
                     <img
                         src={data.images[activeImage]}
-                        className="w-full h-80 object-cover rounded-2xl"
+                        className={`
+                            w-full object-cover
+                            ${isMobile ? "h-[300px] rounded-none" : "h-80 rounded-2xl"}
+                        `}
                     />
 
                     {/* Thumbnails */}
-                    <div className="flex gap-2 mt-3">
+                    <div
+                        className={`
+                            flex gap-2 mt-3
+                            ${isMobile ? "px-4" : ""}
+                        `}
+                    >
                         {data.images.map((img, i) => (
                             <img
                                 key={i}
@@ -54,7 +69,7 @@ export default function ListingDetailView({
                 </div>
 
                 {/* ================= INFO ================= */}
-                <div className="space-y-4">
+                <div className={`space-y-4 ${isMobile ? "px-4" : ""}`}>
                     {/* Title */}
                     <h1 className="text-2xl font-bold text-[var(--text-primary)]">
                         {data.name}
@@ -106,12 +121,14 @@ export default function ListingDetailView({
                         </div>
                     )}
 
-                    {/* CTA */}
-                    {data.type === "product" ? (
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => onPrimaryAction?.(data)}
-                                className="
+                    {/* ❌ CTA HANYA DESKTOP */}
+                    {!isMobile && (
+                        <>
+                            {data.type === "product" ? (
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => onPrimaryAction?.(data)}
+                                        className="
                                     flex-1 py-3 rounded-xl
                                     border border-[var(--color-border)]
                                     bg-[var(--color-surface)]
@@ -119,43 +136,45 @@ export default function ListingDetailView({
                                     hover:bg-[var(--color-hover)]
                                     transition
                                 "
-                            >
-                                Tambah ke Keranjang
-                            </button>
+                                    >
+                                        Tambah ke Keranjang
+                                    </button>
 
-                            <button
-                                onClick={() => onBuyNow?.(data)}
-                                className="
+                                    <button
+                                        onClick={() => onBuyNow?.(data)}
+                                        className="
                                     flex-1 py-3 rounded-xl
                                     bg-[var(--color-primary)]
                                     text-white font-semibold
                                     shadow-[var(--shadow)]
                                     hover:opacity-90 transition
                                 "
-                            >
-                                Beli Sekarang
-                            </button>
-                        </div>
-                    ) : (
-                        <button
-                            onClick={() => onPrimaryAction?.(data)}
-                            className="
+                                    >
+                                        Beli Sekarang
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => onPrimaryAction?.(data)}
+                                    className="
                                 w-full py-3 rounded-xl
                                 bg-[var(--color-primary)]
                                 text-white font-semibold
                                 shadow-[var(--shadow)]
                                 hover:opacity-90 transition
                             "
-                        >
-                            Booking Sekarang
-                        </button>
+                                >
+                                    Booking Sekarang
+                                </button>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
 
             {/* ================= DESCRIPTION ================= */}
             {data.description && (
-                <div className="space-y-2">
+                <div className={`space-y-2 ${isMobile ? "px-4" : ""}`}>
                     <h2 className="text-lg font-semibold">Deskripsi</h2>
                     <p className="text-sm text-[var(--text-muted)] leading-relaxed">
                         {data.description}
@@ -165,7 +184,7 @@ export default function ListingDetailView({
 
             {/* ================= SERVICES LIST ================= */}
             {data.type === "service" && data.meta?.offerings && (
-                <div className="space-y-3">
+                <div className={`space-y-3 ${isMobile ? "px-4 pb-4" : ""}`}>
                     <h2 className="text-lg font-semibold">Daftar Layanan</h2>
 
                     <div className="space-y-2">
@@ -173,11 +192,11 @@ export default function ListingDetailView({
                             <div
                                 key={item.product_id}
                                 className="
-                        p-3 rounded-xl border
-                        border-[var(--color-border)]
-                        bg-[var(--color-surface)]
-                        flex justify-between items-center
-                    "
+                                    p-3 rounded-xl border
+                                    border-[var(--color-border)]
+                                    bg-[var(--color-surface)]
+                                    flex justify-between items-center
+                                "
                             >
                                 <div>
                                     <p className="font-medium">
