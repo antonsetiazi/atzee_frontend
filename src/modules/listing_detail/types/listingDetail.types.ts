@@ -21,5 +21,10 @@ export interface ListingDetail {
 
     description?: string;
 
+    partner: {
+        id: number;
+        name: string;
+    };
+
     meta?: Record<string, any>;
 }

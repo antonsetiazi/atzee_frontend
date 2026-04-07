@@ -32,6 +32,11 @@ export function mapServiceDetailToListingDetail(data: any): ListingDetail {
 
         description: data.bio || "",
 
+        partner: {
+            id: data.id,
+            name: data.name,
+        },
+
         meta: {
             owner_id: data.id, // 🔥 penting untuk chat
             offerings: data.offerings, // 🔥 kita simpan full di meta

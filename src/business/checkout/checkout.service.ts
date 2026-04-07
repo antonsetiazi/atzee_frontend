@@ -13,6 +13,9 @@ type BookingResult = {
     booking_id: string; // 🔥 dari backend
     expires_at?: string; // optional (UX)
 
+    partner_id: number;
+    partner_name: string;
+
     serviceId: string;
     date: string;
 
@@ -80,6 +83,12 @@ export const checkoutService = {
             items,
             bookingId: booking.booking_id,
             paymentStatus: "idle",
+
+            selectedPartnerId: booking.partner_id,
+            selectedPartner: {
+                id: booking.partner_id,
+                name: booking.partner_name,
+            },
         });
 
         // 🔥 optional event
@@ -113,6 +122,10 @@ export const checkoutService = {
             throw new Error("Tidak ada item");
         }
 
+        if (!state.selectedPartnerId) {
+            throw new Error("Partner belum dipilih");
+        }
+
         // if (!state.selectedPaymentMethodId) {
         //     eventBus.emit("order.failed", {
         //         reason: "Pilih metode pembayaran",
@@ -140,6 +153,8 @@ export const checkoutService = {
                     qty: i.quantity,
                 })),
                 booking_id: state.bookingId,
+                selected_partner_id: state.selectedPartnerId,
+                address_id: state.addressId,
             });
 
             /* -------------------------
@@ -160,6 +175,12 @@ export const checkoutService = {
         }
     },
 
+    setAddress(addressId: number) {
+        checkoutStore.setState({
+            addressId,
+        });
+    },
+
     /* ===========================
        🔄 RESET
        =========================== */
@@ -168,6 +189,12 @@ export const checkoutService = {
             items: [],
             bookingId: null,
             paymentStatus: "idle",
+
+            selectedPartnerId: null,
+            selectedPartner: null,
+
+            addressId: null,
+            selectedAddress: null,
         });
     },
 };

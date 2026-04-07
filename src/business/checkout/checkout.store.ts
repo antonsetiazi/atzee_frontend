@@ -9,6 +9,12 @@ class CheckoutStore {
         items: [],
         bookingId: null,
         paymentStatus: "idle",
+
+        selectedPartnerId: null,
+        selectedPartner: null,
+
+        addressId: null,
+        selectedAddress: null,
     };
 
     private listeners: Listener[] = [];

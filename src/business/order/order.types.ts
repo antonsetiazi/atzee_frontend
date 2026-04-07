@@ -1,6 +1,12 @@
 // src/business/order/order.types.ts
 
-export type OrderStatus = "pending" | "paid" | "completed" | "failed";
+export type OrderStatus =
+    | "pending"
+    | "accepted"
+    | "on_going"
+    | "paid"
+    | "completed"
+    | "failed";
 
 export interface OrderItem {
     id: string;
@@ -10,6 +16,12 @@ export interface OrderItem {
 
     // entityId: string;
     // entityType: "product" | "service";
+}
+
+export interface OrderPartner {
+    id: number;
+    name: string;
+    phone?: string;
 }
 
 export interface Order {
@@ -30,4 +42,18 @@ export interface Order {
 
     // 🔥 SESSION-BASED
     bookingId?: string | null;
+
+    partner?: OrderPartner | null;
+
+    selectedPartner?: {
+        id: number;
+        name: string;
+    } | null;
 }
+
+export type PartnerOrderStatus =
+    | "pending"
+    | "accepted"
+    | "on_going"
+    | "completed"
+    | "cancelled";

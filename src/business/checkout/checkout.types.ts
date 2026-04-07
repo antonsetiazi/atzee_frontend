@@ -25,8 +25,28 @@ export interface CheckoutItem {
     };
 }
 
+export interface SelectedAddress {
+    id: number;
+    label: string;
+    recipient_name: string;
+    phone: string;
+    address_line: string;
+    city: string;
+}
+
+export interface SelectedPartner {
+    id: number;
+    name: string;
+}
+
 export interface CheckoutState {
     items: CheckoutItem[];
     bookingId: string | null;
     paymentStatus: PaymentStatus;
+
+    selectedPartnerId: number | null;
+    selectedPartner: SelectedPartner | null;
+
+    addressId: number | null;
+    selectedAddress?: SelectedAddress | null;
 }

@@ -39,11 +39,24 @@ function mapOrder(item: any): Order {
         })),
 
         total: item.total_amount || 0,
-
         status: item.status,
-
         createdAt: item.created_at,
-
         bookingId: item.booking_id || null, // 🔥 IMPORTANT
+
+        // 🔥 WAJIB TAMBAH INI
+        partner: item.partner
+            ? {
+                  id: item.partner.id,
+                  name: item.partner.name,
+                  phone: item.partner.phone,
+              }
+            : null,
+
+        selectedPartner: item.selected_partner
+            ? {
+                  id: item.selected_partner.id,
+                  name: item.selected_partner.name,
+              }
+            : null,
     };
 }

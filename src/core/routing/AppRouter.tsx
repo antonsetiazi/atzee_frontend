@@ -30,6 +30,10 @@ import ChatPage from "@/modules/chat/ChatPage";
 import BookingListPage from "@/modules/booking/pages/BookingListPage";
 import BookingDetailPage from "@/modules/booking/pages/BookingDetailPage";
 import PageMetaWrapper from "./PageMetaWrapper";
+import TrackingPage from "@/modules/tracking/pages/TrackingPage";
+import PartnerOrderPage from "@/modules/partner_order/pages/PartnerOrderPage";
+import PartnerOrderDetailPage from "@/modules/partner_order/pages/PartnerOrderDetailPage";
+import PartnerSchedulePage from "@/modules/partner_schedule/pages/PartnerSchedulePage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -112,11 +116,50 @@ export default function AppRouter() {
                     />
                     <Route path="/orders/:id" element={<OrderDetailPage />} />
 
+                    {/* =========================
+                        🔥 PARTNER ORDER
+                        ========================= */}
+                    <Route
+                        path="/partner/orders"
+                        element={
+                            <PageMetaWrapper
+                                meta={{
+                                    showBottomNav: true,
+                                }}
+                            >
+                                <PartnerOrderPage />
+                            </PageMetaWrapper>
+                        }
+                    />
+
+                    <Route
+                        path="/partner/orders/:id"
+                        element={<PartnerOrderDetailPage />}
+                    />
+
+                    {/* =========================
+                            🔥 PARTNER SCHEDULE
+                        ========================= */}
+                    <Route
+                        path="/partner/schedule"
+                        element={
+                            <PageMetaWrapper
+                                meta={{
+                                    showBottomNav: true,
+                                }}
+                            >
+                                <PartnerSchedulePage />
+                            </PageMetaWrapper>
+                        }
+                    />
+
                     <Route path="/bookings" element={<BookingListPage />} />
                     <Route
                         path="/bookings/:id"
                         element={<BookingDetailPage />}
                     />
+
+                    <Route path="/tracking/:id" element={<TrackingPage />} />
                 </Route>
 
                 <Route

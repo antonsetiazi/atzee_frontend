@@ -13,7 +13,8 @@ const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 export default function CheckoutPage() {
     const navigate = useNavigate();
 
-    const { items, confirmPayment } = useCheckout();
+    const { items, confirmPayment, selectedPartnerId, addressId } =
+        useCheckout();
 
     const { pay, loading: snapLoading } = useSnapPayment({
         clientKey: CLIENT_KEY,
@@ -35,6 +36,21 @@ export default function CheckoutPage() {
        =========================== */
     async function handlePay() {
         try {
+            if (!items.length) {
+                alert("Tidak ada item di checkout");
+                return;
+            }
+
+            if (!selectedPartnerId) {
+                alert("Partner belum dipilih");
+                return;
+            }
+
+            if (!addressId) {
+                alert("Silakan pilih alamat terlebih dahulu");
+                return;
+            }
+
             setIsSubmitting(true);
 
             const res = await confirmPayment();

@@ -20,6 +20,7 @@ export function useCheckout() {
         initFromBooking: checkoutService.initFromBooking,
         // selectPaymentMethod: checkoutService.selectPaymentMethod,
         confirmPayment: checkoutService.confirmPayment,
+        setAddress: checkoutService.setAddress,
         reset: checkoutService.reset,
         paymentStatus: state.paymentStatus,
 

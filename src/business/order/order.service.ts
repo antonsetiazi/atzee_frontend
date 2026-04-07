@@ -14,6 +14,8 @@ export const orderService = {
     async createOrder(payload: {
         items: { id: number; qty: number }[];
         booking_id?: string | null;
+        selected_partner_id: number;
+        address_id?: number | null;
     }) {
         const order = await createOrderApi(payload);
 
@@ -33,11 +35,15 @@ export const orderService = {
         items: { id: number; qty: number }[];
         booking_id?: string | null;
         payment_method: string;
+        selected_partner_id: number;
+        address_id?: number | null;
     }) {
         /* ---------- 1. ORDER ---------- */
         const order = await this.createOrder({
             items: payload.items,
             booking_id: payload.booking_id,
+            selected_partner_id: payload.selected_partner_id, // ✅ FIX
+            address_id: payload.address_id,
         });
 
         /* ---------- 2. PAYMENT ---------- */

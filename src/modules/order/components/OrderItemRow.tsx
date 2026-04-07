@@ -10,7 +10,7 @@ interface Props {
 
 export default function OrderItemRow({ item }: Props) {
     return (
-        <div className="p-4 border rounded-2xl bg-white shadow-sm">
+        <div className="p-4 border border-[var(--color-border)] rounded-2xl bg-white shadow-sm">
             <div className="flex justify-between">
                 <div>
                     <p className="font-medium">{item.name}</p>

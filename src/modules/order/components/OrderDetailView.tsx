@@ -1,6 +1,7 @@
 // src/modules/order/components/OrderDetailView.tsx
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Order } from "@/business/order/order.types";
 import OrderTimeline from "./OrderTimeline";
 import OrderItemRow from "./OrderItemRow";
@@ -9,10 +10,10 @@ import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from "@/core/config/format.config";
 
 import { completeOrderApi } from "@/business/order/order.api";
 import { orderStore } from "@/business/order/order.store";
+import { HeaderPage } from "@/core/ui/components";
 
 interface Props {
     order: Order;
-    onBack: () => void;
 }
 
 function getStatusStyle(status: string) {
@@ -30,9 +31,10 @@ function getStatusStyle(status: string) {
     }
 }
 
-export default function OrderDetailView({ order, onBack }: Props) {
+export default function OrderDetailView({ order }: Props) {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-
+    // console.log(order);
     const handleComplete = async () => {
         const confirm = window.confirm(
             "Apakah Anda yakin layanan sudah selesai?",
@@ -58,77 +60,106 @@ export default function OrderDetailView({ order, onBack }: Props) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-6">
-            {/* BACK */}
-            <button
-                onClick={onBack}
-                className="text-sm text-gray-500 hover:text-black"
-            >
-                ← Kembali
-            </button>
+        <>
+            <HeaderPage title="Kembali" />
+            <div className="max-w-4xl mx-auto p-4 space-y-6">
+                {/* BACK */}
 
-            {/* HEADER CARD */}
-            <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white space-y-3 shadow-sm">
-                <div className="flex justify-between items-center">
-                    <h2 className="font-bold text-lg">
-                        Order #
-                        {order.order_number || String(order.id).slice(0, 6)}
-                    </h2>
+                {/* HEADER CARD */}
+                <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white space-y-3 shadow-sm">
+                    <div className="flex justify-between items-center">
+                        <h2 className="font-bold text-lg">
+                            Order #
+                            {order.order_number || String(order.id).slice(0, 6)}
+                        </h2>
 
-                    <span
-                        className={`
+                        <span
+                            className={`
                             px-3 py-1 text-xs rounded-full font-medium
                             ${getStatusStyle(order.status)}
                         `}
-                    >
-                        {order.status}
-                    </span>
-                </div>
+                        >
+                            {order.status}
+                        </span>
+                    </div>
 
-                <p className="text-sm text-gray-500">
-                    {formatValue(order.createdAt, { format: "datetime" })}
-                </p>
-
-                <div className="flex justify-between items-center pt-2 border-t border-[var(--color-border)]">
-                    <p className="text-sm text-gray-500">Metode Pembayaran</p>
-                    <p className="font-medium">{order.paymentMethod}</p>
-                </div>
-
-                <div className="flex justify-between items-center">
-                    <p className="text-sm text-gray-500">Total</p>
-                    <p className="font-semibold text-lg">
-                        {formatValue(order.total, {
-                            format: "currency",
-                            currency: DEFAULT_CURRENCY,
-                            locale: DEFAULT_LOCALE,
-                        })}
+                    <p className="text-sm text-gray-500">
+                        {formatValue(order.createdAt, { format: "datetime" })}
                     </p>
+
+                    <div className="flex justify-between items-center pt-2 border-t border-[var(--color-border)]">
+                        <p className="text-sm text-gray-500">
+                            Metode Pembayaran
+                        </p>
+                        <p className="font-medium">{order.paymentMethod}</p>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <p className="text-sm text-gray-500">Total</p>
+                        <p className="font-semibold text-lg">
+                            {formatValue(order.total, {
+                                format: "currency",
+                                currency: DEFAULT_CURRENCY,
+                                locale: DEFAULT_LOCALE,
+                            })}
+                        </p>
+                    </div>
                 </div>
-            </div>
 
-            {/* ITEMS */}
-            <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Item Pesanan</h3>
+                {order.selectedPartner && !order.partner && (
+                    <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm space-y-2">
+                        <p className="text-sm text-gray-500">
+                            Menunggu konfirmasi dari partner
+                        </p>
 
-                <div className="space-y-3">
-                    {order.items.map((item) => (
-                        <OrderItemRow key={item.id} item={item} />
-                    ))}
+                        <p className="font-semibold">
+                            {order.selectedPartner.name}
+                        </p>
+
+                        <p className="text-xs text-gray-400">
+                            Partner akan segera menerima pesanan kamu
+                        </p>
+                    </div>
+                )}
+
+                {order.partner && (
+                    <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
+                        <button
+                            onClick={() => navigate(`/tracking/${order.id}`)}
+                            className="w-full py-3 rounded-xl font-semibold bg-green-600 text-white hover:bg-green-700 transition"
+                        >
+                            Lacak Partner
+                        </button>
+
+                        <p className="text-xs text-gray-500 mt-2 text-center">
+                            Lihat posisi partner secara real-time
+                        </p>
+                    </div>
+                )}
+
+                {/* ITEMS */}
+                <div className="space-y-4">
+                    <h3 className="font-semibold text-lg">Item Pesanan</h3>
+
+                    <div className="space-y-3">
+                        {order.items.map((item) => (
+                            <OrderItemRow key={item.id} item={item} />
+                        ))}
+                    </div>
                 </div>
-            </div>
 
-            {/* TIMELINE */}
-            <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
-                <OrderTimeline status={order.status} />
-            </div>
-
-            {/* 🔥 COMPLETE ACTION */}
-            {order.status === "paid" && (
+                {/* TIMELINE */}
                 <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
-                    <button
-                        onClick={handleComplete}
-                        disabled={loading}
-                        className={`
+                    <OrderTimeline status={order.status} />
+                </div>
+
+                {/* 🔥 COMPLETE ACTION */}
+                {order.status === "paid" && (
+                    <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
+                        <button
+                            onClick={handleComplete}
+                            disabled={loading}
+                            className={`
                             w-full py-3 rounded-xl font-semibold transition
                             ${
                                 loading
@@ -136,17 +167,19 @@ export default function OrderDetailView({ order, onBack }: Props) {
                                     : "bg-blue-600 text-white hover:bg-blue-700"
                             }
                         `}
-                    >
-                        {loading
-                            ? "Memproses..."
-                            : "Konfirmasi Layanan Selesai"}
-                    </button>
+                        >
+                            {loading
+                                ? "Memproses..."
+                                : "Konfirmasi Layanan Selesai"}
+                        </button>
 
-                    <p className="text-xs text-gray-500 mt-2 text-center">
-                        Klik jika layanan sudah selesai dilakukan oleh partner
-                    </p>
-                </div>
-            )}
-        </div>
+                        <p className="text-xs text-gray-500 mt-2 text-center">
+                            Klik jika layanan sudah selesai dilakukan oleh
+                            partner
+                        </p>
+                    </div>
+                )}
+            </div>
+        </>
     );
 }

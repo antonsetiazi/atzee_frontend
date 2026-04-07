@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 
 import BookingView from "../components/BookingView";
 import { bookingService } from "../services/booking.service";
@@ -15,6 +14,8 @@ import { mapServiceDetailToListingDetail } from "@/modules/listing_detail/servic
 import type { ListingDetail } from "@/modules/listing_detail/types/listingDetail.types";
 
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
+import { HeaderPage } from "@/core/ui/components";
+import { toggleOffering } from "../utils/toggleOffering";
 
 export default function ServiceBookingPage() {
     const { id } = useParams();
@@ -90,9 +91,15 @@ export default function ServiceBookingPage() {
 
             if (!id) return;
 
+            if (!data?.partner) {
+                throw new Error("Partner tidak ditemukan");
+            }
+
             const enrichedResult = {
                 booking_id: booking.booking_id,
                 expires_at: booking.expires_at,
+                partner_id: data.partner.id, // ✅ FIX
+                partner_name: data.partner.name,
                 serviceId: id,
                 date: booking.date,
                 slotLabel: booking.slotLabel,
@@ -135,49 +142,12 @@ export default function ServiceBookingPage() {
     // ================================
     if (isMobile) {
         return (
-            <div className="relative min-h-screen bg-[var(--color-background)]">
-                {/* HEADER */}
-                <div
-                    className="
-                        fixed top-0 left-0 right-0 z-40
-                        px-4 pt-3 pb-3
-                        flex items-center gap-3
-                        backdrop-blur-xl border-b
-                    "
-                    style={{
-                        borderColor: "var(--color-border)",
-                        background: "rgba(255,255,255,0.75)",
-                    }}
-                >
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="
-                            w-10 h-10 flex items-center justify-center
-                            rounded-full
-                            bg-white/80 backdrop-blur
-                            shadow-md border
-                            active:scale-95 transition
-                        "
-                        style={{
-                            borderColor: "var(--color-border)",
-                        }}
-                    >
-                        <ArrowLeftIcon className="w-5 h-5 text-[var(--text-primary)]" />
-                    </button>
+            <>
+                <HeaderPage title="Booking" subtitle="" />
 
-                    <h1 className="text-base font-semibold">Booking</h1>
-                </div>
-
-                {/* CONTENT */}
-                <div className="pt-20 pb-28 px-3">
-                    <div
-                        className="
-                            p-4 rounded-2xl space-y-4
-                            border border-[var(--color-border)]
-                            bg-[var(--color-surface)]
-                            shadow-[var(--shadow)]
-                        "
-                    >
+                <div className="p-4">
+                    {/* CONTENT */}
+                    <div className="px-3">
                         <BookingView
                             selectedDate={selectedDate}
                             onSelectDate={selectDate}
@@ -189,37 +159,14 @@ export default function ServiceBookingPage() {
                             selectedOfferings={selectedOfferings}
                             hideCTA={true}
                             onToggleOffering={(offeringId) => {
-                                setSelectedOfferings((prev) => {
-                                    let updated: number[];
-
-                                    if (prev.includes(offeringId)) {
-                                        updated = prev.filter(
-                                            (x) => x !== offeringId,
-                                        );
-                                    } else {
-                                        updated = [...prev, offeringId];
-                                    }
-
-                                    const selectedOfferingsFull =
-                                        allOfferings.filter((o) =>
-                                            updated.includes(o.product_id),
-                                        );
-
-                                    bookingService.setOfferings(
-                                        selectedOfferingsFull.map((o) => ({
-                                            id: o.product_id,
-                                            name: o.product_name,
-                                            duration: o.duration_minutes,
-                                            price: o.price,
-                                        })),
-                                    );
-
-                                    if (id) {
-                                        bookingService.selectResource(id);
-                                    }
-
-                                    return updated;
-                                });
+                                setSelectedOfferings((prev) =>
+                                    toggleOffering(
+                                        offeringId,
+                                        prev,
+                                        allOfferings,
+                                        id,
+                                    ),
+                                );
                             }}
                             onConfirm={handleConfirm}
                         />
@@ -255,7 +202,7 @@ export default function ServiceBookingPage() {
                         Konfirmasi Booking
                     </button>
                 </div>
-            </div>
+            </>
         );
     }
 
@@ -263,18 +210,10 @@ export default function ServiceBookingPage() {
     // 💻 DESKTOP VERSION
     // ================================
     return (
-        <div className="space-y-6">
-            <div
-                className="
-                    m-2
-                    p-4 rounded-2xl space-y-4
-                    border border-[var(--color-border)]
-                    bg-[var(--color-surface)]
-                    shadow-[var(--shadow)]
-                "
-            >
-                <h2 className="text-lg font-semibold">Booking</h2>
+        <>
+            <HeaderPage title="Booking" subtitle="" />
 
+            <div className="p-4 space-y-6">
                 <BookingView
                     selectedDate={selectedDate}
                     onSelectDate={selectDate}
@@ -285,41 +224,13 @@ export default function ServiceBookingPage() {
                     offerings={allOfferings}
                     selectedOfferings={selectedOfferings}
                     onToggleOffering={(offeringId) => {
-                        setSelectedOfferings((prev) => {
-                            let updated: number[];
-
-                            if (prev.includes(offeringId)) {
-                                updated = prev.filter((x) => x !== offeringId);
-                            } else {
-                                updated = [...prev, offeringId];
-                            }
-
-                            // 🔥 ambil offering yang terpilih
-                            const selectedOfferingsFull = allOfferings.filter(
-                                (o) => updated.includes(o.product_id),
-                            );
-
-                            // 🔥 SET OFFERINGS KE STORE (PENTING BANGET)
-                            bookingService.setOfferings(
-                                selectedOfferingsFull.map((o) => ({
-                                    id: o.product_id,
-                                    name: o.product_name,
-                                    duration: o.duration_minutes,
-                                    price: o.price,
-                                })),
-                            );
-
-                            // 🔥 SET RESOURCE (ambil dari service id / partner)
-                            if (id) {
-                                bookingService.selectResource(id);
-                            }
-
-                            return updated;
-                        });
+                        setSelectedOfferings((prev) =>
+                            toggleOffering(offeringId, prev, allOfferings, id),
+                        );
                     }}
                     onConfirm={handleConfirm}
                 />
             </div>
-        </div>
+        </>
     );
 }
