@@ -10,10 +10,16 @@ import CheckoutDesktop from "./layouts/CheckoutDesktop";
 interface Props {
     items: CheckoutItem[];
     onPay: () => void;
+    onCancel: () => void;
     isSubmitting: boolean;
 }
 
-export default function CheckoutView({ items, onPay, isSubmitting }: Props) {
+export default function CheckoutView({
+    items,
+    onPay,
+    onCancel,
+    isSubmitting,
+}: Props) {
     const { isMobile } = useBreakpoint();
     const [addressModalOpen, setAddressModalOpen] = useState(false);
     const { selectedAddress, selectedPartner } = useCheckout();
@@ -26,6 +32,7 @@ export default function CheckoutView({ items, onPay, isSubmitting }: Props) {
         items,
         total,
         onPay,
+        onCancel,
         isSubmitting,
         selectedAddress,
         selectedPartner,

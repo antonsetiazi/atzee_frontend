@@ -40,6 +40,7 @@ import TrackingPage from "@/modules/tracking/pages/TrackingPage";
 import PartnerOrderPage from "@/modules/partner_order/pages/PartnerOrderPage";
 import PartnerOrderDetailPage from "@/modules/partner_order/pages/PartnerOrderDetailPage";
 import PartnerSchedulePage from "@/modules/partner_schedule/pages/PartnerSchedulePage";
+import RedirectRootHandler from "./RedirectRootHandler";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -55,6 +56,7 @@ export default function AppRouter() {
         <BrowserRouter>
             {/* GLOBAL FEEDBACK UI */}
             <ToastRenderer />
+            <RedirectRootHandler />
 
             <Routes>
                 {/* PUBLIC */}

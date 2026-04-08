@@ -13,8 +13,13 @@ const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 export default function CheckoutPage() {
     const navigate = useNavigate();
 
-    const { items, confirmPayment, selectedPartnerId, addressId } =
-        useCheckout();
+    const {
+        items,
+        confirmPayment,
+        cancelCurrentBooking,
+        selectedPartnerId,
+        addressId,
+    } = useCheckout();
 
     const { pay, loading: snapLoading } = useSnapPayment({
         clientKey: CLIENT_KEY,
@@ -99,10 +104,22 @@ export default function CheckoutPage() {
         }
     }
 
+    async function handleCancelBooking() {
+        try {
+            await cancelCurrentBooking();
+            alert("Booking berhasil dibatalkan");
+            navigate("/services");
+        } catch (err) {
+            console.error(err);
+            alert("Gagal membatalkan booking");
+        }
+    }
+
     return (
         <CheckoutView
             items={items}
             onPay={handlePay}
+            onCancel={handleCancelBooking}
             isSubmitting={isSubmitting || snapLoading}
         />
     );

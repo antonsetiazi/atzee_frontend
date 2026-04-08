@@ -105,6 +105,14 @@ export const bookingService = {
         };
     },
 
+    async cancelBooking(bookingId: string) {
+        if (!bookingId) {
+            throw new Error("Booking ID tidak ditemukan");
+        }
+
+        return bookingApi.cancel(bookingId);
+    },
+
     /* ===========================
        📡 FETCH AVAILABILITY (FIXED)
        =========================== */

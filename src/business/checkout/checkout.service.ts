@@ -8,6 +8,7 @@ import { eventBus } from "@/core/event/event.bus";
 import { orderService } from "@/business/order/order.service";
 import { paymentService } from "../payment/payment.service";
 import type { PaymentExecution } from "@/business/payment/payment.types";
+import { bookingService } from "@/modules/booking/services/booking.service";
 
 type BookingResult = {
     booking_id: string; // 🔥 dari backend
@@ -126,22 +127,11 @@ export const checkoutService = {
             throw new Error("Partner belum dipilih");
         }
 
-        // if (!state.selectedPaymentMethodId) {
-        //     eventBus.emit("order.failed", {
-        //         reason: "Pilih metode pembayaran",
-        //     });
-        //     throw new Error("Pilih metode pembayaran");
-        // }
-
         /* ---------- SET STATE ---------- */
 
         checkoutStore.setState({
             paymentStatus: "pending",
         });
-
-        // eventBus.emit("checkout.payment.started", {
-        //     methodId: state.selectedPaymentMethodId,
-        // });
 
         try {
             /* -------------------------
@@ -178,6 +168,30 @@ export const checkoutService = {
     setAddress(addressId: number) {
         checkoutStore.setState({
             addressId,
+        });
+    },
+
+    async cancelCurrentBooking() {
+        const state = checkoutStore.getState();
+
+        if (!state.bookingId) {
+            throw new Error("Tidak ada booking aktif");
+        }
+
+        await bookingService.cancelBooking(state.bookingId);
+
+        checkoutStore.setState({
+            items: [],
+            bookingId: null,
+            paymentStatus: "idle",
+            selectedPartnerId: null,
+            selectedPartner: null,
+            addressId: null,
+            selectedAddress: null,
+        });
+
+        eventBus.emit("booking.canceled", {
+            bookingId: state.bookingId,
         });
     },
 

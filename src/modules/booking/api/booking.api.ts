@@ -36,6 +36,10 @@ export const bookingApi = {
         return httpPost<HoldBookingResponse>("/business/booking/hold", payload);
     },
 
+    cancel(bookingId: string) {
+        return httpPost(`/business/booking/${bookingId}/cancel`, {});
+    },
+
     getAvailability(params: {
         resource_type: string;
         resource_id: string;

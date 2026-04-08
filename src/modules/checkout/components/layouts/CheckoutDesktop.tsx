@@ -16,6 +16,7 @@ interface Props {
     total: number;
 
     onPay: () => void;
+    onCancel: () => void;
     isSubmitting: boolean;
 
     selectedAddress: any;
@@ -29,6 +30,7 @@ export default function CheckoutDesktop({
     items,
     total,
     onPay,
+    onCancel,
     isSubmitting,
     selectedAddress,
     selectedPartner,
@@ -82,6 +84,18 @@ export default function CheckoutDesktop({
                                 {isSubmitting
                                     ? "Memproses..."
                                     : "Bayar Sekarang"}
+                            </button>
+
+                            <button
+                                onClick={onCancel}
+                                disabled={isSubmitting}
+                                className="w-full mt-3 py-4 rounded-2xl border font-semibold transition-all disabled:opacity-50"
+                                style={{
+                                    borderColor: "var(--color-border)",
+                                    color: "var(--text-muted)",
+                                }}
+                            >
+                                Batalkan Booking
                             </button>
 
                             <p className="text-xs text-center text-[var(--text-muted)] mt-4">

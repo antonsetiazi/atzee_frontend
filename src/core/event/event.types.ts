@@ -39,6 +39,10 @@ export type EventMap = {
         schedule: string;
     };
 
+    "booking.canceled": {
+        bookingId: string;
+    };
+
     // REVIEW
     "review.created": Review;
 };
