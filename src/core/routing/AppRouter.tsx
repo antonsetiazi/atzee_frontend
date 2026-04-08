@@ -19,6 +19,7 @@ import { useSessionStore } from "../session/session.store";
 
 import SessionExpiredPage from "@/core/ui/views/auth/SessionExpiredPage";
 
+import ProfilePage from "@/modules/account/profile/pages/ProfilePage";
 import AddressListPage from "@/modules/account/address/pages/AddressListPage";
 import AddressCreatePage from "@/modules/account/address/pages/AddressCreatePage";
 import AddressEditPage from "@/modules/account/address/pages/AddressEditPage";
@@ -64,6 +65,8 @@ export default function AppRouter() {
                 <Route path="/" element={<AppLayout />}>
                     {usersRoutes.map(renderRoute)}
                     {buildPageRoutes(pages)}
+
+                    <Route path="/account/profile" element={<ProfilePage />} />
 
                     <Route
                         path="/account/address"
