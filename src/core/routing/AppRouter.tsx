@@ -18,6 +18,11 @@ import { buildPageRoutes } from "@/core/routing/PageRoutes";
 import { useSessionStore } from "../session/session.store";
 
 import SessionExpiredPage from "@/core/ui/views/auth/SessionExpiredPage";
+
+import AddressListPage from "@/modules/account/address/pages/AddressListPage";
+import AddressCreatePage from "@/modules/account/address/pages/AddressCreatePage";
+import AddressEditPage from "@/modules/account/address/pages/AddressEditPage";
+
 import CartPage from "@/app/pages/cart/CartPage";
 import OrderPage from "@/modules/order/pages/OrderPage";
 import OrderDetailPage from "@/modules/order/pages/OrderDetailPage";
@@ -59,6 +64,19 @@ export default function AppRouter() {
                 <Route path="/" element={<AppLayout />}>
                     {usersRoutes.map(renderRoute)}
                     {buildPageRoutes(pages)}
+
+                    <Route
+                        path="/account/address"
+                        element={<AddressListPage />}
+                    />
+                    <Route
+                        path="/account/address/create"
+                        element={<AddressCreatePage />}
+                    />
+                    <Route
+                        path="/account/address/edit/:id"
+                        element={<AddressEditPage />}
+                    />
 
                     <Route path="/chat" element={<ChatPage />} />
                     <Route path="/chat/:roomId" element={<ChatPage />} />

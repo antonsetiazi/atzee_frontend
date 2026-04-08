@@ -3,9 +3,9 @@
 import { useParams } from "react-router-dom";
 import { useTracking } from "../hooks/useTracking";
 
-import TrackingHeader from "../components/TrackingHeader";
 import TrackingMap from "../components/TrackingMap";
 import TrackingStatus from "../components/TrackingStatus";
+import { HeaderPage } from "@/core/ui/components";
 
 export default function TrackingPage() {
     const { id } = useParams();
@@ -20,14 +20,15 @@ export default function TrackingPage() {
     }
 
     return (
-        <div className="flex flex-col h-screen">
-            <TrackingHeader />
+        <>
+            <div className="flex flex-col h-screen">
+                <HeaderPage title="Live Tracking" />
+                <div className="flex-1">
+                    <TrackingMap data={data} />
+                </div>
 
-            <div className="flex-1">
-                <TrackingMap data={data} />
+                <TrackingStatus data={data} />
             </div>
-
-            <TrackingStatus />
-        </div>
+        </>
     );
 }
