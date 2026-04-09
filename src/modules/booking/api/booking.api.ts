@@ -24,11 +24,11 @@ export interface AvailabilitySlot {
 export interface BookingItem {
     id: string;
     resource_id: string;
-
     start_time: string;
     end_time: string;
-
     status: string;
+    can_review: boolean;
+    has_reviewed: boolean;
 }
 
 export const bookingApi = {

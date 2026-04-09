@@ -1,31 +1,16 @@
 // src/modules/review/types/review.types.ts
 
 export interface Review {
-    id: string;
-
-    entityType: "product" | "service";
-    entityId: string;
-
-    userName: string;
-    userAvatar?: string;
-
-    rating: number; // 1 - 5
+    id: number;
+    booking_id: number;
+    rating: number;
     comment: string;
-
-    isVerified?: boolean;
-
-    createdAt: string;
+    created_at: string;
+    user_name: string;
 }
 
-export interface ReviewSummaryData {
-    averageRating: number;
-    totalReviews: number;
-
-    breakdown: {
-        5: number;
-        4: number;
-        3: number;
-        2: number;
-        1: number;
-    };
+export interface CreateReviewPayload {
+    booking_id: number;
+    rating: number;
+    comment: string;
 }

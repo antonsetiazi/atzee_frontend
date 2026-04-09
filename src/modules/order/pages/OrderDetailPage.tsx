@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useOrders } from "../hooks/useOrders";
 import OrderDetailView from "../components/OrderDetailView";
 import { getOrderDetailApi } from "@/business/order/order.api";
+import { useOrderBooking } from "../hooks/useOrderBooking";
 
 export default function OrderDetailPage() {
     const { id } = useParams();
@@ -38,7 +39,9 @@ export default function OrderDetailPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
-    if (loading) {
+    const { booking, loading: bookingLoading } = useOrderBooking(order);
+
+    if (loading || bookingLoading) {
         return <div className="p-4">Loading...</div>;
     }
 
@@ -46,5 +49,5 @@ export default function OrderDetailPage() {
         return <div className="p-4">Order tidak ditemukan</div>;
     }
 
-    return <OrderDetailView order={order} />;
+    return <OrderDetailView order={order} booking={booking} />;
 }

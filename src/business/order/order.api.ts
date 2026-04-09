@@ -40,8 +40,9 @@ function mapOrder(item: any): Order {
 
         total: item.total_amount || 0,
         status: item.status,
+        payment_status: item.payment_status,
         createdAt: item.created_at,
-        bookingId: item.booking_id || null, // 🔥 IMPORTANT
+        bookingId: item.bookingId || null, // 🔥 IMPORTANT
 
         // 🔥 WAJIB TAMBAH INI
         partner: item.partner

@@ -6,7 +6,8 @@ export type OrderStatus =
     | "on_going"
     | "paid"
     | "completed"
-    | "failed";
+    | "failed"
+    | "cancelled";
 
 export interface OrderItem {
     id: string;
@@ -27,12 +28,10 @@ export interface OrderPartner {
 export interface Order {
     id: string;
     order_number: string;
-
     items: OrderItem[];
-
     total: number;
-
     status: OrderStatus;
+    payment_status: string;
 
     createdAt: string;
 

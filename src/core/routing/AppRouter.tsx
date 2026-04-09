@@ -33,8 +33,8 @@ import ServiceDetailPage from "@/modules/listing_detail/pages/ServiceDetailPage"
 import ServiceBookingPage from "@/modules/booking/pages/ServiceBookingPage";
 import CheckoutPage from "@/modules/checkout/pages/CheckoutPage";
 import ChatPage from "@/modules/chat/ChatPage";
-import BookingListPage from "@/modules/booking/pages/BookingListPage";
-import BookingDetailPage from "@/modules/booking/pages/BookingDetailPage";
+// import BookingListPage from "@/modules/booking/pages/BookingListPage";
+// import BookingDetailPage from "@/modules/booking/pages/BookingDetailPage";
 import PageMetaWrapper from "./PageMetaWrapper";
 import TrackingPage from "@/modules/tracking/pages/TrackingPage";
 import PartnerOrderPage from "@/modules/partner_order/pages/PartnerOrderPage";
@@ -176,11 +176,11 @@ export default function AppRouter() {
                         }
                     />
 
-                    <Route path="/bookings" element={<BookingListPage />} />
+                    {/* <Route path="/bookings" element={<BookingListPage />} />
                     <Route
                         path="/bookings/:id"
                         element={<BookingDetailPage />}
-                    />
+                    /> */}
 
                     <Route path="/tracking/:id" element={<TrackingPage />} />
                 </Route>

@@ -1,27 +1,36 @@
 // src/modules/booking/pages/BookingDetailPage.tsx
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { bookingApi, type BookingItem } from "../api/booking.api";
 import BookingTimeline from "../components/BookingTimeline";
 import { HeaderPage } from "@/core/ui/components";
 
+import ReviewActionSection from "@/modules/review/components/ReviewActionSection";
+import { useBookingReview } from "@/modules/review/hooks/useBookingReview";
+import ReviewItem from "@/modules/review/components/ReviewItem";
+
 export default function BookingDetailPage() {
     const { id } = useParams();
 
+    const { review, loading: reviewLoading } = useBookingReview(Number(id));
+
     const [data, setData] = useState<BookingItem | null>(null);
 
-    useEffect(() => {
-        async function fetch() {
-            if (!id) return;
-
-            const res = await bookingApi.getDetail(id);
-            setData(res);
-        }
-
-        fetch();
+    const fetchBookingData = useCallback(async () => {
+        if (!id) return null;
+        return await bookingApi.getDetail(id);
     }, [id]);
+
+    useEffect(() => {
+        if (!id) return;
+
+        (async () => {
+            const res = await fetchBookingData();
+            if (res) setData(res);
+        })();
+    }, [id, fetchBookingData]);
 
     if (!data) {
         return (
@@ -99,11 +108,11 @@ export default function BookingDetailPage() {
                 {/* 🕒 TIME CARD */}
                 <div
                     className="
-                p-5 rounded-2xl
-                border border-[var(--color-border)]
-                bg-[var(--color-surface)]
-                shadow-sm
-                "
+                        p-5 rounded-2xl
+                        border border-[var(--color-border)]
+                        bg-[var(--color-surface)]
+                        shadow-sm
+                    "
                 >
                     <p className="text-sm text-[var(--text-muted)] mb-1">
                         Jadwal
@@ -121,11 +130,11 @@ export default function BookingDetailPage() {
                 {/* 🔄 TIMELINE CARD */}
                 <div
                     className="
-                p-5 rounded-2xl
-                border border-[var(--color-border)]
-                bg-[var(--color-surface)]
-                shadow-sm
-                "
+                        p-5 rounded-2xl
+                        border border-[var(--color-border)]
+                        bg-[var(--color-surface)]
+                        shadow-sm
+                    "
                 >
                     <p className="text-sm text-[var(--text-muted)] mb-3">
                         Progress Booking
@@ -133,6 +142,43 @@ export default function BookingDetailPage() {
 
                     <BookingTimeline status={data.status} />
                 </div>
+
+                {/* ⭐ REVIEW SECTION */}
+                {data.status === "COMPLETED" && (
+                    <div
+                        className="
+                            p-5 rounded-2xl
+                            border border-[var(--color-border)]
+                            bg-[var(--color-surface)]
+                            shadow-sm
+                        "
+                    >
+                        <p className="text-sm text-[var(--text-muted)] mb-3">
+                            Review Layanan
+                        </p>
+
+                        {data.can_review && (
+                            <ReviewActionSection
+                                bookingId={Number(data.id)}
+                                canReview={data.can_review}
+                                onSuccess={async () => {
+                                    const res = await fetchBookingData();
+                                    if (res) setData(res);
+                                }}
+                            />
+                        )}
+
+                        {data.has_reviewed && review && (
+                            <ReviewItem review={review} />
+                        )}
+
+                        {reviewLoading && (
+                            <p className="text-sm text-[var(--text-muted)]">
+                                Memuat review...
+                            </p>
+                        )}
+                    </div>
+                )}
             </div>
         </>
     );

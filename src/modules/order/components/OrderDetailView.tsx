@@ -1,4 +1,5 @@
 // src/modules/order/components/OrderDetailView.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,9 +12,14 @@ import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from "@/core/config/format.config";
 import { completeOrderApi } from "@/business/order/order.api";
 import { orderStore } from "@/business/order/order.store";
 import { HeaderPage } from "@/core/ui/components";
+import { useBookingReview } from "@/modules/review/hooks/useBookingReview";
+import BookingTimeline from "@/modules/booking/components/BookingTimeline";
+import ReviewActionSection from "@/modules/review/components/ReviewActionSection";
+import ReviewItem from "@/modules/review/components/ReviewItem";
 
 interface Props {
     order: Order;
+    booking: any;
 }
 
 function getStatusStyle(status: string) {
@@ -31,10 +37,14 @@ function getStatusStyle(status: string) {
     }
 }
 
-export default function OrderDetailView({ order }: Props) {
+export default function OrderDetailView({ order, booking }: Props) {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    // console.log(order);
+
+    const { review, loading: reviewLoading } = useBookingReview(
+        Number(booking?.id),
+    );
+
     const handleComplete = async () => {
         const confirm = window.confirm(
             "Apakah Anda yakin layanan sudah selesai?",
@@ -44,13 +54,13 @@ export default function OrderDetailView({ order }: Props) {
 
         try {
             setLoading(true);
-
             await completeOrderApi(order.id);
 
             // 🔥 UPDATE LOCAL STORE
             orderStore.completeOrder(order.id);
 
             alert("Pesanan berhasil diselesaikan");
+            window.location.reload();
         } catch (err) {
             console.error(err);
             alert("Gagal menyelesaikan pesanan");
@@ -61,11 +71,10 @@ export default function OrderDetailView({ order }: Props) {
 
     return (
         <>
-            <HeaderPage title="Kembali" />
-            <div className="max-w-4xl mx-auto p-4 space-y-6">
-                {/* BACK */}
+            <HeaderPage title="Rincian Pesanan" />
 
-                {/* HEADER CARD */}
+            <div className="max-w-4xl mx-auto p-4 space-y-6">
+                {/* ORDER CARD */}
                 <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white space-y-3 shadow-sm">
                     <div className="flex justify-between items-center">
                         <h2 className="font-bold text-lg">
@@ -106,6 +115,45 @@ export default function OrderDetailView({ order }: Props) {
                     </div>
                 </div>
 
+                {/* ITEMS */}
+                <div className="space-y-4">
+                    <h3 className="font-semibold text-lg">Item Pesanan</h3>
+
+                    <div className="space-y-3">
+                        {order.items.map((item) => (
+                            <OrderItemRow key={item.id} item={item} />
+                        ))}
+                    </div>
+                </div>
+
+                {/* BOOKING INFO */}
+                {booking && (
+                    <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm space-y-4">
+                        <h3 className="font-semibold">Status Booking</h3>
+
+                        <BookingTimeline status={booking.status} />
+                    </div>
+                )}
+
+                {/* TRACKING */}
+                {order.partner &&
+                    ["accepted", "on_going"].includes(order.status) && (
+                        <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
+                            <button
+                                onClick={() =>
+                                    navigate(`/tracking/${order.id}`)
+                                }
+                                className="w-full py-3 rounded-xl font-semibold bg-green-600 text-white hover:bg-green-700 transition"
+                            >
+                                Lacak Partner
+                            </button>
+
+                            <p className="text-xs text-gray-500 mt-2 text-center">
+                                Lihat posisi partner secara real-time
+                            </p>
+                        </div>
+                    )}
+
                 {order.selectedPartner && !order.partner && (
                     <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm space-y-2">
                         <p className="text-sm text-gray-500">
@@ -122,44 +170,19 @@ export default function OrderDetailView({ order }: Props) {
                     </div>
                 )}
 
-                {order.partner && (
-                    <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
-                        <button
-                            onClick={() => navigate(`/tracking/${order.id}`)}
-                            className="w-full py-3 rounded-xl font-semibold bg-green-600 text-white hover:bg-green-700 transition"
-                        >
-                            Lacak Partner
-                        </button>
-
-                        <p className="text-xs text-gray-500 mt-2 text-center">
-                            Lihat posisi partner secara real-time
-                        </p>
-                    </div>
-                )}
-
-                {/* ITEMS */}
-                <div className="space-y-4">
-                    <h3 className="font-semibold text-lg">Item Pesanan</h3>
-
-                    <div className="space-y-3">
-                        {order.items.map((item) => (
-                            <OrderItemRow key={item.id} item={item} />
-                        ))}
-                    </div>
-                </div>
-
                 {/* TIMELINE */}
                 <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
                     <OrderTimeline status={order.status} />
                 </div>
 
                 {/* 🔥 COMPLETE ACTION */}
-                {order.status === "paid" && (
-                    <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
-                        <button
-                            onClick={handleComplete}
-                            disabled={loading}
-                            className={`
+                {order.payment_status === "paid" &&
+                    ["accepted", "on_going"].includes(order.status) && (
+                        <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
+                            <button
+                                onClick={handleComplete}
+                                disabled={loading}
+                                className={`
                             w-full py-3 rounded-xl font-semibold transition
                             ${
                                 loading
@@ -167,16 +190,41 @@ export default function OrderDetailView({ order }: Props) {
                                     : "bg-blue-600 text-white hover:bg-blue-700"
                             }
                         `}
-                        >
-                            {loading
-                                ? "Memproses..."
-                                : "Konfirmasi Layanan Selesai"}
-                        </button>
+                            >
+                                {loading
+                                    ? "Memproses..."
+                                    : "Konfirmasi Layanan Selesai"}
+                            </button>
 
-                        <p className="text-xs text-gray-500 mt-2 text-center">
-                            Klik jika layanan sudah selesai dilakukan oleh
-                            partner
-                        </p>
+                            <p className="text-xs text-gray-500 mt-2 text-center">
+                                Klik jika layanan sudah selesai dilakukan oleh
+                                partner
+                            </p>
+                        </div>
+                    )}
+
+                {/* REVIEW */}
+                {booking?.status === "COMPLETED" && (
+                    <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
+                        <h3 className="font-semibold mb-3">Review Layanan</h3>
+
+                        {booking.can_review && (
+                            <ReviewActionSection
+                                bookingId={booking.id}
+                                canReview={booking.can_review}
+                                onSuccess={() => window.location.reload()}
+                            />
+                        )}
+
+                        {booking.has_reviewed && review && (
+                            <ReviewItem review={review} />
+                        )}
+
+                        {reviewLoading && (
+                            <p className="text-sm text-gray-500">
+                                Memuat review...
+                            </p>
+                        )}
                     </div>
                 )}
             </div>

@@ -2,22 +2,49 @@
 
 import type { OrderStatus } from "@/business/order/order.types";
 
-const steps: OrderStatus[] = ["pending", "paid", "completed"];
+const steps: OrderStatus[] = [
+    "pending",
+    "accepted",
+    "on_going",
+    "completed",
+    "cancelled",
+];
 
 function getLabel(step: OrderStatus) {
     switch (step) {
         case "pending":
-            return "Menunggu Pembayaran";
-        case "paid":
-            return "Pembayaran Berhasil";
+            return "Menunggu Konfirmasi Partner";
+
+        case "accepted":
+            return "Partner Menerima Pesanan";
+
+        case "on_going":
+            return "Layanan Sedang Berlangsung";
+
         case "completed":
-            return "Selesai";
+            return "Pesanan Selesai";
+
+        case "cancelled":
+            return "Pesanan Dibatalkan";
+
         default:
             return step;
     }
 }
 
 export default function OrderTimeline({ status }: { status: OrderStatus }) {
+    if (status === "cancelled") {
+        return (
+            <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Status Pesanan</h3>
+
+                <div className="p-4 rounded-xl border border-red-200 bg-red-50 text-red-600 text-sm font-medium">
+                    Pesanan telah dibatalkan
+                </div>
+            </div>
+        );
+    }
+
     const currentIndex = steps.indexOf(status);
 
     return (
@@ -32,7 +59,7 @@ export default function OrderTimeline({ status }: { status: OrderStatus }) {
                         <div key={step} className="flex items-center gap-3">
                             <div
                                 className={`
-                                    w-4 h-4 rounded-full border-2 border-[var(--color-border)]
+                                    w-4 h-4 rounded-full border-2
                                     ${
                                         isActive
                                             ? "bg-green-500 border-green-500"
@@ -54,12 +81,6 @@ export default function OrderTimeline({ status }: { status: OrderStatus }) {
                     );
                 })}
             </div>
-
-            {status === "failed" && (
-                <p className="text-red-500 text-sm">
-                    Pembayaran gagal, silakan coba lagi
-                </p>
-            )}
         </div>
     );
 }

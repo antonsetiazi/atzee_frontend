@@ -1,39 +1,34 @@
 // src/modules/review/components/ReviewActionSection.tsx
 
 import ReviewForm from "./ReviewForm";
-import { reviewService } from "@/business/review/review.service";
+import { useCreateReview } from "../hooks/useCreateReview";
 
 interface Props {
+    bookingId: number;
     canReview: boolean;
-    entityType: "product" | "service";
-    entityId: string;
-
-    userId: string;
-    userName: string;
+    onSuccess?: () => void;
 }
 
 export default function ReviewActionSection({
+    bookingId,
     canReview,
-    entityType,
-    entityId,
-    userId,
-    userName,
+    onSuccess,
 }: Props) {
+    const { submit } = useCreateReview();
+
     if (!canReview) return null;
 
     return (
-        <div className="mt-6">
-            <ReviewForm
-                onSubmit={(data) =>
-                    reviewService.create({
-                        ...data,
-                        entityType,
-                        entityId,
-                        userId,
-                        userName,
-                    })
-                }
-            />
-        </div>
+        <ReviewForm
+            onSubmit={async ({ rating, comment }) => {
+                await submit({
+                    booking_id: bookingId,
+                    rating,
+                    comment,
+                });
+
+                onSuccess?.();
+            }}
+        />
     );
 }

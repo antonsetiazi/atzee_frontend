@@ -15,15 +15,9 @@ export default function ReviewItem({ review }: Props) {
             style={{ background: "var(--color-surface)" }}
         >
             <div className="flex items-start gap-4">
-                {/* Avatar */}
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
-                    {review.userAvatar ? (
-                        <img
-                            src={review.userAvatar}
-                            alt={review.userName}
-                            className="w-full h-full object-cover"
-                        />
-                    ) : null}
+                {/* Avatar Placeholder */}
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300 flex items-center justify-center text-sm font-semibold">
+                    {review.user_name?.charAt(0).toUpperCase()}
                 </div>
 
                 {/* Content */}
@@ -34,24 +28,17 @@ export default function ReviewItem({ review }: Props) {
                                 className="font-semibold"
                                 style={{ color: "var(--text-primary)" }}
                             >
-                                {review.userName}
+                                {review.user_name}
                             </div>
-
-                            {review.isVerified && (
-                                <div
-                                    className="text-xs"
-                                    style={{ color: "var(--color-success)" }}
-                                >
-                                    ✔ Verified Purchase
-                                </div>
-                            )}
                         </div>
 
                         <div
                             className="text-sm"
                             style={{ color: "var(--text-muted)" }}
                         >
-                            {formatValue(review.createdAt, { format: "date" })}
+                            {formatValue(review.created_at, {
+                                format: "date",
+                            })}
                         </div>
                     </div>
 
