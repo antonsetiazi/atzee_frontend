@@ -12,7 +12,7 @@ export default function DesktopShell({
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
     return (
         <div
-            className="flex h-screen"
+            className="flex min-h-screen"
             style={{
                 background: `
                     radial-gradient(circle at 20% 0%, 
@@ -24,7 +24,7 @@ export default function DesktopShell({
         >
             {/* <Sidebar /> */}
 
-            <div className="flex flex-1 flex-col overflow-hidden">
+            <div className="flex flex-1 flex-col">
                 <AppTopbar />
 
                 {/* Main Content */}

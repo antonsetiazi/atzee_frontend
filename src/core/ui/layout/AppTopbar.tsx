@@ -1,6 +1,5 @@
 // src/core/ui/layout/AppTopbar.tsx
 
-import { useShell } from "./shell/ShellContext";
 import { useNavigationStore } from "@/core/ui/navigation/navigation.store";
 import { useNavigate, useLocation } from "react-router-dom";
 import Icon from "@/core/ui/icons/Icon";
@@ -9,12 +8,7 @@ import { useSessionStore } from "@/core/session/session.store";
 import { AuthButton } from "@/core/ui/components";
 import { NotificationBell } from "@/core/ui/components";
 
-interface TopbarProps {
-    title?: string;
-}
-
-export default function AppTopbar({ title }: TopbarProps) {
-    const { isMobile, toggleDrawer } = useShell();
+export default function AppTopbar() {
     const items = useNavigationStore((s) => s.topbar);
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,10 +18,12 @@ export default function AppTopbar({ title }: TopbarProps) {
 
     return (
         <header
-            className="relative z-40 h-14 border-b backdrop-blur-md"
+            className="sticky top-0 z-40 h-16 border-b backdrop-blur-xl"
             style={{
-                borderColor: "var(--color-border)",
-                background: "var(--color-surface)",
+                borderColor: "rgba(255,255,255,0.08)",
+                background:
+                    "linear-gradient(to right, var(--color-primary), var(--color-secondary))",
+                boxShadow: "var(--shadow)",
             }}
         >
             <div
@@ -36,81 +32,41 @@ export default function AppTopbar({ title }: TopbarProps) {
             >
                 {/* LEFT SIDE */}
                 <div className="flex items-center gap-8">
-                    {/* Mobile Hamburger */}
-                    {isMobile && (
-                        <button
-                            onClick={toggleDrawer}
-                            className="rounded-md p-2 transition-colors"
-                            style={{
-                                color: "var(--text-secondary)",
-                            }}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M4 6h16M4 12h16M4 18h16"
-                                />
-                            </svg>
-                        </button>
-                    )}
+                    <div className="flex items-center gap-10">
+                        {items.map((item) => {
+                            const active =
+                                item.route &&
+                                location.pathname.startsWith(item.route);
 
-                    {/* Mobile Title */}
-                    {isMobile && (
-                        <span
-                            className="text-sm font-medium leading-none"
-                            style={{ color: "var(--text-primary)" }}
-                        >
-                            {title || "Dashboard"}
-                        </span>
-                    )}
+                            return (
+                                <button
+                                    key={item.target}
+                                    onClick={() =>
+                                        item.route && navigate(item.route)
+                                    }
+                                    className="relative flex items-center gap-2 text-sm font-medium transition-all duration-200"
+                                    style={{
+                                        color: active
+                                            ? "#ffffff"
+                                            : "rgba(255,255,255,0.75)",
+                                    }}
+                                >
+                                    <Icon name={item.icon} size="md" />
+                                    <span>{item.label}</span>
 
-                    {/* Desktop Navigation */}
-                    {!isMobile && (
-                        <div className="flex items-center gap-10">
-                            {items.map((item) => {
-                                const active =
-                                    item.route &&
-                                    location.pathname.startsWith(item.route);
-
-                                return (
-                                    <button
-                                        key={item.target}
-                                        onClick={() =>
-                                            item.route && navigate(item.route)
-                                        }
-                                        className="relative flex items-center gap-2 text-sm font-medium transition-all duration-200"
-                                        style={{
-                                            color: active
-                                                ? "var(--text-primary)"
-                                                : "var(--text-secondary)",
-                                        }}
-                                    >
-                                        <Icon name={item.icon} size="md" />
-                                        <span>{item.label}</span>
-
-                                        {/* Active indicator */}
-                                        {active && (
-                                            <div
-                                                className="absolute -bottom-[18px] left-0 right-0 h-[2px] rounded-full"
-                                                style={{
-                                                    background:
-                                                        "var(--color-primary)",
-                                                }}
-                                            />
-                                        )}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    )}
+                                    {/* Active indicator */}
+                                    {active && (
+                                        <div
+                                            className="absolute -bottom-[18px] left-0 right-0 h-[2px] rounded-full"
+                                            style={{
+                                                background: "#ffffff",
+                                            }}
+                                        />
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 {/* RIGHT SIDE */}
@@ -125,20 +81,7 @@ export default function AppTopbar({ title }: TopbarProps) {
                         </AuthButton>
                     ) : (
                         <>
-                            <NotificationBell
-                                notifications={[
-                                    {
-                                        id: "1",
-                                        title: "New booking received",
-                                        description: "Ahmad booked a session",
-                                    },
-                                    {
-                                        id: "2",
-                                        title: "Payment confirmed",
-                                        description: "Invoice #1023 paid",
-                                    },
-                                ]}
-                            />
+                            <NotificationBell />
                             <UserMenuDropdown
                                 name={user.full_name}
                                 avatarUrl={user.avatar_url}

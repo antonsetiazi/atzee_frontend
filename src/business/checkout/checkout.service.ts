@@ -100,15 +100,6 @@ export const checkoutService = {
     },
 
     /* ===========================
-       💳 SELECT PAYMENT
-       =========================== */
-    // selectPaymentMethod(id: string) {
-    //     checkoutStore.setState({
-    //         selectedPaymentMethodId: id,
-    //     });
-    // },
-
-    /* ===========================
        🚀 CONFIRM PAYMENT
        =========================== */
     async confirmPayment(): Promise<PaymentExecution> {

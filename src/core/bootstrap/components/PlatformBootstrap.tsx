@@ -1,19 +1,23 @@
 // src/core/bootstrap/components/PlatformBootstrap.tsx
 
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
 import { TenantBootstrap } from "@/core/bootstrap/services/tenant.bootstrap";
-import { registerNotificationListeners } from "@/core/notification/notification.listener";
+import { registerNotificationListeners } from "@/modules/notification/services/notification.listener";
 import { registerOrderListeners } from "@/business/order/order.service";
 import { useSessionStore } from "@/core/session/session.store";
 import { AuthBootstrap } from "@/core/bootstrap/services/auth.bootstrap";
 
 export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
+    const initialized = useRef(false);
     const [ready, setReady] = useState(false);
 
     const { isBootstrapped } = useSessionStore();
 
     useEffect(() => {
+        if (initialized.current) return;
+        initialized.current = true;
+
         async function init() {
             await TenantBootstrap();
             await AuthBootstrap();

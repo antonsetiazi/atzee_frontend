@@ -10,8 +10,15 @@ export default function Footer() {
         <footer
             className="border-t backdrop-blur-sm"
             style={{
-                borderColor: "var(--color-border)",
-                background: "var(--color-surface)",
+                borderColor: "rgba(255,255,255,0.08)",
+                background: `
+                    linear-gradient(
+                        to right,
+                        var(--color-primary),
+                        var(--color-secondary)
+                    )
+                `,
+                boxShadow: "0 -1px 8px rgba(0,0,0,0.06)",
             }}
         >
             <div
@@ -23,14 +30,20 @@ export default function Footer() {
                     <div className="flex items-center gap-3">
                         <span
                             className="font-semibold tracking-wide"
-                            style={{ color: "var(--text-primary)" }}
+                            style={{ color: "#ffffff" }}
                         >
                             {TITLE}
                         </span>
 
-                        <span style={{ color: "var(--text-muted)" }}>|</span>
+                        <span style={{ color: "rgba(255,255,255,0.35)" }}>
+                            |
+                        </span>
 
-                        <span style={{ color: "var(--text-secondary)" }}>
+                        <span
+                            style={{
+                                color: "rgba(255,255,255,0.75)",
+                            }}
+                        >
                             © {new Date().getFullYear()} {COPYRIGHT}
                         </span>
                     </div>
@@ -40,9 +53,11 @@ export default function Footer() {
                         <span
                             className="px-3 py-1 text-xs font-medium tracking-wide"
                             style={{
-                                background: "var(--color-surface-alt)",
-                                color: "var(--text-secondary)",
+                                background: "rgba(255,255,255,0.12)",
+                                color: "#ffffff",
                                 borderRadius: "9999px",
+                                border: "1px solid rgba(255,255,255,0.15)",
+                                backdropFilter: "blur(8px)",
                             }}
                         >
                             v{VERSION}
@@ -55,7 +70,11 @@ export default function Footer() {
                             }}
                         />
 
-                        <span style={{ color: "var(--text-muted)" }}>
+                        <span
+                            style={{
+                                color: "rgba(255,255,255,0.65)",
+                            }}
+                        >
                             Engineered with precision
                         </span>
                     </div>

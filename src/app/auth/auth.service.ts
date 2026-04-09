@@ -72,7 +72,7 @@ export function useAuthService() {
         clearSession();
         clearPermissions();
 
-        window.location.href = "/login";
+        window.location.href = "/";
     }
 
     function isAuthenticated(): boolean {

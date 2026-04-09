@@ -79,6 +79,7 @@ export function registerOrderListeners() {
 
             total: total,
             status: "pending",
+            payment_status: "pending",
             createdAt: new Date().toISOString(),
         });
 

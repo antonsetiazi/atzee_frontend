@@ -109,7 +109,7 @@ export default function BlockRenderer(props: Props): React.ReactNode {
      * =========================================
      */
 
-    if (block.type === "header") {
+    if (block.type === "header" && isMobile) {
         return <BlockHeader key={idx} {...props} />;
     }
 

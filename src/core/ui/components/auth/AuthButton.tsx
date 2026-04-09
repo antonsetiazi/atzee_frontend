@@ -28,6 +28,7 @@ export default function AuthButton({
                 "active:scale-[0.98]",
                 "disabled:opacity-60 disabled:cursor-not-allowed",
                 "focus:outline-none",
+                "cursor-pointer",
 
                 variant === "primary" && "px-4 py-2",
                 variant === "topbar" && "px-3 py-1.5",

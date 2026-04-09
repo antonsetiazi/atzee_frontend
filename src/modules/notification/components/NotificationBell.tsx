@@ -1,31 +1,50 @@
-// src/core/ui/components/notifications/NotificationBell.tsx
+// src/modules/notification/components/NotificationBell.tsx
 
 import { useRef, useState } from "react";
 import Icon from "@/core/ui/icons/Icon";
 import NotificationDropdown from "./NotificationDropdown";
-import type { NotificationItemData } from "./notifications.types";
 import { useClickOutside } from "@/core/ui/hooks/useClickOutside";
+import { useNotifications } from "../hooks/useNotifications";
+import { notificationService } from "../services/notification.service";
+import { useNotificationSync } from "../hooks/useNotificationSync";
 
-interface Props {
-    notifications: NotificationItemData[];
-}
-
-export default function NotificationBell({ notifications }: Props) {
+export default function NotificationBell() {
+    useNotificationSync();
     const [open, setOpen] = useState(false);
-
     const ref = useRef<HTMLDivElement>(null);
 
     useClickOutside(ref, () => setOpen(false));
 
+    // Ambil notification langsung dari store
+    const notifications = useNotifications();
+
+    // Hitung unread
     const unread = notifications.filter((n) => !n.read).length;
+
+    // Toggle dropdown
+    const handleToggle = () => {
+        const next = !open;
+        setOpen(next);
+
+        // Optional: saat dibuka, tandai semua sebagai read
+        if (next && unread > 0) {
+            notificationService.inbox.markAllAsRead();
+        }
+    };
 
     return (
         <div ref={ref} className="relative">
             <button
-                onClick={() => setOpen((v) => !v)}
+                onClick={handleToggle}
                 className="relative flex items-center justify-center w-9 h-9 rounded-md transition-all duration-200 hover:scale-105"
                 style={{
-                    color: "var(--text-secondary)",
+                    color: "#ffffff",
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
                 }}
             >
                 <Icon name="bell" variant="primary" />

@@ -39,7 +39,13 @@ export default function UserMenuDropdown({
                 onClick={() => setOpen(!open)}
                 className="group flex items-center gap-3 rounded-md px-3 py-1.5 transition-all duration-200"
                 style={{
-                    color: "var(--text-secondary)",
+                    color: "rgba(255,255,255,0.9)",
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "transparent";
                 }}
             >
                 {/* Avatar */}
@@ -56,8 +62,9 @@ export default function UserMenuDropdown({
                     <div
                         className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium"
                         style={{
-                            background: "var(--color-surface-alt)",
-                            color: "var(--text-primary)",
+                            background: "rgba(255,255,255,0.15)",
+                            color: "#ffffff",
+                            backdropFilter: "blur(8px)",
                         }}
                     >
                         {name.charAt(0).toUpperCase()}
@@ -66,7 +73,7 @@ export default function UserMenuDropdown({
 
                 <span
                     className="text-sm font-medium"
-                    style={{ color: "var(--text-primary)" }}
+                    style={{ color: "#ffffff" }}
                 >
                     {name}
                 </span>
@@ -76,7 +83,7 @@ export default function UserMenuDropdown({
                     className={`w-4 h-4 transition-transform duration-200 ${
                         open ? "rotate-180" : ""
                     }`}
-                    style={{ color: "var(--text-muted)" }}
+                    style={{ color: "rgba(255,255,255,0.7)" }}
                 />
             </button>
 
@@ -148,12 +155,12 @@ function DropdownItem({ icon, label, onClick, danger }: ItemProps) {
     return (
         <button
             onClick={onClick}
-            className="flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors duration-150"
+            className="flex w-full items-center gap-3 px-4 py-2 text-sm transition-colors duration-150 cursor-pointer"
             style={{
                 color: danger ? "var(--color-error)" : "var(--text-secondary)",
             }}
             onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--color-surface-alt)";
+                e.currentTarget.style.background = "rgba(255,255,255,0.08)";
                 e.currentTarget.style.color = danger
                     ? "var(--color-error)"
                     : "var(--text-primary)";
