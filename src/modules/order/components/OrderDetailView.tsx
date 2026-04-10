@@ -17,6 +17,9 @@ import BookingTimeline from "@/modules/booking/components/BookingTimeline";
 import ReviewActionSection from "@/modules/review/components/ReviewActionSection";
 import ReviewItem from "@/modules/review/components/ReviewItem";
 
+import { useConfirm } from "@/core/confirm/useConfirm";
+import { useFeedback } from "@/core/feedback/useFeedback";
+
 interface Props {
     order: Order;
     booking: any;
@@ -39,18 +42,25 @@ function getStatusStyle(status: string) {
 
 export default function OrderDetailView({ order, booking }: Props) {
     const navigate = useNavigate();
+    const confirm = useConfirm();
+    const feedback = useFeedback();
+
     const [loading, setLoading] = useState(false);
 
-    const { review, loading: reviewLoading } = useBookingReview(
-        Number(booking?.id),
-    );
+    const {
+        review,
+        loading: reviewLoading,
+        refetch,
+    } = useBookingReview(Number(booking?.id));
 
     const handleComplete = async () => {
-        const confirm = window.confirm(
-            "Apakah Anda yakin layanan sudah selesai?",
-        );
+        const approved = await confirm({
+            title: "Selesaikan Layanan",
+            message: "Apakah Anda yakin layanan sudah selesai?",
+            level: "info",
+        });
 
-        if (!confirm) return;
+        if (!approved) return;
 
         try {
             setLoading(true);
@@ -59,11 +69,11 @@ export default function OrderDetailView({ order, booking }: Props) {
             // 🔥 UPDATE LOCAL STORE
             orderStore.completeOrder(order.id);
 
-            alert("Pesanan berhasil diselesaikan");
+            feedback.success("Pesanan berhasil diselesaikan", "Berhasil");
             window.location.reload();
         } catch (err) {
             console.error(err);
-            alert("Gagal menyelesaikan pesanan");
+            feedback.error("Gagal menyelesaikan pesanan", "Error");
         } finally {
             setLoading(false);
         }
@@ -208,17 +218,15 @@ export default function OrderDetailView({ order, booking }: Props) {
                     <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
                         <h3 className="font-semibold mb-3">Review Layanan</h3>
 
-                        {booking.can_review && (
+                        {booking.can_review && !review && (
                             <ReviewActionSection
                                 bookingId={booking.id}
                                 canReview={booking.can_review}
-                                onSuccess={() => window.location.reload()}
+                                onSuccess={refetch}
                             />
                         )}
 
-                        {booking.has_reviewed && review && (
-                            <ReviewItem review={review} />
-                        )}
+                        {review && <ReviewItem review={review} />}
 
                         {reviewLoading && (
                             <p className="text-sm text-gray-500">

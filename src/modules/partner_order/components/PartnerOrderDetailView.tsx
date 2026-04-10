@@ -5,6 +5,8 @@ import type { Order } from "@/business/order/order.types";
 import { HeaderPage } from "@/core/ui/components";
 import PartnerOrderTimeline from "./PartnerOrderTimeline";
 import { acceptOrderApi } from "../partner_order.api";
+import { useConfirm } from "@/core/confirm/useConfirm";
+import { useFeedback } from "@/core/feedback/useFeedback";
 
 interface Props {
     order: Order;
@@ -13,23 +15,30 @@ interface Props {
 export default function PartnerOrderDetailView({ order }: Props) {
     const [loading, setLoading] = useState(false);
 
-    const handleAccept = async () => {
-        const confirm = window.confirm("Terima order ini?");
+    const confirm = useConfirm();
+    const feedback = useFeedback();
 
-        if (!confirm) return;
+    const handleAccept = async () => {
+        const approved = await confirm({
+            title: "Terima Order",
+            message: "Apakah kamu yakin ingin menerima order ini?",
+            level: "info",
+        });
+
+        if (!approved) return;
 
         setLoading(true);
 
         try {
             await acceptOrderApi(order.id);
 
-            alert("Order berhasil diterima");
+            feedback.success("Order berhasil diterima", "Berhasil");
 
             // 🔥 refresh data
             window.location.reload();
         } catch (err) {
             console.error(err);
-            alert("Gagal menerima order");
+            feedback.error("Gagal menerima order", "Error");
         } finally {
             setLoading(false);
         }
@@ -38,7 +47,7 @@ export default function PartnerOrderDetailView({ order }: Props) {
     const handleStart = async () => {
         setLoading(true);
         try {
-            alert("Start service");
+            feedback.info("Layanan dimulai");
         } finally {
             setLoading(false);
         }
@@ -47,7 +56,7 @@ export default function PartnerOrderDetailView({ order }: Props) {
     const handleComplete = async () => {
         setLoading(true);
         try {
-            alert("Complete service");
+            feedback.success("Layanan selesai");
         } finally {
             setLoading(false);
         }
