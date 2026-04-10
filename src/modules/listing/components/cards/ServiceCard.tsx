@@ -1,8 +1,8 @@
-// src/modules/listing/components/ServiceCard.tsx
+// src/modules/listing/components/cards/ServiceCard.tsx
 
 import { useState } from "react";
 import AppImage from "@/core/ui/components/media/AppImage";
-import type { ServiceListing } from "../types/listing.types";
+import type { ServiceListing } from "../../types/listing.types";
 
 interface Props {
     item: ServiceListing;

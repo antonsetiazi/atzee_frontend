@@ -178,10 +178,10 @@ export default function ListingSidebarFilters({
                             <input
                                 type="checkbox"
                                 checked={(filters.category as any)?.includes(
-                                    cat.name,
+                                    cat.code,
                                 )}
                                 onChange={() =>
-                                    toggleArray("category", cat.name)
+                                    toggleArray("category", cat.code)
                                 }
                             />
                             {cat.name}

@@ -14,6 +14,7 @@ export function useCategories(scope: string) {
             try {
                 const categoriesFromApi =
                     await categoryApi.getCategories(scope);
+
                 if (isMounted) {
                     setCategories(categoriesFromApi); // langsung assign array
                 }

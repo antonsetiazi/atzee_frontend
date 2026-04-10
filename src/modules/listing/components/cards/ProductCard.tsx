@@ -1,7 +1,7 @@
-// src/modules/listing/components/ProductCard.tsx
+// src/modules/listing/components/cards/ProductCard.tsx
 
 import AppImage from "@/core/ui/components/media/AppImage";
-import type { ProductListing } from "../types/listing.types";
+import type { ProductListing } from "../../types/listing.types";
 
 interface Props {
     item: ProductListing;
