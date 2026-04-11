@@ -19,6 +19,22 @@ export interface OrderItem {
     // entityType: "product" | "service";
 }
 
+export interface OrderCustomer {
+    id: string;
+    name: string;
+    phone?: string;
+}
+
+export interface OrderAddress {
+    label?: string;
+    recipient_name?: string;
+    phone?: string;
+    address_line?: string;
+    notes?: string;
+    latitude?: number;
+    longitude?: number;
+}
+
 export interface OrderPartner {
     id: number;
     name: string;
@@ -48,6 +64,10 @@ export interface Order {
         id: number;
         name: string;
     } | null;
+
+    customer?: OrderCustomer | null;
+    address?: OrderAddress | null;
+    fulfillment_type?: string;
 }
 
 export type PartnerOrderStatus =

@@ -7,6 +7,7 @@ import PartnerOrderTimeline from "./PartnerOrderTimeline";
 import { acceptOrderApi } from "../partner_order.api";
 import { useConfirm } from "@/core/confirm/useConfirm";
 import { useFeedback } from "@/core/feedback/useFeedback";
+import CustomerDestinationMap from "@/modules/tracking/components/CustomerDestinationMap";
 
 interface Props {
     order: Order;
@@ -77,8 +78,61 @@ export default function PartnerOrderDetailView({ order }: Props) {
                 {/* CUSTOMER */}
                 <div className="p-4 border border-[var(--color-border)] rounded-xl bg-white">
                     <p className="text-sm text-gray-500">Customer</p>
-                    <p className="font-semibold">{order.userName || "User"}</p>
+                    <p className="font-semibold">
+                        {order.customer?.name || "User"}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                        {order.customer?.phone || "-"}
+                    </p>
                 </div>
+
+                {order.address && (
+                    <div className="p-4 border border-[var(--color-border)] rounded-xl bg-white">
+                        <p className="text-sm text-gray-500 mb-2">
+                            Lokasi Tujuan
+                        </p>
+
+                        <p className="font-semibold">
+                            {order.address.recipient_name}
+                        </p>
+
+                        <p className="text-sm">{order.address.phone}</p>
+
+                        <p className="text-sm text-gray-600 mt-2">
+                            {order.address.address_line}
+                        </p>
+
+                        {order.address.notes && (
+                            <p className="text-xs text-gray-400 mt-2">
+                                Catatan: {order.address.notes}
+                            </p>
+                        )}
+                    </div>
+                )}
+
+                {order.address?.latitude && order.address?.longitude && (
+                    <div className="p-4 border border-[var(--color-border)] rounded-xl bg-white">
+                        <p className="text-sm text-gray-500 mb-3">
+                            Lokasi Customer
+                        </p>
+
+                        <div className="h-[300px] rounded-xl overflow-hidden">
+                            <CustomerDestinationMap
+                                latitude={order.address.latitude}
+                                longitude={order.address.longitude}
+                            />
+                        </div>
+
+                        <a
+                            href={`https://www.google.com/maps?q=${order.address.latitude},${order.address.longitude}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block mt-3 text-center py-2 rounded-lg border"
+                        >
+                            Buka di Google Maps
+                        </a>
+                    </div>
+                )}
 
                 {/* ITEMS */}
                 <div className="p-4 border border-[var(--color-border)] rounded-xl bg-white space-y-2">

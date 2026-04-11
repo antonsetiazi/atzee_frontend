@@ -52,8 +52,20 @@ function mapOrder(item: any): Order {
 
         total: item.total_amount || 0,
         status: item.status,
+        payment_status: item.payment_status,
         createdAt: item.created_at,
         bookingId: item.booking_id || null,
+
+        customer: item.customer
+            ? {
+                  id: String(item.customer.id),
+                  name: item.customer.name,
+                  phone: item.customer.phone,
+              }
+            : null,
+
+        address: item.address || null,
+        fulfillment_type: item.fulfillment_type,
 
         partner: item.partner
             ? {
