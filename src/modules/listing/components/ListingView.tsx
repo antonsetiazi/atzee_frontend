@@ -35,7 +35,9 @@ export default function ListingView(props: Props) {
         props.onChangeFilters({
             search: "",
             category: [],
-            location: [],
+            city: undefined,
+            useMyLocation: false,
+            radius: undefined,
             minPrice: undefined,
             maxPrice: undefined,
         });

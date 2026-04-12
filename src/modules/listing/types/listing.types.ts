@@ -14,7 +14,7 @@ export interface ProductListing {
     price: number;
 
     category?: string;
-    location?: string;
+    city?: string;
 
     isPromo?: boolean;
     isNew?: boolean;
@@ -37,7 +37,7 @@ export interface ServiceListing {
     priceLabel: string;
     serviceCount: number;
 
-    location: string;
+    city?: string;
 
     category?: string;
 
@@ -50,7 +50,15 @@ export interface ServiceListing {
 export interface ListingFiltersState {
     search: string;
     category: string[];
-    location: string[];
+    // location: string[];
+
+    city?: string;
+    useMyLocation?: boolean;
+    radius?: number;
+
+    lat?: number;
+    lng?: number;
+
     minPrice?: number;
     maxPrice?: number;
 }

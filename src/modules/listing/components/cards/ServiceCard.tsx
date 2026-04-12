@@ -57,7 +57,7 @@ export default function ServiceCard({ item, onClick }: Props) {
                 </h3>
 
                 {/* 🔥 WAJIB */}
-                <p className="text-xs text-gray-500">📍 {item.location}</p>
+                <p className="text-xs text-gray-500">📍 {item.city || "-"}</p>
 
                 <p className="text-[var(--color-primary)] font-bold text-base">
                     {item.priceLabel}

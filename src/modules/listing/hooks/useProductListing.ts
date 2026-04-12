@@ -13,7 +13,7 @@ export function useProductListing() {
     const [filters, setFilters] = useState<ListingFiltersState>({
         search: "",
         category: [],
-        location: [],
+        // location: [],
     });
 
     const [sort, setSort] = useState<ListingSort>("latest");

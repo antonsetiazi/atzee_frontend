@@ -20,7 +20,7 @@ interface ProductItemResponse {
     price: number;
 
     category?: string;
-    location?: string;
+    city?: string;
 
     is_new?: boolean;
     is_promo?: boolean;
@@ -36,7 +36,7 @@ interface ServiceItemResponse {
     priceLabel: string;
 
     // 🔥 WAJIB
-    location: string;
+    city: string;
 
     category?: string;
 }
@@ -56,7 +56,14 @@ function buildQuery(params: {
     return {
         search: filters.search || undefined,
         category: filters.category.length ? filters.category : undefined,
-        location: filters.location.length ? filters.location : undefined,
+        city: filters.city || undefined,
+        // 🔥 PREPARE GEO (belum aktif backend)
+        use_my_location: filters.useMyLocation || undefined,
+        radius: filters.radius || undefined,
+
+        lat: filters.lat,
+        lng: filters.lng,
+
         min_price: filters.minPrice,
         max_price: filters.maxPrice,
         sort,
@@ -93,7 +100,7 @@ export const listingApi = {
                     image: item.image,
                     price: item.price,
                     category: item.category,
-                    location: item.location,
+                    city: item.city,
                     isNew: item.is_new,
                     isPromo: item.is_promo,
                 }),
@@ -126,7 +133,7 @@ export const listingApi = {
                     startingPrice: item.starting_price,
                     priceLabel: item.priceLabel,
                     serviceCount: item.service_count,
-                    location: item.location,
+                    city: item.city,
                     category: item.category,
                 }),
             ),

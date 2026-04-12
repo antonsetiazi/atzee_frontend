@@ -20,8 +20,8 @@ export default function ProductCard({ item, onClick }: Props) {
                     <p className="text-xs text-gray-500">{item.category}</p>
                 )}
 
-                {item.location && (
-                    <p className="text-xs text-gray-400">📍 {item.location}</p>
+                {item.city && (
+                    <p className="text-xs text-gray-400">📍 {item.city}</p>
                 )}
 
                 <p className="font-bold text-primary">

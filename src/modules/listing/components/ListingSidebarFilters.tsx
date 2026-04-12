@@ -4,6 +4,7 @@
 import { useState } from "react";
 import type { ListingFiltersState } from "../types/listing.types";
 import { useCategories } from "../hooks/useCategories";
+import { useCities } from "../hooks/useCities";
 
 interface Props {
     filters: ListingFiltersState;
@@ -111,7 +112,6 @@ function Section({
 // ==============================
 // 🔥 MAIN COMPONENT
 // ==============================
-const locations = ["Jakarta", "Bandung", "Surabaya", "Bekasi", "Bogor"];
 
 export default function ListingSidebarFilters({
     filters,
@@ -122,20 +122,22 @@ export default function ListingSidebarFilters({
 
     const { categories, loading } = useCategories("partners.service_category"); // scope yang sesuai
 
+    const { cities, loading: loadingCities } = useCities();
+
     function toggleSection(name: string) {
         setOpenSection((prev) => (prev === name ? null : name));
     }
 
-    function toggleArray(key: "category" | "location", value: string) {
-        const current = (filters as any)[key] || [];
+    function toggleCategory(value: string) {
+        const current = filters.category || [];
 
         const exists = current.includes(value);
 
         const updated = exists
-            ? current.filter((v: string) => v !== value)
+            ? current.filter((v) => v !== value)
             : [...current, value];
 
-        onChange({ ...filters, [key]: updated });
+        onChange({ ...filters, category: updated });
     }
 
     function update<K extends keyof ListingFiltersState>(
@@ -146,7 +148,7 @@ export default function ListingSidebarFilters({
     }
 
     const categoryCount = filters.category?.length || 0;
-    const locationCount = filters.location?.length || 0;
+    const locationCount = filters.useMyLocation || filters.city ? 1 : 0;
     const priceActive = filters.minPrice || filters.maxPrice ? 1 : 0;
 
     return (
@@ -180,9 +182,7 @@ export default function ListingSidebarFilters({
                                 checked={(filters.category as any)?.includes(
                                     cat.code,
                                 )}
-                                onChange={() =>
-                                    toggleArray("category", cat.code)
-                                }
+                                onChange={() => toggleCategory(cat.code)}
                             />
                             {cat.name}
                         </label>
@@ -201,19 +201,71 @@ export default function ListingSidebarFilters({
                 isMobile={isMobile}
                 count={locationCount}
             >
-                {locations.map((loc) => (
-                    <label
-                        key={loc}
-                        className="flex items-center gap-2 text-sm"
+                {/* 🔥 USE MY LOCATION */}
+                <label className="flex items-center gap-2 text-sm">
+                    <input
+                        type="checkbox"
+                        checked={filters.useMyLocation || false}
+                        onChange={(e) =>
+                            onChange({
+                                ...filters,
+                                useMyLocation: e.target.checked,
+                                city: e.target.checked
+                                    ? undefined
+                                    : filters.city,
+                            })
+                        }
+                    />
+                    Gunakan lokasi saya
+                </label>
+
+                {/* 🔥 RADIUS (ONLY IF ENABLED) */}
+                {filters.useMyLocation && (
+                    <div className="pl-6 mt-2 space-y-2 text-sm">
+                        {[5, 10, 25].map((r) => (
+                            <label key={r} className="flex items-center gap-2">
+                                <input
+                                    type="radio"
+                                    name="radius"
+                                    checked={filters.radius === r}
+                                    onChange={() =>
+                                        onChange({ ...filters, radius: r })
+                                    }
+                                />
+                                {r} km
+                            </label>
+                        ))}
+                    </div>
+                )}
+
+                {/* 🔥 CITY SELECT (ONLY IF NOT USING GPS) */}
+                {!filters.useMyLocation && (
+                    <select
+                        value={filters.city || ""}
+                        onChange={(e) =>
+                            onChange({
+                                ...filters,
+                                city: e.target.value || undefined,
+                            })
+                        }
+                        className="
+                            w-full px-3 py-2 text-sm
+                            border border-[var(--color-border)]
+                            rounded-lg
+                        "
                     >
-                        <input
-                            type="checkbox"
-                            checked={(filters.location as any)?.includes(loc)}
-                            onChange={() => toggleArray("location", loc)}
-                        />
-                        {loc}
-                    </label>
-                ))}
+                        <option value="">Semua lokasi</option>
+                        {loadingCities ? (
+                            <option disabled>Loading...</option>
+                        ) : (
+                            cities.map((city) => (
+                                <option key={city.id} value={city.code}>
+                                    {city.name}
+                                </option>
+                            ))
+                        )}
+                    </select>
+                )}
             </Section>
 
             <hr className="border-[var(--color-border)]" />
@@ -264,11 +316,11 @@ export default function ListingSidebarFilters({
             {isMobile && (
                 <div
                     className="
-                    fixed bottom-0 left-0 right-0
-                    p-4
-                    bg-[var(--color-surface)]
-                    border-t border-[var(--color-border)]
-                "
+                        fixed bottom-0 left-0 right-0
+                        p-4
+                        bg-[var(--color-surface)]
+                        border-t border-[var(--color-border)]
+                    "
                 >
                     <button
                         className="
