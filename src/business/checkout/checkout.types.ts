@@ -39,6 +39,11 @@ export interface SelectedPartner {
     name: string;
 }
 
+export interface FeeItem {
+    name: string;
+    amount: number;
+}
+
 export interface CheckoutState {
     items: CheckoutItem[];
     bookingId: string | null;
@@ -49,4 +54,8 @@ export interface CheckoutState {
 
     addressId: number | null;
     selectedAddress?: SelectedAddress | null;
+
+    fees: FeeItem[];
+    subtotal: number;
+    total: number;
 }

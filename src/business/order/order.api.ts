@@ -4,6 +4,10 @@
 import { httpGet, httpPost } from "@/core/http/http.client";
 import type { Order } from "./order.types";
 
+export async function previewOrderApi(payload: any) {
+    return httpPost("/marketplace/orders/preview/", payload);
+}
+
 export async function createOrderApi(payload: any): Promise<Order> {
     return httpPost("/marketplace/orders/create/", payload);
 }

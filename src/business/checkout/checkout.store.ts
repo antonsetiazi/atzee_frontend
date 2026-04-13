@@ -15,6 +15,10 @@ class CheckoutStore {
 
         addressId: null,
         selectedAddress: null,
+
+        fees: [],
+        subtotal: 0,
+        total: 0,
     };
 
     private listeners: Listener[] = [];

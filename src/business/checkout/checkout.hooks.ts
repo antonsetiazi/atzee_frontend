@@ -13,6 +13,16 @@ export function useCheckout() {
         });
     }, []);
 
+    useEffect(() => {
+        if (!state.items.length || !state.selectedPartnerId) return;
+
+        const timeout = setTimeout(() => {
+            checkoutService.fetchPreview();
+        }, 200);
+
+        return () => clearTimeout(timeout);
+    }, [state.items, state.selectedPartnerId]);
+
     return {
         ...state,
 
@@ -24,9 +34,7 @@ export function useCheckout() {
         reset: checkoutService.reset,
         paymentStatus: state.paymentStatus,
 
-        total: state.items.reduce(
-            (acc, item) => acc + item.price * item.quantity,
-            0,
-        ),
+        subtotal: state.subtotal,
+        total: state.total,
     };
 }

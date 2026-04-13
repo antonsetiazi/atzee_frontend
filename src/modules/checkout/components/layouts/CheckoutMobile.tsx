@@ -13,6 +13,9 @@ import { HeaderPage } from "@/core/ui/components";
 
 interface Props {
     items: CheckoutItem[];
+
+    fees: { name: string; amount: number }[];
+    subtotal: number;
     total: number;
 
     onPay: () => void;
@@ -28,6 +31,8 @@ interface Props {
 
 export default function CheckoutMobile({
     items,
+    fees,
+    subtotal,
     total,
     onPay,
     onCancel,
@@ -52,7 +57,13 @@ export default function CheckoutMobile({
                         onClick={() => setAddressModalOpen(true)}
                     />
 
-                    <OrderSummary items={items} detailed />
+                    <OrderSummary
+                        items={items}
+                        detailed
+                        fees={fees}
+                        subtotal={subtotal}
+                        total={total}
+                    />
 
                     <PaymentInfo />
                 </div>

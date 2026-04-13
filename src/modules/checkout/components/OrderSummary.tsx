@@ -5,13 +5,25 @@ import type { CheckoutItem } from "@/business/checkout/checkout.types";
 interface Props {
     items: CheckoutItem[];
     detailed?: boolean;
+    fees?: { name: string; amount: number }[];
+    subtotal?: number;
+    total?: number;
 }
 
-export default function OrderSummary({ items, detailed }: Props) {
-    const total = items.reduce(
+export default function OrderSummary({
+    items,
+    detailed,
+    fees,
+    subtotal,
+    total,
+}: Props) {
+    const calculatedSubtotal = items.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0,
     );
+
+    const finalSubtotal = subtotal ?? calculatedSubtotal;
+    const finalTotal = total ?? finalSubtotal;
 
     return (
         <div
@@ -66,15 +78,24 @@ export default function OrderSummary({ items, detailed }: Props) {
             </div>
 
             {detailed && (
-                <div
-                    className="
-                    border-t border-[var(--color-border)]
-                    pt-3 flex justify-between font-semibold
-                "
-                >
-                    <span>Total</span>
-                    <span>Rp {total.toLocaleString()}</span>
-                </div>
+                <>
+                    <div className="flex justify-between text-sm">
+                        <span>Subtotal</span>
+                        <span>Rp {finalSubtotal.toLocaleString()}</span>
+                    </div>
+
+                    {fees?.map((fee, idx) => (
+                        <div key={idx} className="flex justify-between text-sm">
+                            <span>{fee.name}</span>
+                            <span>Rp {fee.amount.toLocaleString()}</span>
+                        </div>
+                    ))}
+
+                    <div className="flex justify-between text-sm">
+                        <span>Total</span>
+                        <span>Rp {finalTotal.toLocaleString()}</span>
+                    </div>
+                </>
             )}
         </div>
     );

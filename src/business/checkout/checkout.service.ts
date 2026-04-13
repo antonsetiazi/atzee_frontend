@@ -9,6 +9,7 @@ import { orderService } from "@/business/order/order.service";
 import { paymentService } from "../payment/payment.service";
 import type { PaymentExecution } from "@/business/payment/payment.types";
 import { bookingService } from "@/modules/booking/services/booking.service";
+import { previewOrderApi } from "../order/order.api";
 
 type BookingResult = {
     booking_id: string; // 🔥 dari backend
@@ -183,6 +184,27 @@ export const checkoutService = {
 
         eventBus.emit("booking.canceled", {
             bookingId: state.bookingId,
+        });
+    },
+
+    async fetchPreview() {
+        const state = checkoutStore.getState();
+
+        if (!state.items.length) return;
+
+        const data = await previewOrderApi({
+            items: state.items.map((i) => ({
+                id: Number(i.entityId),
+                qty: i.quantity,
+                price: i.price, // 🔥 penting untuk preview
+            })),
+            selected_partner_id: state.selectedPartnerId,
+        });
+
+        checkoutStore.setState({
+            fees: data.fees || [],
+            subtotal: data.subtotal,
+            total: data.total,
         });
     },
 
