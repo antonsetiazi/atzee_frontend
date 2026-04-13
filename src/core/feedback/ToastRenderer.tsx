@@ -12,7 +12,7 @@ export default function ToastRenderer() {
     if (messages.length === 0) return null;
 
     return (
-        <div className="fixed top-6 right-6 z-[100] flex w-full max-w-sm flex-col gap-3">
+        <div className="fixed top-6 right-6 z-[10000] flex w-full max-w-sm flex-col gap-3">
             {messages.map((msg) => (
                 <ToastItem
                     key={msg.id}
@@ -40,20 +40,24 @@ function ToastItem({ msg, onClose }: ToastItemProps) {
 
     const variantStyles = {
         success: {
-            border: "border-[var(--color-success)]/40",
-            accent: "bg-[var(--color-success)]",
+            border: "border-green-200",
+            accent: "bg-green-500",
+            text: "text-green-700",
         },
         error: {
-            border: "border-[var(--color-danger)]/40",
-            accent: "bg-[var(--color-danger)]",
+            border: "border-red-200",
+            accent: "bg-red-500",
+            text: "text-red-700",
         },
         warning: {
-            border: "border-[var(--color-warning)]/40",
-            accent: "bg-[var(--color-warning)]",
+            border: "border-orange-200",
+            accent: "bg-orange-500",
+            text: "text-orange-700",
         },
         info: {
-            border: "border-[var(--color-primary)]/40",
-            accent: "bg-[var(--color-primary)]",
+            border: "border-blue-200",
+            accent: "bg-blue-500",
+            text: "text-blue-700",
         },
     };
 
@@ -61,7 +65,6 @@ function ToastItem({ msg, onClose }: ToastItemProps) {
 
     return (
         <div
-            onClick={onClose}
             className={`
                 group
                 relative
@@ -70,15 +73,14 @@ function ToastItem({ msg, onClose }: ToastItemProps) {
                 rounded-2xl
                 border
                 ${style.border}
-                bg-[var(--color-surface-elevated)]
+                bg-white
                 px-4
                 py-3
-                shadow-lg
-                backdrop-blur-md
+                shadow-[0_10px_25px_rgba(0,0,0,0.12)]
                 transition-all
                 duration-200
                 hover:-translate-y-0.5
-                hover:shadow-xl
+                hover:shadow-[0_12px_30px_rgba(0,0,0,0.15)]
             `}
         >
             {/* Accent bar */}
@@ -87,11 +89,11 @@ function ToastItem({ msg, onClose }: ToastItemProps) {
             />
             <div className="pl-3">
                 {msg.title && (
-                    <div className="mb-0.5 text-sm font-semibold text-[var(--color-text-primary)]">
+                    <div className="mb-0.5 text-sm font-semibold text-gray-900">
                         {msg.title}
                     </div>
                 )}
-                <div className="text-sm leading-snug text-[var(--color-text-secondary)]">
+                <div className="text-sm leading-snug text-gray-600">
                     {msg.message}
                 </div>
             </div>

@@ -1,6 +1,7 @@
 // src/core/ui/components/modal/Modal.tsx
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import type { ModalProps } from "./modal.types";
 
 export default function Modal({
@@ -9,7 +10,6 @@ export default function Modal({
     children,
     className = "",
 }: ModalProps) {
-    // ESC key close
     useEffect(() => {
         function handleKey(e: KeyboardEvent) {
             if (e.key === "Escape") {
@@ -18,37 +18,20 @@ export default function Modal({
         }
 
         window.addEventListener("keydown", handleKey);
-
         return () => window.removeEventListener("keydown", handleKey);
     }, [onClose]);
 
     if (!open) return null;
 
-    return (
-        <div
-            className="
-                fixed
-                inset-0
-                z-50
-                flex
-                items-center
-                justify-center
-            "
-        >
+    return createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center">
             {/* Backdrop */}
-
             <div
                 onClick={onClose}
-                className="
-                    absolute
-                    inset-0
-                    bg-black/40
-                    backdrop-blur-sm
-                "
+                className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             />
 
             {/* Dialog */}
-
             <div
                 className={`
                     relative
@@ -65,6 +48,7 @@ export default function Modal({
             >
                 {children}
             </div>
-        </div>
+        </div>,
+        document.body,
     );
 }

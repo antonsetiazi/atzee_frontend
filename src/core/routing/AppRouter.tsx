@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import ToastRenderer from "@/core/feedback/ToastRenderer";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
+import ModalProvider from "@/core/modal/ModalProvider";
 
 import LoginPage from "@/core/ui/views/auth/LoginPage";
 import RegisterPage from "@/core/ui/views/auth/RegisterPage";
@@ -41,6 +42,7 @@ import PartnerOrderPage from "@/modules/partner_order/pages/PartnerOrderPage";
 import PartnerOrderDetailPage from "@/modules/partner_order/pages/PartnerOrderDetailPage";
 import PartnerSchedulePage from "@/modules/partner_schedule/pages/PartnerSchedulePage";
 import RedirectRootHandler from "./RedirectRootHandler";
+import WalletPage from "@/modules/wallet/pages/WalletPage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -57,6 +59,8 @@ export default function AppRouter() {
             {/* GLOBAL FEEDBACK UI */}
             <ToastRenderer />
             <RedirectRootHandler />
+            {/* 🔥 GLOBAL MODAL */}
+            <ModalProvider />
 
             <Routes>
                 {/* PUBLIC */}
@@ -175,6 +179,8 @@ export default function AppRouter() {
                             </PageMetaWrapper>
                         }
                     />
+
+                    <Route path="/wallet" element={<WalletPage />} />
 
                     {/* <Route path="/bookings" element={<BookingListPage />} />
                     <Route

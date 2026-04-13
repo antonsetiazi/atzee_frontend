@@ -9,6 +9,9 @@ import { useConfirm } from "@/core/confirm/useConfirm";
 import { useFeedback } from "@/core/feedback/useFeedback";
 import CustomerDestinationMap from "@/modules/tracking/components/CustomerDestinationMap";
 
+import { useModal } from "@/core/modal/useModal";
+import RejectOrderModal from "./RejectOrderModal";
+
 interface Props {
     order: Order;
 }
@@ -18,6 +21,7 @@ export default function PartnerOrderDetailView({ order }: Props) {
 
     const confirm = useConfirm();
     const feedback = useFeedback();
+    const { openModal } = useModal();
 
     const handleAccept = async () => {
         const approved = await confirm({
@@ -151,13 +155,26 @@ export default function PartnerOrderDetailView({ order }: Props) {
                 {/* ACTION BUTTONS */}
                 <div className="space-y-2">
                     {order.status === "pending" && (
-                        <button
-                            onClick={handleAccept}
-                            disabled={loading}
-                            className="w-full py-3 bg-blue-600 text-white rounded-xl"
-                        >
-                            Terima Order
-                        </button>
+                        <div className="space-y-2">
+                            <button
+                                onClick={handleAccept}
+                                disabled={loading}
+                                className="w-full py-3 bg-blue-600 text-white rounded-xl"
+                            >
+                                Terima Order
+                            </button>
+
+                            <button
+                                onClick={() =>
+                                    openModal(RejectOrderModal, {
+                                        orderId: order.id,
+                                    })
+                                }
+                                className="w-full py-3 bg-red-100 text-red-600 rounded-xl"
+                            >
+                                Tolak Order
+                            </button>
+                        </div>
                     )}
 
                     {order.status === "accepted" && (

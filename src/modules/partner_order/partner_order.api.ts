@@ -27,8 +27,10 @@ export async function acceptOrderApi(orderId: string) {
     return httpPost(`/marketplace/orders/${orderId}/accept/`, {});
 }
 
-export async function rejectOrderApi(orderId: string) {
-    return httpPost(`/marketplace/orders/${orderId}/reject/`, {});
+export async function rejectOrderApi(orderId: string, reason: string) {
+    return httpPost(`/marketplace/orders/${orderId}/reject/`, {
+        reason,
+    });
 }
 
 export async function startOrderApi(orderId: string) {

@@ -24,11 +24,23 @@ export default function PartnerOrderTimeline({
 }: {
     status: OrderStatus;
 }) {
+    const isCancelled = status === "cancelled";
     const currentIndex = steps.indexOf(status);
 
     return (
         <div className="space-y-4">
             <h3 className="font-semibold text-lg">Status Layanan</h3>
+
+            {/* 🔥 CANCEL STATE */}
+            {isCancelled && (
+                <div className="p-3 rounded-xl border border-red-200 bg-red-50">
+                    <p className="text-sm font-medium text-red-600">
+                        Order dibatalkan oleh partner
+                    </p>
+                </div>
+            )}
+
+            {/* TIMELINE */}
 
             <div className="space-y-3">
                 {steps.map((step, index) => {
