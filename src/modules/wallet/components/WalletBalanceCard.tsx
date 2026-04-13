@@ -2,12 +2,14 @@
 
 import { formatValue } from "@/shared/utils/formatValue";
 import type { WalletSummary } from "../types/wallet.types";
+import { useNavigate } from "react-router-dom";
 
 export default function WalletBalanceCard({
     summary,
 }: {
     summary: WalletSummary;
 }) {
+    const navigate = useNavigate();
     return (
         <div
             className="relative overflow-hidden rounded-3xl p-6 text-white shadow-xl"
@@ -44,7 +46,10 @@ export default function WalletBalanceCard({
                     <button className="px-3 py-2 text-sm rounded-xl bg-white/20 backdrop-blur hover:bg-white/30 transition">
                         Topup
                     </button>
-                    <button className="px-3 py-2 text-sm rounded-xl bg-white/20 backdrop-blur hover:bg-white/30 transition">
+                    <button
+                        onClick={() => navigate("/wallet/withdraw")}
+                        className="px-3 py-2 text-sm rounded-xl bg-white/20 backdrop-blur hover:bg-white/30 transition"
+                    >
                         Tarik Dana
                     </button>
                 </div>
