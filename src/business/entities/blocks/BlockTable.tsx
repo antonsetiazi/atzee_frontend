@@ -4,11 +4,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdaptiveTableRenderer from "../../tables/AdaptiveTableRenderer";
-// import EmptyState from "@/shared/ui/EmptyState";
-import { usePermissionStore } from "@/core/permissions/permission.store";
 import type { TableContext } from "../../tables/table.context";
-import { button } from "@/core/ui/ui.class";
-import { interpolate } from "@/core/utils/interpolate";
 
 interface Props {
     block: any;
@@ -65,73 +61,6 @@ export default function BlockTable({
                     background: "var(--color-primary)",
                 }}
             />
-
-            {/* Header */}
-            {(block.title || block.top_actions?.length > 0) && (
-                <div
-                    className="flex items-start justify-between gap-6 px-6 py-5 border-b"
-                    style={{
-                        borderColor: "var(--color-border)",
-                    }}
-                >
-                    <div className="space-y-1">
-                        {block.title && (
-                            <h3
-                                className="text-lg font-semibold tracking-tight"
-                                style={{
-                                    color: "var(--text-primary)",
-                                }}
-                            >
-                                {block.title}
-                            </h3>
-                        )}
-
-                        {block.description && (
-                            <p
-                                className="text-sm"
-                                style={{
-                                    color: "var(--text-secondary)",
-                                }}
-                            >
-                                {block.description}
-                            </p>
-                        )}
-                    </div>
-
-                    {/* Top Actions */}
-                    {block.top_actions?.length > 0 && (
-                        <div className="flex gap-2 shrink-0">
-                            {block.top_actions.map((action: any) => {
-                                const canShow =
-                                    !action.permission ||
-                                    usePermissionStore
-                                        .getState()
-                                        .has(action.permission);
-
-                                if (!canShow) return null;
-
-                                return (
-                                    <button
-                                        key={action.label}
-                                        className={`${button.base} ${button.primary}`}
-                                        onClick={() => {
-                                            if (action.type === "navigate") {
-                                                navigate(
-                                                    interpolate(action.to, {
-                                                        id,
-                                                    }),
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        {action.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-            )}
 
             {/* Body */}
             <div className="px-6 py-5">

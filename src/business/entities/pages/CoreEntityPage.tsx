@@ -69,10 +69,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
         <>
             {/* DEFAULT HEADER */}
             {showHeader && headerMode === "default" && (
-                <HeaderPage
-                    title={schema.title}
-                    subtitle={schema.description}
-                />
+                <HeaderPage title={schema.title} subtitle={schema.subtitle} />
             )}
 
             {/* OVERLAY HEADER (scroll-based) */}

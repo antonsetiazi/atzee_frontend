@@ -2,6 +2,7 @@
 
 // import Sidebar from "../Sidebar";
 import AppTopbar from "../AppTopbar";
+import BrandHeader from "../BrandHeader";
 import Footer from "../Footer";
 
 export default function DesktopShell({
@@ -26,7 +27,7 @@ export default function DesktopShell({
 
             <div className="flex flex-1 flex-col">
                 <AppTopbar />
-
+                <BrandHeader />
                 {/* Main Content */}
                 <main
                     className="flex-1 overflow-y-auto"
@@ -36,7 +37,7 @@ export default function DesktopShell({
                     }}
                 >
                     <div
-                        className="mx-auto w-full px-6 py-8"
+                        className="mx-auto w-full px-6"
                         style={{ maxWidth: MAX_WIDTH }}
                     >
                         {children}

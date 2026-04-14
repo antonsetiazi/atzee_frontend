@@ -76,6 +76,16 @@ export function applyBranding(branding: BrandingConfig) {
     }
 
     // ==============================
+    // simpan logo ke global variable (clean)
+    // ==============================
+    if (branding.logoUrl) {
+        document.documentElement.style.setProperty(
+            "--app-logo",
+            `url(${branding.logoUrl})`,
+        );
+    }
+
+    // ==============================
     // App Name
     // ==============================
     document.title = branding.appName;
