@@ -51,21 +51,47 @@ export default function ServiceCard({ item, onClick }: Props) {
                 {liked ? "❤️" : "🤍"}
             </button>
 
-            <div className="p-4 space-y-2">
+            <div className="p-3 flex flex-col gap-2">
+                {/* ================= NAME ================= */}
                 <h3 className="text-[var(--text-primary)] font-semibold text-sm line-clamp-2">
                     {item.name}
                 </h3>
 
-                {/* 🔥 WAJIB */}
-                <p className="text-xs text-gray-500">📍 {item.city || "-"}</p>
+                {/* ================= ROW 1 ================= */}
+                <div className="flex items-center justify-between">
+                    {/* 📍 LOCATION */}
+                    <p className="text-xs text-gray-500">
+                        📍 {item.city || "-"}
+                    </p>
 
-                <p className="text-[var(--color-primary)] font-bold text-base">
-                    {item.priceLabel}
-                </p>
+                    {/* 📦 SERVICE COUNT */}
+                    <span className="text-xs text-gray-400">
+                        {item.serviceCount} layanan
+                    </span>
+                </div>
 
-                <p className="text-xs text-gray-400">
-                    {item.serviceCount} layanan
-                </p>
+                {/* ================= ROW 2 ================= */}
+                <div className="flex items-end justify-between">
+                    {/* 💰 PRICE */}
+                    <div className="flex flex-col leading-tight">
+                        <span className="text-[10px] text-[var(--text-muted)]">
+                            Mulai
+                        </span>
+
+                        <span className="text-[var(--color-primary)] font-bold text-lg leading-none">
+                            Rp {item.startingPrice.toLocaleString()}
+                        </span>
+                    </div>
+
+                    {/* ⭐ RATING */}
+                    <div className="flex items-center gap-1">
+                        <span className="text-yellow-500 text-sm">⭐</span>
+
+                        <span className="text-sm font-medium text-[var(--text-primary)]">
+                            {item.rating?.toFixed(1) ?? "0.0"}
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     );

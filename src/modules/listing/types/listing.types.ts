@@ -42,6 +42,7 @@ export interface ServiceListing {
     category?: string;
 
     rating?: number;
+    rating_count: number;
 }
 
 // ==============================

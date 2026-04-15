@@ -38,6 +38,9 @@ interface ServiceItemResponse {
     // 🔥 WAJIB
     city: string;
 
+    rating: number;
+    rating_count: number;
+
     category?: string;
 }
 
@@ -135,6 +138,8 @@ export const listingApi = {
                     serviceCount: item.service_count,
                     city: item.city,
                     category: item.category,
+                    rating: item.rating ?? 0,
+                    rating_count: item.rating_count ?? 0,
                 }),
             ),
             totalPages: res.meta.total_pages,

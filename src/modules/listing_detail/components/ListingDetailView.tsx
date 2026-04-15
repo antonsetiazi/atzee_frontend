@@ -76,19 +76,48 @@ export default function ListingDetailView({
                     </h1>
 
                     {/* Meta */}
-                    <div className="text-sm text-[var(--text-muted)] flex gap-3">
-                        <span>⭐ {data.rating}</span>
+                    <div className="text-sm text-[var(--text-muted)] flex flex-wrap items-center gap-2">
+                        <div className="flex items-center gap-1">
+                            <span className="text-yellow-500">⭐</span>
+                            <span className="font-medium">
+                                {data.rating_count > 0
+                                    ? data.rating_avg.toFixed(1)
+                                    : "0.0"}
+                            </span>
+                            <span>
+                                {data.rating_count > 0
+                                    ? `(${data.rating_count})`
+                                    : "Baru"}
+                            </span>
+                        </div>
+
                         <span>•</span>
-                        <span>{data.sold} terjual</span>
+                        <span>{data.sold ?? 0} terjual</span>
+
                         <span>•</span>
                         <span>{data.location}</span>
                     </div>
 
                     {/* Price */}
-                    <div className="text-2xl font-bold text-[var(--color-primary)]">
-                        {data.type === "product"
-                            ? `Rp ${data.price?.toLocaleString()}`
-                            : data.priceLabel}
+                    <div className="flex flex-col">
+                        {data.type === "product" ? (
+                            <span className="text-2xl font-bold text-[var(--color-primary)]">
+                                Rp {data.price?.toLocaleString()}
+                            </span>
+                        ) : (
+                            <div className="flex items-end gap-2">
+                                <span className="text-sm text-[var(--text-muted)]">
+                                    Mulai dari
+                                </span>
+
+                                <span className="text-2xl font-bold text-[var(--color-primary)]">
+                                    {data.priceLabel?.replace(
+                                        "Mulai dari ",
+                                        "",
+                                    )}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Category */}

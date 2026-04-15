@@ -30,10 +30,10 @@ export interface PaymentState {
 
 // 🔥 NEW: normalized execution (future-proof)
 export type PaymentExecutionType =
-    | "popup"
-    | "redirect"
-    | "instruction"
-    | "direct";
+    | "popup" // Midtrans Snap
+    | "redirect" // external redirect
+    | "instruction" // manual instruction
+    | "direct"; // 🔥 wallet / internal instant payment
 
 export interface PaymentExecution {
     payment_id: string;

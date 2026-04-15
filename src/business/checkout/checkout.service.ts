@@ -140,11 +140,11 @@ export const checkoutService = {
             });
 
             /* -------------------------
-           2. CREATE PAYMENT
-        ------------------------- */
+                2. CREATE PAYMENT
+                ------------------------- */
             const execution = await paymentService.startPaymentExecution({
                 order_id: String(order.id),
-                payment_method: "",
+                payment_method: state.paymentMethod,
             });
 
             return execution;
@@ -160,6 +160,12 @@ export const checkoutService = {
     setAddress(addressId: number) {
         checkoutStore.setState({
             addressId,
+        });
+    },
+
+    setPaymentMethod(method: string) {
+        checkoutStore.setState({
+            paymentMethod: method,
         });
     },
 

@@ -1,5 +1,7 @@
 // src/business/checkout/checkout.types.ts
 
+export type PaymentMethod = "wallet" | "midtrans" | string;
+
 export type PaymentStatus = "idle" | "pending" | "paid" | "failed";
 
 export interface CheckoutItem {
@@ -48,6 +50,7 @@ export interface CheckoutState {
     items: CheckoutItem[];
     bookingId: string | null;
     paymentStatus: PaymentStatus;
+    paymentMethod: PaymentMethod;
 
     selectedPartnerId: number | null;
     selectedPartner: SelectedPartner | null;

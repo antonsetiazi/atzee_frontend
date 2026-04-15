@@ -15,7 +15,7 @@ export default function BookingTimeline({ status }: Props) {
     const getSubtext = (key: string) => {
         switch (key) {
             case "HOLD":
-                return "Menunggu pembayaran";
+                return "Menunggu konfirmasi partner";
             case "CONFIRMED":
                 return "Jadwal telah dikonfirmasi";
             case "ONGOING":

@@ -13,6 +13,9 @@ export interface ListingDetail {
     category: string;
     location: string;
 
+    rating_avg: number;
+    rating_count: number;
+
     rating: number;
     sold: number;
 

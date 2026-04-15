@@ -41,7 +41,31 @@ export const paymentService = {
     ): Promise<PaymentExecution> {
         const res = await this.startPayment(payload);
 
-        // 🔥 mapping (NON-BREAKING)
+        // ==========================
+        // 💰 WALLET RESPONSE (NEW)
+        // ==========================
+        if ((res as any).payment_type === "wallet") {
+            return {
+                payment_id: res.order_id,
+                type: "direct",
+                payload: {
+                    data: res,
+                },
+            };
+        }
+
+        // 🔥 WALLET (DIRECT)
+        if (payload.payment_method === "wallet") {
+            return {
+                payment_id: res.order_id,
+                type: "direct",
+                payload: {
+                    data: res,
+                },
+            };
+        }
+
+        // 🔥 MIDTRANS SNAP
         if (res.payment_token) {
             return {
                 payment_id: res.order_id,

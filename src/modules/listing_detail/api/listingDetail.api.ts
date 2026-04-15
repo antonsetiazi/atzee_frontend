@@ -7,6 +7,9 @@ interface ServiceDetailResponse {
     name: string;
     avatar_url: string | null;
 
+    rating: number;
+    rating_count: number;
+
     offerings: {
         product_id: number;
         product_name: string;

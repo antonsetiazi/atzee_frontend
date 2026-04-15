@@ -32,8 +32,9 @@ export function useCheckout() {
         cancelCurrentBooking: checkoutService.cancelCurrentBooking,
         setAddress: checkoutService.setAddress,
         reset: checkoutService.reset,
+        setPaymentMethod: checkoutService.setPaymentMethod,
         paymentStatus: state.paymentStatus,
-
+        paymentMethod: state.paymentMethod,
         subtotal: state.subtotal,
         total: state.total,
     };

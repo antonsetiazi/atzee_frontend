@@ -7,7 +7,7 @@ function getLabel(type: string) {
         case "topup":
             return "Pembayaran berhasil";
         case "escrow_hold":
-            return "Menunggu layanan selesai";
+            return "Dana ditahan, menunggu layanan selesai";
         case "escrow_release":
             return "Dana diteruskan ke ustadz";
         case "refund":

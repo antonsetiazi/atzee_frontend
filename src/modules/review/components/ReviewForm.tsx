@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button, StarRating } from "@/core/ui/components";
+import { notificationService } from "@/modules/notification/services/notification.service";
 
 interface Props {
     onSubmit: (data: { rating: number; comment: string }) => Promise<void>;
@@ -12,7 +13,12 @@ export default function ReviewForm({ onSubmit }: Props) {
     const [comment, setComment] = useState("");
 
     async function handleSubmit() {
-        if (rating === 0) return;
+        if (rating === 0) {
+            notificationService.toast.error(
+                "Silakan beri rating terlebih dahulu",
+            );
+            return;
+        }
 
         await onSubmit({
             rating,

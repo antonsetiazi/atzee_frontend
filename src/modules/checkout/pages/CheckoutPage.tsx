@@ -68,6 +68,12 @@ export default function CheckoutPage() {
                 throw new Error("No response from payment API");
             }
 
+            // 🔥 WALLET (DIRECT)
+            if (res.type === "direct") {
+                navigate(`/payment?order_id=${res.payment_id}`);
+                return;
+            }
+
             // 🔥 NEW: generic handler
             if (res.type === "popup" && res.payload.token) {
                 pay(res.payload.token, {

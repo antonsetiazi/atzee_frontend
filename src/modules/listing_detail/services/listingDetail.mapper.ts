@@ -22,7 +22,9 @@ export function mapServiceDetailToListingDetail(data: any): ListingDetail {
         category: data.specialization || "Service",
         location: "Indonesia", // 🔥 nanti bisa dari backend
 
-        rating: data.rating_avg || 0,
+        rating: data.rating ?? 0,
+        rating_avg: data.rating ?? 0,
+        rating_count: data.rating_count ?? 0,
         sold: 0,
 
         priceLabel:
