@@ -81,6 +81,32 @@ export default function ProfileActions() {
                 Manage Address
             </button>
 
+            {/* BANK */}
+            <button
+                onClick={() => navigate("/account/bank")}
+                className="
+                    w-full
+                    rounded-xl
+                    py-3
+                    text-sm
+                    transition
+                "
+                style={{
+                    border: "1px solid var(--color-border)",
+                    color: "var(--text-primary)",
+                    background: "var(--color-surface-alt)",
+                }}
+                onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "var(--color-surface)")
+                }
+                onMouseLeave={(e) =>
+                    (e.currentTarget.style.background =
+                        "var(--color-surface-alt)")
+                }
+            >
+                Manage Bank Account
+            </button>
+
             {/* LOGOUT */}
             <button
                 onClick={handleLogout}

@@ -104,4 +104,68 @@ export function registerNotificationListeners() {
             payload: { rating },
         });
     });
+
+    eventBus.on("withdrawal.created", ({ amount }) => {
+        notificationService.toast.success(
+            `Penarikan berhasil diajukan (${amount.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+            })})`,
+        );
+
+        notificationService.inbox.add({
+            title: "Withdrawal Requested",
+            message: `Penarikan dana sebesar ${amount.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+            })} sedang diproses`,
+            type: "info",
+            event: "withdrawal_created",
+            entity_type: "wallet_withdrawal",
+            payload: { amount },
+        });
+    });
+
+    eventBus.on("withdrawal.failed", ({ message }) => {
+        notificationService.toast.error(message || "Gagal melakukan penarikan");
+
+        notificationService.inbox.add({
+            title: "Withdrawal Failed",
+            message: message || "Terjadi kesalahan saat penarikan",
+            type: "error",
+            event: "withdrawal_failed",
+        });
+    });
+
+    eventBus.on("withdrawal.processing", ({ id }) => {
+        notificationService.toast.info("Penarikan sedang diproses");
+
+        notificationService.inbox.add({
+            title: "Withdrawal Processing",
+            message: "Penarikan sedang diproses",
+            type: "info",
+            event: "withdrawal_processing",
+            entity_type: "wallet_withdrawal",
+            entity_id: id,
+        });
+    });
+
+    eventBus.on("withdrawal.completed", ({ id, amount }) => {
+        notificationService.toast.success(
+            `Penarikan berhasil (${amount.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+            })})`,
+        );
+
+        notificationService.inbox.add({
+            title: "Withdrawal Completed",
+            message: "Dana telah berhasil ditransfer",
+            type: "success",
+            event: "withdrawal_completed",
+            entity_type: "wallet_withdrawal",
+            entity_id: id,
+            payload: { amount },
+        });
+    });
 }

@@ -45,4 +45,21 @@ export type EventMap = {
 
     // REVIEW
     "review.created": Review;
+
+    "withdrawal.created": {
+        amount: number;
+    };
+
+    "withdrawal.failed": {
+        message: string;
+    };
+
+    "withdrawal.processing": {
+        id: string;
+    };
+
+    "withdrawal.completed": {
+        id: string;
+        amount: number;
+    };
 };

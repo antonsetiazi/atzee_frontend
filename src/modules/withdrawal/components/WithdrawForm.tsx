@@ -1,11 +1,15 @@
 // src/modules/withdrawal/components/WithdrawForm.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
 import { createWithdrawal } from "../services/withdraw.service";
 import { formatValue } from "@/shared/utils/formatValue";
+import { BankSelector } from "@/modules/account/bank";
+import { eventBus } from "@/core/event/event.bus";
 
 export default function WithdrawForm({ onSuccess }: { onSuccess: () => void }) {
     const [amount, setAmount] = useState("");
+    const [selectedBankId, setSelectedBankId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const numericAmount = Number(amount) || 0;
@@ -13,22 +17,32 @@ export default function WithdrawForm({ onSuccess }: { onSuccess: () => void }) {
     const total = numericAmount + fee;
 
     const handleSubmit = async () => {
-        if (!numericAmount) return;
+        if (!numericAmount || !selectedBankId) return;
 
         setLoading(true);
 
-        await createWithdrawal({
-            amount: numericAmount,
-            destination: {
-                bank_name: "BCA",
-                account_number: "1234567890",
-                account_name: "User",
-            },
-        });
+        try {
+            await createWithdrawal({
+                amount: numericAmount,
+                destination_bank_id: selectedBankId,
+            });
 
-        setAmount("");
-        setLoading(false);
-        onSuccess();
+            // 🔥 SUCCESS EVENT
+            eventBus.emit("withdrawal.created", {
+                amount: numericAmount,
+            });
+
+            setAmount("");
+            setSelectedBankId(null);
+            onSuccess();
+        } catch (err: any) {
+            // 🔥 ERROR EVENT
+            eventBus.emit("withdrawal.failed", {
+                message: err?.message || "Gagal melakukan penarikan",
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const quickAmounts = [50000, 100000, 200000];
@@ -54,11 +68,14 @@ export default function WithdrawForm({ onSuccess }: { onSuccess: () => void }) {
                     className="text-sm"
                     style={{ color: "var(--text-secondary)" }}
                 >
-                    Transfer ke rekening tujuan
+                    Pilih rekening dan masukkan nominal penarikan
                 </p>
             </div>
 
-            {/* INPUT */}
+            {/* 🔥 BANK SELECTOR */}
+            <BankSelector value={selectedBankId} onChange={setSelectedBankId} />
+
+            {/* AMOUNT INPUT */}
             <div>
                 <label
                     className="text-sm"

@@ -24,6 +24,7 @@ import ProfilePage from "@/modules/account/profile/pages/ProfilePage";
 import AddressListPage from "@/modules/account/address/pages/AddressListPage";
 import AddressCreatePage from "@/modules/account/address/pages/AddressCreatePage";
 import AddressEditPage from "@/modules/account/address/pages/AddressEditPage";
+import BankAccountPage from "@/modules/account/bank/pages/BankAccountPage";
 
 import CartPage from "@/app/pages/cart/CartPage";
 import OrderPage from "@/modules/order/pages/OrderPage";
@@ -87,6 +88,8 @@ export default function AppRouter() {
                         path="/account/address/edit/:id"
                         element={<AddressEditPage />}
                     />
+
+                    <Route path="/account/bank" element={<BankAccountPage />} />
 
                     <Route path="/chat" element={<ChatPage />} />
                     <Route path="/chat/:roomId" element={<ChatPage />} />

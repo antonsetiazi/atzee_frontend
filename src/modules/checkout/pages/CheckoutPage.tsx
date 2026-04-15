@@ -7,6 +7,7 @@ import CheckoutView from "../components/CheckoutView";
 import { useCheckout } from "../hooks/useCheckout";
 
 import { useSnapPayment } from "@/core/payment/useSnapPayment";
+import { notificationService } from "@/modules/notification/services/notification.service";
 
 const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 
@@ -42,17 +43,19 @@ export default function CheckoutPage() {
     async function handlePay() {
         try {
             if (!items.length) {
-                alert("Tidak ada item di checkout");
+                notificationService.toast.error("Tidak ada item di checkout");
                 return;
             }
 
             if (!selectedPartnerId) {
-                alert("Partner belum dipilih");
+                notificationService.toast.error("Partner belum dipilih");
                 return;
             }
 
             if (!addressId) {
-                alert("Silakan pilih alamat terlebih dahulu");
+                notificationService.toast.error(
+                    "Silakan pilih alamat terlebih dahulu",
+                );
                 return;
             }
 
@@ -75,7 +78,9 @@ export default function CheckoutPage() {
                         navigate(`/payment?order_id=${res.payment_id}`);
                     },
                     onError: () => {
-                        alert("Pembayaran gagal. Silakan coba lagi.");
+                        notificationService.toast.error(
+                            "Pembayaran gagal. Silakan coba lagi.",
+                        );
                     },
                     onClose: () => {
                         console.log("User menutup popup pembayaran");
@@ -98,7 +103,9 @@ export default function CheckoutPage() {
             throw new Error("Invalid payment execution");
         } catch (err) {
             console.error("Payment error:", err);
-            alert("Gagal memulai pembayaran. Silakan coba lagi.");
+            notificationService.toast.error(
+                "Gagal memulai pembayaran. Silakan coba lagi.",
+            );
         } finally {
             setIsSubmitting(false);
         }
@@ -107,11 +114,11 @@ export default function CheckoutPage() {
     async function handleCancelBooking() {
         try {
             await cancelCurrentBooking();
-            alert("Booking berhasil dibatalkan");
+            notificationService.toast.info("Booking berhasil dibatalkan");
             navigate("/services");
         } catch (err) {
             console.error(err);
-            alert("Gagal membatalkan booking");
+            notificationService.toast.error("Gagal membatalkan booking");
         }
     }
 
