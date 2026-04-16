@@ -45,6 +45,7 @@ import PartnerSchedulePage from "@/modules/partner_schedule/pages/PartnerSchedul
 import RedirectRootHandler from "./RedirectRootHandler";
 import WalletPage from "@/modules/wallet/pages/WalletPage";
 import WalletWithdrawPage from "@/modules/withdrawal/pages/WalletWithdrawPage";
+import WalletTopupPage from "@/modules/wallet/pages/WalletTopupPage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -185,6 +186,7 @@ export default function AppRouter() {
                     />
 
                     <Route path="/wallet" element={<WalletPage />} />
+                    <Route path="/wallet/topup" element={<WalletTopupPage />} />
                     <Route
                         path="/wallet/withdraw"
                         element={<WalletWithdrawPage />}

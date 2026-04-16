@@ -43,7 +43,10 @@ export default function WalletBalanceCard({
 
                 {/* Actions */}
                 <div className="flex gap-2 pt-3">
-                    <button className="px-3 py-2 text-sm rounded-xl bg-white/20 backdrop-blur hover:bg-white/30 transition">
+                    <button
+                        onClick={() => navigate("/wallet/topup")}
+                        className="px-3 py-2 text-sm rounded-xl bg-white/20 backdrop-blur hover:bg-white/30 transition"
+                    >
                         Topup
                     </button>
                     <button

@@ -168,4 +168,53 @@ export function registerNotificationListeners() {
             payload: { amount },
         });
     });
+
+    // 💰 Wallet Topup
+    eventBus.on("wallet.topup.success", ({ amount }) => {
+        notificationService.toast.success(
+            `Topup berhasil (${amount.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+            })})`,
+        );
+
+        notificationService.inbox.add({
+            title: "Topup Berhasil",
+            message: `Saldo bertambah sebesar ${amount.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+            })}`,
+            type: "success",
+            event: "wallet_topup_success",
+            entity_type: "wallet",
+            payload: { amount },
+        });
+    });
+
+    eventBus.on("wallet.topup.pending", ({ amount }) => {
+        notificationService.toast.info("Menunggu pembayaran");
+
+        notificationService.inbox.add({
+            title: "Topup Diproses",
+            message: `Topup sebesar ${amount.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+            })} sedang menunggu pembayaran`,
+            type: "info",
+            event: "wallet_topup_pending",
+            entity_type: "wallet",
+            payload: { amount },
+        });
+    });
+
+    eventBus.on("wallet.topup.failed", ({ message }) => {
+        notificationService.toast.error(message || "Topup gagal");
+
+        notificationService.inbox.add({
+            title: "Topup Gagal",
+            message: message || "Terjadi kesalahan saat topup",
+            type: "error",
+            event: "wallet_topup_failed",
+        });
+    });
 }

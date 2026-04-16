@@ -12,6 +12,28 @@ export type WalletTransactionType =
     | "escrow_release"
     | "refund";
 
+export interface WalletTransactionMeta {
+    flow?: "topup" | "payment" | "escrow" | "payout" | "refund" | "system";
+
+    source?: "midtrans" | "wallet" | "system";
+    channel?: string;
+
+    status?: "pending" | "success" | "failed" | "expired";
+
+    order_id?: string;
+    booking_id?: string;
+
+    actor?: "user" | "system" | "partner";
+
+    note?: string;
+
+    breakdown?: {
+        subtotal?: number;
+        partner_receive?: number;
+        platform_fee?: number;
+    };
+}
+
 export interface WalletTransaction {
     id: number;
     amount: number;
@@ -19,5 +41,6 @@ export interface WalletTransaction {
     reference_type?: string;
     reference_id?: string;
     description?: string;
+    meta?: WalletTransactionMeta;
     created_at: string;
 }

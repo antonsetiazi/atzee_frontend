@@ -62,4 +62,17 @@ export type EventMap = {
         id: string;
         amount: number;
     };
+
+    // WALLET
+    "wallet.topup.success": {
+        amount: number;
+    };
+
+    "wallet.topup.pending": {
+        amount: number;
+    };
+
+    "wallet.topup.failed": {
+        message?: string;
+    };
 };
