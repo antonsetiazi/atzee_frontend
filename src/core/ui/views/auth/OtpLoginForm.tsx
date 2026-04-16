@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthService } from "../../../../app/auth/auth.service";
-import { Button, TelField, TextField } from "@/core/ui/components";
+import { Button, OtpInput, TelField } from "@/core/ui/components";
+import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
 
@@ -18,6 +19,23 @@ export default function OtpLoginForm() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    async function submitOtp(code: string) {
+        try {
+            setLoading(true);
+            setError(null);
+
+            await auth.loginOtp(phone, code, TENANT_CODE);
+            await runUserBootstrap();
+
+            navigate("/dashboard", { replace: true });
+        } catch (err) {
+            console.error(err);
+            setError("Invalid OTP");
+        } finally {
+            setLoading(false);
+        }
+    }
 
     async function handleRequestOtp(e: React.FormEvent) {
         e.preventDefault();
@@ -38,20 +56,7 @@ export default function OtpLoginForm() {
 
     async function handleVerifyOtp(e: React.FormEvent) {
         e.preventDefault();
-
-        setLoading(true);
-        setError(null);
-
-        try {
-            await auth.loginOtp(phone, otp, TENANT_CODE);
-
-            navigate("/dashboard", { replace: true });
-        } catch (err) {
-            console.error(err);
-            setError("Invalid OTP");
-        } finally {
-            setLoading(false);
-        }
+        await submitOtp(otp);
     }
 
     const errorBox = (
@@ -94,16 +99,16 @@ export default function OtpLoginForm() {
     // STEP 2: OTP INPUT
     return (
         <form onSubmit={handleVerifyOtp} className="space-y-5">
-            <TextField
-                name="otp"
-                label="OTP Code"
-                placeholder="123456"
-                value={otp}
-                error={error ?? undefined}
-                required
-                disabled={loading}
-                onChange={(_, value) => setOtp(value)}
-            />
+            <div className="space-y-2 text-center">
+                <label className="text-sm text-gray-500">Enter OTP Code</label>
+
+                <OtpInput
+                    value={otp}
+                    onChange={setOtp}
+                    disabled={loading}
+                    onComplete={submitOtp}
+                />
+            </div>
 
             {error && errorBox}
 

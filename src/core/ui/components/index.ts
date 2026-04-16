@@ -17,6 +17,7 @@ export { default as GeoMap } from "./geo_map/GeoMap";
 export { default as Heading } from "./heading/Heading";
 export { default as Image } from "./image/Image";
 export { default as NotificationBell } from "../../../modules/notification/components/NotificationBell";
+export { default as OtpInput } from "./otp_input/OtpInput";
 export { default as Pagination } from "./pagination/Pagination";
 export { default as ProgressIndicator } from "./progress_indicator/ProgressIndicator";
 export { default as Radio } from "./radio/Radio";
