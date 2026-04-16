@@ -4,10 +4,11 @@ export type OrderStatus =
     | "pending"
     | "accepted"
     | "on_going"
-    | "paid"
+    | "completed_by_partner"
     | "completed"
-    | "failed"
-    | "cancelled";
+    | "cancelled"
+    | "paid"
+    | "failed";
 
 export interface OrderItem {
     id: string;
@@ -41,11 +42,20 @@ export interface OrderPartner {
     phone?: string;
 }
 
+export interface OrderBooking {
+    id: string;
+    start_time: string;
+    end_time: string;
+    duration?: number;
+    status: string;
+}
+
 export interface Order {
     id: string;
     order_number: string;
     items: OrderItem[];
     total: number;
+    partner_earning?: number;
     status: OrderStatus;
     payment_status: string;
 
@@ -57,6 +67,7 @@ export interface Order {
 
     // 🔥 SESSION-BASED
     bookingId?: string | null;
+    booking?: OrderBooking | null;
 
     partner?: OrderPartner | null;
 
@@ -74,5 +85,6 @@ export type PartnerOrderStatus =
     | "pending"
     | "accepted"
     | "on_going"
+    | "completed_by_partner"
     | "completed"
     | "cancelled";

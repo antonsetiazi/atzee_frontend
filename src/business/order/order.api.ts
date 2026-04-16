@@ -45,6 +45,7 @@ function mapOrder(item: any): Order {
         total: item.total_amount || 0,
         status: item.status,
         payment_status: item.payment_status,
+        paymentMethod: item.payment_method || "-",
         createdAt: item.created_at,
         bookingId: item.bookingId || null, // 🔥 IMPORTANT
 

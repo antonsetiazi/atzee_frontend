@@ -2,7 +2,16 @@
 
 import type { OrderStatus } from "@/business/order/order.types";
 
-const steps: OrderStatus[] = ["pending", "accepted", "on_going", "completed"];
+/**
+ * UI FLOW STEPS (bukan backend status)
+ */
+const steps: OrderStatus[] = [
+    "pending",
+    "accepted",
+    "on_going",
+    "completed_by_partner",
+    "completed",
+];
 
 function getLabel(step: OrderStatus) {
     switch (step) {
@@ -12,8 +21,12 @@ function getLabel(step: OrderStatus) {
             return "Diterima";
         case "on_going":
             return "Sedang Berjalan";
+        case "completed_by_partner":
+            return "Menunggu Konfirmasi Customer";
         case "completed":
             return "Selesai";
+        case "cancelled":
+            return "Dibatalkan";
         default:
             return step;
     }
@@ -28,20 +41,19 @@ export default function PartnerOrderTimeline({
     const currentIndex = steps.indexOf(status);
 
     return (
-        <div className="space-y-4">
+        <div className="p-4 border border-[var(--color-border)] rounded-xl bg-white space-y-4">
             <h3 className="font-semibold text-lg">Status Layanan</h3>
 
-            {/* 🔥 CANCEL STATE */}
+            {/* CANCEL STATE */}
             {isCancelled && (
                 <div className="p-3 rounded-xl border border-red-200 bg-red-50">
                     <p className="text-sm font-medium text-red-600">
-                        Order dibatalkan oleh partner
+                        Order dibatalkan
                     </p>
                 </div>
             )}
 
             {/* TIMELINE */}
-
             <div className="space-y-3">
                 {steps.map((step, index) => {
                     const isActive = index <= currentIndex;
@@ -60,11 +72,14 @@ export default function PartnerOrderTimeline({
                             />
 
                             <p
-                                className={`text-sm ${
-                                    isActive
-                                        ? "font-medium text-black"
-                                        : "text-gray-400"
-                                }`}
+                                className={`
+                                    text-sm
+                                    ${
+                                        isActive
+                                            ? "font-medium text-black"
+                                            : "text-gray-400"
+                                    }
+                                `}
                             >
                                 {getLabel(step)}
                             </p>
@@ -72,6 +87,13 @@ export default function PartnerOrderTimeline({
                     );
                 })}
             </div>
+
+            {/* INFO MESSAGE */}
+            {status === "completed_by_partner" && (
+                <p className="text-xs text-gray-500 text-center">
+                    Dana akan masuk setelah customer konfirmasi
+                </p>
+            )}
         </div>
     );
 }

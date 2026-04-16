@@ -6,6 +6,7 @@ const steps: OrderStatus[] = [
     "pending",
     "accepted",
     "on_going",
+    "completed_by_partner",
     "completed",
     "cancelled",
 ];
@@ -20,6 +21,9 @@ function getLabel(step: OrderStatus) {
 
         case "on_going":
             return "Layanan Sedang Berlangsung";
+
+        case "completed_by_partner":
+            return "Menunggu Konfirmasi Anda";
 
         case "completed":
             return "Pesanan Selesai";
@@ -48,7 +52,7 @@ export default function OrderTimeline({ status }: { status: OrderStatus }) {
     const currentIndex = steps.indexOf(status);
 
     return (
-        <div className="space-y-4">
+        <div className="p-5 rounded-2xl border border-[var(--color-border)] bg-white shadow-sm space-y-4">
             <h3 className="font-semibold text-lg">Status Pesanan</h3>
 
             <div className="space-y-3">

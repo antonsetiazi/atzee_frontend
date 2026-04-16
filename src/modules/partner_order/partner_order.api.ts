@@ -37,6 +37,10 @@ export async function startOrderApi(orderId: string) {
     return httpPost(`/marketplace/orders/${orderId}/start/`, {});
 }
 
+export async function partnerCompleteOrderApi(orderId: string) {
+    return httpPost(`/marketplace/orders/${orderId}/partner-complete/`, {});
+}
+
 /* =========================
    🔁 SHARED MAPPER (reuse)
 ========================= */
@@ -53,10 +57,12 @@ function mapOrder(item: any): Order {
         })),
 
         total: item.total_amount || 0,
+        partner_earning: item.partner_earning || 0,
         status: item.status,
         payment_status: item.payment_status,
         createdAt: item.created_at,
         bookingId: item.booking_id || null,
+        booking: item.booking || null,
 
         customer: item.customer
             ? {
