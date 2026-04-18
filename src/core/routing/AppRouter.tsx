@@ -46,6 +46,7 @@ import RedirectRootHandler from "./RedirectRootHandler";
 import WalletPage from "@/modules/wallet/pages/WalletPage";
 import WalletWithdrawPage from "@/modules/withdrawal/pages/WalletWithdrawPage";
 import WalletTopupPage from "@/modules/wallet/pages/WalletTopupPage";
+import NotificationToastContainer from "@/modules/notification/components/NotificationToastContainer";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -62,6 +63,7 @@ export default function AppRouter() {
             {/* GLOBAL FEEDBACK UI */}
             <ToastRenderer />
             <RedirectRootHandler />
+            <NotificationToastContainer />
             {/* 🔥 GLOBAL MODAL */}
             <ModalProvider />
 

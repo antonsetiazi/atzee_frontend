@@ -2,15 +2,25 @@
 
 import type { Notification } from "../types/notification.types";
 import { notificationService } from "../services/notification.service";
+import { useNavigate } from "react-router-dom";
+import { getNotificationUrl } from "../services/notification.navigate";
 
 interface Props {
     item: Notification;
 }
 
 export default function NotificationItem({ item }: Props) {
+    const navigate = useNavigate();
+
     const handleClick = () => {
         if (!item.read) {
             notificationService.inbox.markAsRead(item.id);
+        }
+
+        const url = getNotificationUrl(item);
+
+        if (url) {
+            navigate(url);
         }
     };
 
@@ -69,14 +79,13 @@ function formatRelativeTime(dateString: string) {
     const now = new Date();
 
     const diffMs = now.getTime() - date.getTime();
-    const diffMin = Math.floor(diffMs / 60000);
+    const min = Math.floor(diffMs / 60000);
+    const hour = Math.floor(min / 60);
+    const day = Math.floor(hour / 24);
 
-    if (diffMin < 1) return "Just now";
-    if (diffMin < 60) return `${diffMin} min ago`;
-
-    const diffHour = Math.floor(diffMin / 60);
-    if (diffHour < 24) return `${diffHour} hour ago`;
-
-    const diffDay = Math.floor(diffHour / 24);
-    return `${diffDay} day ago`;
+    if (min < 1) return "Just now";
+    if (min < 60) return `${min}m ago`;
+    if (hour < 24) return `${hour}h ago`;
+    if (day === 1) return "Yesterday";
+    return `${day}d ago`;
 }
