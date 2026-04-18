@@ -48,7 +48,6 @@ interface Props {
 export default function BlockRenderer(props: Props): React.ReactNode {
     const { block, idx, pageData, id } = props;
     const { isMobile } = useBreakpoint();
-
     /**
      * =========================================
      * 🔥 SPECIAL BLOCK: CONTAINER (recursive)
@@ -184,7 +183,8 @@ export default function BlockRenderer(props: Props): React.ReactNode {
     }
 
     if (block.type === "image_gallery") {
-        return <BlockImageGallery key={idx} {...props} />;
+        const blockData = resolveBlockData(block, pageData);
+        return <BlockImageGallery key={idx} {...props} pageData={blockData} />;
     }
 
     if (block.type === "list_view") {

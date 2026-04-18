@@ -8,22 +8,33 @@ import PageMetaWrapper from "./PageMetaWrapper";
 
 const EntityPage = lazy(() => import("@/business/entities/pages/EntityPage"));
 
+function normalizeRoutePath(path: string) {
+    if (!path) return path;
+
+    // convert {id} => :id
+    return path.replace(/\{(\w+)\}/g, ":$1");
+}
+
 export function buildPageRoutes(pages: any) {
     if (!pages || Object.keys(pages).length === 0) {
         return null;
     }
 
-    return Object.values(pages).map((page: any) => (
-        <Route
-            key={page.key}
-            path={page.path}
-            element={
-                <PermissionGuard permission={page.permissions?.[0]}>
-                    <PageMetaWrapper meta={page.meta}>
-                        <EntityPage entityKey={page.key} />
-                    </PageMetaWrapper>
-                </PermissionGuard>
-            }
-        />
-    ));
+    return Object.values(pages).map((page: any) => {
+        const routePath = normalizeRoutePath(page.path);
+
+        return (
+            <Route
+                key={page.key}
+                path={routePath}
+                element={
+                    <PermissionGuard permission={page.permissions?.[0]}>
+                        <PageMetaWrapper meta={page.meta}>
+                            <EntityPage entityKey={page.key} />
+                        </PageMetaWrapper>
+                    </PermissionGuard>
+                }
+            />
+        );
+    });
 }

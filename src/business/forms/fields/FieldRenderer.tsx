@@ -156,6 +156,7 @@ export default function FieldRenderer({
                     disabled={field.disabled}
                     dataSource={field.data_source}
                     dataOptions={field.options}
+                    params={(field as any).params}
                     onChange={onChange}
                 />
             );

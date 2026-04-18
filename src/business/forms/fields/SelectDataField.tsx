@@ -1,4 +1,5 @@
 // src/business/forms/fields/SelectDataField.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
 import { fetchFieldOptions } from "@/business/forms/fields/field.api";
@@ -11,6 +12,7 @@ import { SelectField } from "@/core/ui/components";
 interface Props extends FieldProps {
     dataSource?: string;
     dataOptions?: SelectOption[];
+    params?: Record<string, any>;
 }
 
 export default function SelectDataSourceField({
@@ -23,6 +25,7 @@ export default function SelectDataSourceField({
     required,
     dataOptions,
     dataSource,
+    params,
     onChange,
 }: Props) {
     const [options, setOptions] = useState<SelectOption[]>([]);
@@ -46,7 +49,7 @@ export default function SelectDataSourceField({
             setLoading(true);
 
             try {
-                const opts = await fetchFieldOptions(source);
+                const opts = await fetchFieldOptions(source, params ?? {});
                 if (alive) setOptions(opts);
             } catch (err) {
                 console.error("Failed loading datasource:", dataSource, err);
@@ -60,7 +63,7 @@ export default function SelectDataSourceField({
         return () => {
             alive = false;
         };
-    }, [dataSource, dataOptions]);
+    }, [dataSource, dataOptions, params]);
 
     return (
         <SelectField

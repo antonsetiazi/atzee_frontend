@@ -4,8 +4,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import FormRenderer from "../../forms/FormRenderer";
-import { fetchEntityDetail } from "./../api/entity.api";
-import { httpPost } from "@/core/http/http.client";
 import LoadingState from "@/shared/ui/LoadingState";
 import type { FormContext } from "@/business/forms/form.context";
 
@@ -18,18 +16,6 @@ interface Props {
     pageData?: any;
     context?: Record<string, any>;
 }
-
-// 🔹 Fungsi rekursif untuk menemukan FormBlock
-const findFormBlock = (blocks: any[]): any | undefined => {
-    for (const b of blocks) {
-        if (b.type === "form") return b;
-        if (b.blocks) {
-            const nested = findFormBlock(b.blocks);
-            if (nested) return nested;
-        }
-    }
-    return undefined;
-};
 
 export default function BlockForm({
     entityKey,
@@ -60,6 +46,9 @@ export default function BlockForm({
         async function load() {
             setLoadingData(true);
 
+            /**
+             * FILTER MODE
+             */
             if (isFilterMode) {
                 setInitialValues({});
                 setLoadingData(false);
@@ -106,54 +95,15 @@ export default function BlockForm({
             }
 
             /**
-             * 🔹 PRIORITAS 3: Fallback (Legacy Support)
-             * Jika page tidak punya data_source
+             * Tidak ada data
              */
-            try {
-                const formBlock = findFormBlock(schema.blocks);
-
-                if (id && formBlock?.submit_to) {
-                    const submitUrl = formBlock.submit_to
-                        .replace("{id}", id.toString())
-                        .replace("{parent_id}", parentId ?? "");
-
-                    const res = await fetchEntityDetail(submitUrl);
-                    setInitialValues(res);
-                }
-            } catch (err) {
-                console.error("Failed to fetch entity detail:", err);
-            } finally {
-                setLoadingData(false);
-            }
-
-            /**
-             * 🔹 SELF ENTITY QUERY (rare case)
-             */
-            if (!id) {
-                try {
-                    const res = await httpPost(
-                        `/entities/${schema.domain}/${schema.entity}/query/`,
-                        {}, // 👈 query kosong
-                    );
-
-                    setInitialValues(res);
-                } catch (err) {
-                    console.error("Failed to fetch self entity:", err);
-                } finally {
-                    setLoadingData(false);
-                }
-                return;
-            }
-
+            setInitialValues({});
             setLoadingData(false);
         }
 
         load();
     }, [
         entityKey,
-        id,
-        parentId,
-        schema,
         isCreatePage,
         isFilterMode,
         location.state,
