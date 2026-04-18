@@ -2,6 +2,7 @@
 
 export interface BankAccount {
     id: string;
+    bank_id: string;
     bank_name: string;
     account_number: string;
     account_name: string;
@@ -11,7 +12,7 @@ export interface BankAccount {
 }
 
 export interface BankPayload {
-    bank_name: string;
+    bank_id: string;
     account_number: string;
     account_name: string;
     is_default?: boolean;

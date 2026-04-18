@@ -1,15 +1,18 @@
 // src/module/account/bank/components/BankForm.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
 import { useBankForm } from "../hooks/useBankForm";
 import { useBankActions } from "../hooks/useBankActions";
+import { useMasterBanks } from "../hooks/useMasterBanks";
 
 export default function BankForm({ onSuccess }: { onSuccess: () => void }) {
+    const { data: masterBanks } = useMasterBanks();
     const { form, setField } = useBankForm();
     const { create } = useBankActions();
     const [loading, setLoading] = useState(false);
 
-    const isValid = form.bank_name && form.account_number && form.account_name;
+    const isValid = form.bank_id && form.account_number && form.account_name;
 
     const handleSubmit = async () => {
         if (!isValid) return;
@@ -60,10 +63,10 @@ export default function BankForm({ onSuccess }: { onSuccess: () => void }) {
                     >
                         Nama Bank
                     </label>
-                    <input
-                        placeholder="Contoh: BCA, Mandiri"
-                        value={form.bank_name}
-                        onChange={(e) => setField("bank_name", e.target.value)}
+                    <select
+                        value={form.bank_id || ""}
+                        onChange={(e) => setField("bank_id", e.target.value)}
+                        disabled={masterBanks.length === 0}
                         className="w-full px-4 py-3 outline-none"
                         style={{
                             border: "1px solid var(--color-border)",
@@ -71,7 +74,19 @@ export default function BankForm({ onSuccess }: { onSuccess: () => void }) {
                             background: "var(--color-background)",
                             color: "var(--text-primary)",
                         }}
-                    />
+                    >
+                        <option value="">
+                            {masterBanks.length === 0
+                                ? "Memuat bank..."
+                                : "Pilih Bank"}
+                        </option>
+
+                        {masterBanks.map((b: any) => (
+                            <option key={b.id} value={b.id}>
+                                {b.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 {/* ACCOUNT NUMBER */}

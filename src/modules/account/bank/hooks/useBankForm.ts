@@ -6,7 +6,7 @@ import type { BankPayload } from "../types/bank.types";
 
 export function useBankForm(initial?: Partial<BankPayload>) {
     const [form, setForm] = useState<BankPayload>({
-        bank_name: initial?.bank_name || "",
+        bank_id: initial?.bank_id || "",
         account_number: initial?.account_number || "",
         account_name: initial?.account_name || "",
         is_default: initial?.is_default || false,
