@@ -1,11 +1,9 @@
 // src/modules/listing/components/sections/ListingGridSection.tsx
 
-import ProductCard from "./../cards/ProductCard";
-import ServiceCard from "./../cards/ServiceCard";
-import ListingEmptyState from "./../ListingEmptyState";
-import type { ProductListing, ServiceListing } from "../../types/listing.types";
+import ListingGrid from "./ListingGrid";
+import ListingEmptyState from "../ListingEmptyState";
 
-type ListingItem = ProductListing | ServiceListing;
+import type { ListingItem } from "../../types/listing.shared";
 
 interface Props {
     listings: ListingItem[];
@@ -20,26 +18,6 @@ export default function ListingGridSection({
     onReset,
     mobile,
 }: Props) {
-    function renderItem(item: ListingItem, index: number) {
-        if (item.type === "product") {
-            return (
-                <ProductCard
-                    key={`product-${item.id}`}
-                    item={item}
-                    onClick={onItemClick}
-                />
-            );
-        }
-
-        return (
-            <ServiceCard
-                key={`service-${item.id}-${index}`}
-                item={item}
-                onClick={onItemClick}
-            />
-        );
-    }
-
     return (
         <>
             <p className="text-sm text-[var(--text-secondary)] mb-4">
@@ -49,15 +27,11 @@ export default function ListingGridSection({
             {listings.length === 0 ? (
                 <ListingEmptyState onReset={onReset} />
             ) : (
-                <div
-                    className={
-                        mobile
-                            ? "grid grid-cols-2 gap-3"
-                            : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-                    }
-                >
-                    {listings.map(renderItem)}
-                </div>
+                <ListingGrid
+                    items={listings}
+                    mobile={mobile}
+                    onItemClick={onItemClick}
+                />
             )}
         </>
     );

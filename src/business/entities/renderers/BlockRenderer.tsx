@@ -26,6 +26,8 @@ import BlockMap from "../blocks/BlockMap";
 import BlockImageGallery from "../blocks/BlockImageGallery";
 import BlockTransactionSummary from "../blocks/BlockTransactionSummary";
 import BlockFiles from "../blocks/BlockFiles";
+import BlockListingSection from "../blocks/BlockListingSection";
+import BlockCategorySlider from "../blocks/BlockCategorySlider";
 
 /**
  * 🔥 Helper: ambil data dari pageData
@@ -240,5 +242,13 @@ export default function BlockRenderer(props: Props): React.ReactNode {
         return (
             <TransactionWorkspace key={idx} block={block} pageData={pageData} />
         );
+    }
+
+    if (block.type === "listing_section") {
+        return <BlockListingSection key={idx} {...props} />;
+    }
+
+    if (block.type === "category_slider") {
+        return <BlockCategorySlider key={idx} {...props} />;
     }
 }

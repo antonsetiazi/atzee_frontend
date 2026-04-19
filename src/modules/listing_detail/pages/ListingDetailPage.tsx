@@ -1,4 +1,5 @@
 // src/modules/listing_detail/pages/ListingDetailPage.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -15,6 +16,8 @@ import { useSessionStore } from "@/core/session/session.store";
 import { useRequireLogin } from "@/core/auth/useRequireLogin";
 import LoginRequiredDialog from "@/core/auth/LoginRequiredDialog";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
+import ListingSection from "@/modules/listing/components/sections/ListingSection";
+import { useServiceListing } from "@/modules/listing/hooks/useServiceListing";
 
 interface Props {
     type: "product" | "service";
@@ -31,6 +34,17 @@ export default function ListingDetailPage({ type }: Props) {
 
     const { open, handleClose, handleLogin, triggerLoginRequired } =
         useRequireLogin();
+
+    const { listings } = useServiceListing();
+
+    function handleClick(item: any) {
+        if (item.type === "service") {
+            navigate(`/service/${item.id}`);
+            return;
+        }
+
+        navigate(`/product/${item.id}`);
+    }
 
     // ================================
     // 🔥 ACTION HANDLER (UNIFIED)
@@ -104,7 +118,7 @@ export default function ListingDetailPage({ type }: Props) {
                     onPrimaryAction={handlePrimaryAction}
                 />
 
-                <div className="px-2">
+                <div className="p-4">
                     <div className="flex justify-center">
                         <button
                             onClick={handleChatNow}
@@ -137,6 +151,20 @@ export default function ListingDetailPage({ type }: Props) {
                             Chat Sekarang
                         </button>
                     </div>
+                </div>
+
+                <div className="p-4 space-y-8">
+                    <ListingSection
+                        title="Ustadz Terdekat"
+                        items={listings.slice(0, 4)}
+                        onItemClick={handleClick}
+                    />
+
+                    <ListingSection
+                        title="Paling Populer"
+                        items={listings.slice(4, 8)}
+                        onItemClick={handleClick}
+                    />
                 </div>
 
                 <LoginRequiredDialog
@@ -232,6 +260,20 @@ export default function ListingDetailPage({ type }: Props) {
                         Booking Sekarang
                     </button>
                 </div>
+            </div>
+
+            <div className="p-4 space-y-8">
+                <ListingSection
+                    title="Ustadz Terdekat"
+                    items={listings.slice(0, 4)}
+                    onItemClick={handleClick}
+                />
+
+                <ListingSection
+                    title="Paling Populer"
+                    items={listings.slice(4, 8)}
+                    onItemClick={handleClick}
+                />
             </div>
 
             {/* =========================

@@ -3,17 +3,12 @@
 import { useState } from "react";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
-import type {
-    ProductListing,
-    ServiceListing,
-    ListingFiltersState,
-    ListingSort,
-} from "../types/listing.types";
+import type { ListingFiltersState, ListingSort } from "../types/listing.types";
+
+import type { ListingItem } from "../types/listing.shared";
 
 import MobileListingLayout from "./layouts/MobileListingLayout";
 import DesktopListingLayout from "./layouts/DesktopListingLayout";
-
-type ListingItem = ProductListing | ServiceListing;
 
 interface Props {
     listings: ListingItem[];
