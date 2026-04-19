@@ -85,11 +85,11 @@ export default function CoreEntityPage({ entityKey }: Props) {
             {/* 🔥 CONTENT WRAPPER (IMPROVED) */}
             <div
                 className={`mx-auto w-full ${
-                    isMobile ? "space-y-3" : "px-6 py-6 space-y-4"
+                    isMobile ? "space-y-0" : "px-6 py-6 space-y-4"
                 }`}
             >
                 {/* 🔥 BLOCK STACK (CENTRALIZED SPACING) */}
-                <div className="w-full space-y-6">
+                <div className="w-full">
                     {schema.blocks?.map((block: any, idx: number) => (
                         <BlockRenderer
                             key={idx}

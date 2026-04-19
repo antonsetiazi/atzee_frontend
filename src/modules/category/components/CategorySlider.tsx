@@ -43,7 +43,7 @@ export default function CategorySlider({
     }
 
     return (
-        <section className={isMobile ? "px-4 py-3" : "px-6 py-5"}>
+        <section className={isMobile ? "px-1" : "px-6 py-2"}>
             <div className="flex items-center justify-between mb-4">
                 <h2
                     className={`font-semibold ${

@@ -22,6 +22,8 @@ export default function LoginPage() {
     const [methods, setMethods] = useState<AuthMethod[]>([]);
     const [method, setMethod] = useState<AuthMethod>("password");
 
+    const logoUrl = import.meta.env.VITE_APP_LOGO;
+
     useEffect(() => {
         async function loadConfig() {
             const config = await auth.getAuthConfig();
@@ -74,28 +76,29 @@ export default function LoginPage() {
                     {/* Header */}
 
                     <div className="mb-8 text-center">
-                        {/* Logo */}
-                        <div
-                            className="
-                                mx-auto mb-4 flex items-center justify-center
-                                rounded-xl
-                                text-white
-                                shadow
-                            "
-                            style={{
-                                width: isMobile ? 56 : 48,
-                                height: isMobile ? 56 : 48,
-                                background: "var(--color-primary)",
-                            }}
-                        >
-                            <span className="text-sm font-bold">
-                                {import.meta.env.VITE_APP_CODE || "APP"}
-                            </span>
-                        </div>
+                        {/* Logo Container (🔥 upgrade feel) */}
+                        {logoUrl && (
+                            <div
+                                className="
+                                    mx-auto
+                                    flex items-center justify-center
+                                    rounded-2xl
+                                "
+                                style={{
+                                    width: 108,
+                                    height: 108,
+                                    background: "rgba(255,255,255,0.1)",
+                                    backdropFilter: "blur(10px)",
+                                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                                }}
+                            >
+                                <img src={logoUrl} className="h-24" />
+                            </div>
+                        )}
 
                         <h1
                             className={`
-                                font-semibold
+                                font-semibold p-4
                                 ${isMobile ? "text-xl" : "text-2xl"}
                             `}
                             style={{ color: "var(--color-text)" }}

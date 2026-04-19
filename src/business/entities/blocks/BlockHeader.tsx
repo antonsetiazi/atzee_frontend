@@ -64,6 +64,7 @@ export default function BlockHeader({ block }: Props) {
             <div
                 className={`
                     relative px-4
+                    mb-4
                     transition-all duration-300
                     ${isScrolled ? "pt-4 pb-4" : "pt-6 pb-8"}
                 `}
@@ -77,7 +78,7 @@ export default function BlockHeader({ block }: Props) {
                         )}
 
                         <div className="text-white text-xl font-semibold tracking-tight">
-                            {user?.full_name?.split(" ")[0] || "User"}
+                            {user?.full_name?.split(" ")[0] || "Selamat Datang"}
                         </div>
                     </div>
 
@@ -96,14 +97,12 @@ export default function BlockHeader({ block }: Props) {
                         </div>
                     )}
                 </div>
-
                 {/* 🔥 SUBTITLE */}
                 {block.subtitle && (
                     <div className="text-white/80 text-sm mt-2 max-w-[80%]">
                         {block.subtitle}
                     </div>
                 )}
-
                 {/* 🔥 SLOT (future: banner injection) */}
                 <div className="mt-4">{/* extensible slot */}</div>
             </div>

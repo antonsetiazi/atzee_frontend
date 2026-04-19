@@ -52,6 +52,7 @@ export default function MobileShell({
             {/* 🔥 Main Area */}
             <div className="flex flex-1 flex-col overflow-hidden">
                 {/* 🔥 SCROLL CONTAINER */}
+
                 <main
                     id="main-scroll"
                     className="flex-1 overflow-y-auto"
@@ -62,7 +63,6 @@ export default function MobileShell({
                 >
                     {children}
                 </main>
-
                 {/* 🔥 Bottom Navigation */}
                 {showBottomNav && (
                     <div
