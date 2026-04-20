@@ -56,7 +56,12 @@ export default function BlockRenderer(props: Props): React.ReactNode {
      * =========================================
      */
     if (block.type === "container") {
-        const isColumn = block.direction === "column";
+        const hasOnlyStats = block.blocks?.every(
+            (item: any) => item.type === "stat",
+        );
+
+        const isColumn =
+            block.direction === "column" && !(isMobile && hasOnlyStats);
 
         return (
             <div
@@ -64,15 +69,18 @@ export default function BlockRenderer(props: Props): React.ReactNode {
                 className={`
                     w-full
                     ${!isColumn ? "grid" : "flex flex-col"}
-                    ${isMobile ? "p-4" : "p-6"}
+                    ${isMobile ? "p-3" : "p-6"}
                 `}
                 style={
                     !isColumn
                         ? {
-                              gridTemplateColumns: block.columns
-                                  ? `repeat(${block.columns}, 1fr)`
-                                  : "repeat(auto-fit, minmax(250px, 1fr))",
-                              gap: block.gap ?? 20,
+                              gridTemplateColumns: isMobile
+                                  ? "repeat(2, 1fr)"
+                                  : block.columns
+                                    ? `repeat(${block.columns}, 1fr)`
+                                    : "repeat(auto-fit, minmax(250px,1fr))",
+
+                              gap: isMobile ? 12 : (block.gap ?? 20),
                           }
                         : {
                               gap: block.gap ?? 16,

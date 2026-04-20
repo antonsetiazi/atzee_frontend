@@ -1,4 +1,5 @@
 // src/modules/listing/api/discovery.api.ts
+import { remember } from "../store/discovery.cache";
 
 import { listingApi } from "./listing.api";
 
@@ -18,15 +19,17 @@ export const discoveryApi = {
     },
 
     async popularServices() {
-        return listingApi.getServices({
-            filters: {
-                search: "",
-                category: [],
-            },
-            sort: "rating",
-            page: 1,
-            perPage: 8,
-        });
+        return remember("services-rating", () =>
+            listingApi.getServices({
+                filters: {
+                    search: "",
+                    category: [],
+                },
+                sort: "rating",
+                page: 1,
+                perPage: 8,
+            }),
+        );
     },
 
     async newestServices() {
@@ -42,15 +45,17 @@ export const discoveryApi = {
     },
 
     async topRatedServices() {
-        return listingApi.getServices({
-            filters: {
-                search: "",
-                category: [],
-            },
-            sort: "rating",
-            page: 1,
-            perPage: 8,
-        });
+        return remember("services-rating", () =>
+            listingApi.getServices({
+                filters: {
+                    search: "",
+                    category: [],
+                },
+                sort: "rating",
+                page: 1,
+                perPage: 8,
+            }),
+        );
     },
 
     async cheapServices() {
@@ -66,14 +71,16 @@ export const discoveryApi = {
     },
 
     async recommendedServices() {
-        return listingApi.getServices({
-            filters: {
-                search: "",
-                category: [],
-            },
-            sort: "rating",
-            page: 1,
-            perPage: 8,
-        });
+        return remember("services-rating", () =>
+            listingApi.getServices({
+                filters: {
+                    search: "",
+                    category: [],
+                },
+                sort: "rating",
+                page: 1,
+                perPage: 8,
+            }),
+        );
     },
 };

@@ -47,7 +47,7 @@ export function useServiceListing() {
                 setListings(res.listings);
                 setTotalPages(res.totalPages);
             });
-    }, [filters, sort, page, myLocation]);
+    }, [filters, sort, page, myLocation?.latitude, myLocation?.longitude]);
 
     return {
         listings,

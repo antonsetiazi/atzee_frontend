@@ -2,8 +2,11 @@
 
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+
 import type { ShortcutBlock, ShortcutItem } from "../shortcut/shortcut.types";
+
 import Icon from "@/core/ui/icons/Icon";
+import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
 interface Props {
     block: ShortcutBlock;
@@ -11,30 +14,42 @@ interface Props {
 
 function getColor(index: number) {
     const colors = [
-        "#3B82F6", // blue
-        "#10B981", // green
-        "#F59E0B", // yellow
-        "#EF4444", // red
-        "#8B5CF6", // purple
-        "#EC4899", // pink
-        "#06B6D4", // cyan
-        "#F97316", // orange
+        "#3B82F6",
+        "#10B981",
+        "#F59E0B",
+        "#EF4444",
+        "#8B5CF6",
+        "#EC4899",
+        "#06B6D4",
+        "#F97316",
     ];
+
     return colors[index % colors.length];
 }
 
 export default function BlockShortcut({ block }: Props) {
     const items = block.items || [];
+    const { isMobile } = useBreakpoint();
+
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        const t = setTimeout(() => setVisible(true), 50);
+        const t = setTimeout(() => setVisible(true), 60);
         return () => clearTimeout(t);
     }, []);
 
     if (!items.length) {
         return (
-            <div className="py-6 text-sm text-center text-[var(--text-muted)]">
+            <div
+                className="
+                    rounded-2xl border px-4 py-8 text-center text-sm
+                "
+                style={{
+                    borderColor: "var(--color-border)",
+                    background: "var(--color-surface)",
+                    color: "var(--color-text-muted)",
+                }}
+            >
                 Belum ada shortcut
             </div>
         );
@@ -42,7 +57,15 @@ export default function BlockShortcut({ block }: Props) {
 
     return (
         <div className="w-full">
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-y-6 gap-x-2">
+            {/* Responsive Grid */}
+            <div
+                className={`
+                    grid gap-4
+                    grid-cols-${items.length}
+                    border-t border-b border-[var(--color-border)]
+                    ${isMobile ? "py-4 my-0" : "py-5 my-5"}
+                `}
+            >
                 {items.map((item: ShortcutItem, index: number) => {
                     const color = getColor(index);
 
@@ -51,45 +74,93 @@ export default function BlockShortcut({ block }: Props) {
                             key={item.key}
                             to={item.to || "#"}
                             className={`
-                                flex flex-col items-center justify-center gap-2
+                                group relative overflow-hidden
+                                rounded-2xl
+                                flex flex-col items-center justify-center
+                                text-center
                                 transition-all duration-500
-                                active:scale-90
+                                active:scale-95
+                                hover:-translate-y-1
+                                hover:shadow-lg
                                 ${
                                     visible
                                         ? "opacity-100 translate-y-0"
                                         : "opacity-0 translate-y-4"
                                 }
+                                ${isMobile ? "px-2 py-3" : "px-3 py-4"}
                             `}
                             style={{
-                                transitionDelay: `${index * 60}ms`,
+                                transitionDelay: `${index * 55}ms`,
+                                // borderColor: "var(--color-border)",
+                                background: "var(--color-surface)",
                             }}
                         >
-                            {/* ICON */}
+                            {/* Glow Hover Layer */}
                             <div
                                 className="
-                                    flex items-center justify-center
-                                    w-14 h-14 rounded-full
-                                    transition-all duration-300
-                                    hover:scale-110
+                                    absolute inset-0 opacity-0
+                                    group-hover:opacity-100
+                                    transition-opacity duration-300
                                 "
                                 style={{
-                                    background: `${color}15`,
+                                    background: `linear-gradient(135deg, ${color}10, transparent 70%)`,
+                                }}
+                            />
+
+                            {/* Icon */}
+                            <div
+                                className={`
+                                    relative z-10
+                                    flex items-center justify-center
+                                    rounded-2xl
+                                    transition-all duration-300
+                                    group-hover:scale-110
+                                    group-hover:-translate-y-0.5
+                                    ${isMobile ? "w-12 h-12" : "w-14 h-14"}
+                                `}
+                                style={{
+                                    background: `${color}18`,
+                                    boxShadow: `0 8px 18px ${color}20`,
                                 }}
                             >
                                 <Icon
                                     name={item.icon || "home"}
-                                    size="lg"
+                                    size={isMobile ? "lg" : "lg"}
                                     style={{ color }}
                                 />
                             </div>
 
-                            {/* LABEL */}
+                            {/* Label */}
                             <span
-                                className="text-xs sm:text-sm text-center leading-tight"
-                                style={{ color: "var(--color-primary)" }}
+                                className={`
+                                    relative z-10 mt-2 font-medium leading-tight
+                                    transition-colors duration-300
+                                    group-hover:opacity-100                                    
+                                    ${
+                                        isMobile
+                                            ? "text-[11px]"
+                                            : "text-xs sm:text-sm"
+                                    }
+                                `}
+                                style={{
+                                    color: "var(--color-primary)",
+                                }}
                             >
                                 {item.label}
                             </span>
+
+                            {/* Subtle Bottom Accent */}
+                            <div
+                                className="
+                                    absolute bottom-0 left-0 right-0 h-[2px]
+                                    scale-x-0 group-hover:scale-x-100
+                                    transition-transform duration-300
+                                    origin-center
+                                "
+                                style={{
+                                    background: color,
+                                }}
+                            />
                         </Link>
                     );
                 })}

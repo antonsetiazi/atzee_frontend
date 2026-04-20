@@ -3,16 +3,9 @@
 
 import { notificationApi } from "../api/notification.api";
 import { notificationStore } from "../store/notification.store";
-import type {
-    // Notification,
-    NotificationType,
-} from "../types/notification.types";
+import type { NotificationType } from "../types/notification.types";
 
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
-
-// function generateId() {
-//     return Math.random().toString(36).substring(2, 9);
-// }
 
 export const notificationService = {
     toast: {

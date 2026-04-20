@@ -1,7 +1,5 @@
 // src/modules/category/components/CategorySlider.tsx
 
-// src/modules/category/components/CategorySlider.tsx
-
 import { useRef } from "react";
 import CategoryCard from "./CategoryCard";
 import { useDashboardCategories } from "../hooks/useDashboardCategories";
@@ -47,7 +45,7 @@ export default function CategorySlider({
             <div className="flex items-center justify-between mb-4">
                 <h2
                     className={`font-semibold ${
-                        isMobile ? "text-lg" : "text-2xl"
+                        isMobile ? "text-xs" : "text-2xl"
                     }`}
                 >
                     {title}

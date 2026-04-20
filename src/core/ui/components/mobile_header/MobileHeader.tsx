@@ -12,6 +12,8 @@ interface Props {
     right?: React.ReactNode;
 
     sticky?: boolean;
+
+    showBack?: boolean;
 }
 
 export default function MobileHeader({
@@ -20,6 +22,7 @@ export default function MobileHeader({
     onBack,
     right,
     sticky = true,
+    showBack = true,
 }: Props) {
     const navigate = useNavigate();
     const { isMobile } = useBreakpoint();
@@ -49,18 +52,20 @@ export default function MobileHeader({
             >
                 {/* LEFT */}
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={handleBack}
-                        className="
+                    {showBack && (
+                        <button
+                            onClick={handleBack}
+                            className="
                             w-10 h-10 flex items-center justify-center
                             rounded-full
                             bg-white shadow-sm
                             border border-[var(--color-border)]
                             active:scale-95 transition
                         "
-                    >
-                        <ArrowLeftIcon className="w-5 h-5 text-[var(--text-primary)]" />
-                    </button>
+                        >
+                            <ArrowLeftIcon className="w-5 h-5 text-[var(--text-primary)]" />
+                        </button>
+                    )}
 
                     {(title || subtitle) && (
                         <div className="leading-tight">

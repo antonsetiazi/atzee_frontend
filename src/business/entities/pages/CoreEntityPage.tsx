@@ -78,6 +78,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
                     <HeaderPage
                         title={schema.title}
                         subtitle={schema.description}
+                        showBack={false}
                     />
                 </div>
             )}

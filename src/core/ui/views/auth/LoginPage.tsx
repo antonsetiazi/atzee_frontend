@@ -40,66 +40,125 @@ export default function LoginPage() {
     return (
         <div
             className="
-                relative flex min-h-screen items-center justify-center
-                px-4
+                relative min-h-screen overflow-hidden
+                flex items-center justify-center
+                px-4 py-8
             "
             style={{
-                background: "var(--color-background)",
+                background: `
+                    radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent 28%),
+                    radial-gradient(circle at bottom right, rgba(255,255,255,0.05), transparent 25%),
+                    linear-gradient(
+                        135deg,
+                        var(--color-background),
+                        color-mix(in srgb, var(--color-background) 75%, var(--color-primary))
+                    )
+                `,
             }}
         >
-            {/* Gradient background glow */}
-            {!isMobile && (
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                    <div
-                        className="h-[520px] w-[520px] rounded-full blur-3xl opacity-30"
-                        style={{
-                            background: "var(--color-primary)",
-                        }}
-                    />
-                </div>
-            )}
+            {/* Animated Glow Layer */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                <div
+                    className="
+                        absolute -top-20 -left-20
+                        h-72 w-72 rounded-full blur-3xl opacity-20
+                        animate-pulse
+                    "
+                    style={{
+                        background: "var(--color-primary)",
+                    }}
+                />
+
+                <div
+                    className="
+                        absolute bottom-0 right-0
+                        h-80 w-80 rounded-full blur-3xl opacity-20
+                        animate-pulse
+                    "
+                    style={{
+                        background: "var(--color-primary)",
+                        animationDelay: "1s",
+                    }}
+                />
+
+                {!isMobile && (
+                    <>
+                        <div
+                            className="absolute top-1/4 left-1/3 h-44 w-44 rounded-full blur-3xl opacity-10"
+                            style={{
+                                background: "#ffffff",
+                            }}
+                        />
+
+                        <div
+                            className="absolute bottom-1/4 right-1/3 h-52 w-52 rounded-full blur-3xl opacity-10"
+                            style={{
+                                background: "var(--color-primary)",
+                            }}
+                        />
+                    </>
+                )}
+            </div>
+
+            {/* Grid Texture */}
+            <div
+                className="absolute inset-0 opacity-[0.04]"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(to right, #ffffff 1px, transparent 1px),
+                        linear-gradient(to bottom, #ffffff 1px, transparent 1px)
+                    `,
+                    backgroundSize: "36px 36px",
+                }}
+            />
 
             {/* Login Card */}
             <div
                 className={`
-                    relative w-full
+                    relative z-10 w-full
                     ${isMobile ? "max-w-sm" : "max-w-md"}
-                    rounded-2xl
-                    shadow-xl
+                    rounded-3xl
+                    backdrop-blur-xl
+                    shadow-2xl
                 `}
                 style={{
-                    background: "var(--color-surface)",
-                    border: "1px solid var(--color-border)",
+                    background: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    boxShadow:
+                        "0 25px 60px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08)",
                 }}
             >
                 <div className={isMobile ? "p-6" : "p-8"}>
                     {/* Header */}
-
                     <div className="mb-8 text-center">
-                        {/* Logo Container (🔥 upgrade feel) */}
                         {logoUrl && (
                             <div
                                 className="
-                                    mx-auto
+                                    mx-auto mb-5
                                     flex items-center justify-center
-                                    rounded-2xl
+                                    rounded-3xl
                                 "
                                 style={{
-                                    width: 108,
-                                    height: 108,
-                                    background: "rgba(255,255,255,0.1)",
-                                    backdropFilter: "blur(10px)",
-                                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                                    width: isMobile ? 92 : 108,
+                                    height: isMobile ? 92 : 108,
+                                    background:
+                                        "linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04))",
+                                    border: "1px solid rgba(255,255,255,0.12)",
+                                    backdropFilter: "blur(12px)",
+                                    boxShadow: "0 14px 40px rgba(0,0,0,0.18)",
                                 }}
                             >
-                                <img src={logoUrl} className="h-24" />
+                                <img
+                                    src={logoUrl}
+                                    className={isMobile ? "h-16" : "h-20"}
+                                />
                             </div>
                         )}
 
                         <h1
                             className={`
-                                font-semibold p-4
-                                ${isMobile ? "text-xl" : "text-2xl"}
+                                font-semibold tracking-tight
+                                ${isMobile ? "text-2xl" : "text-3xl"}
                             `}
                             style={{ color: "var(--color-text)" }}
                         >
@@ -107,37 +166,73 @@ export default function LoginPage() {
                         </h1>
 
                         <p
-                            className="mt-1 text-sm"
-                            style={{ color: "var(--color-text-muted)" }}
+                            className="mt-2 text-sm"
+                            style={{
+                                color: "var(--color-text-muted)",
+                            }}
                         >
-                            Sign in to continue to your workspace
+                            Selamat datang kembali
                         </p>
+
+                        {/* Tagline */}
+                        <div className="mt-5 flex items-center justify-center gap-3">
+                            <div
+                                className="h-px w-10"
+                                style={{
+                                    background:
+                                        "linear-gradient(to right, transparent, rgba(255,255,255,0.35))",
+                                }}
+                            />
+
+                            <p
+                                className="
+                                    text-[11px]
+                                    uppercase
+                                    tracking-[0.25em]
+                                    font-medium
+                                "
+                                style={{
+                                    color: "var(--color-text-muted)",
+                                }}
+                            >
+                                {import.meta.env.VITE_APP_TAGLINE}
+                            </p>
+
+                            <div
+                                className="h-px w-10"
+                                style={{
+                                    background:
+                                        "linear-gradient(to left, transparent, rgba(255,255,255,0.35))",
+                                }}
+                            />
+                        </div>
                     </div>
 
-                    {/* Login Method Switcher */}
+                    {/* Switcher */}
                     <LoginMethodSwitcher
                         methods={methods}
                         value={method}
                         onChange={setMethod}
                     />
 
-                    {/* Login Forms */}
-                    <div className="mt-4">
+                    {/* Forms */}
+                    <div className="mt-5">
                         {method === "otp" && <OtpLoginForm />}
-
                         {method === "password" && <PasswordLoginForm />}
                     </div>
 
-                    {/* Register Link */}
+                    {/* Register */}
                     <div
-                        className="mt-5 text-center text-sm"
+                        className="mt-6 text-center text-sm"
                         style={{ color: "var(--color-text-muted)" }}
                     >
                         Belum punya akun?{" "}
                         <Link
                             to="/register"
-                            className="font-medium"
-                            style={{ color: "var(--color-primary)" }}
+                            className="font-semibold transition-opacity hover:opacity-80"
+                            style={{
+                                color: "var(--color-primary)",
+                            }}
                         >
                             Daftar di sini
                         </Link>
@@ -146,7 +241,10 @@ export default function LoginPage() {
                     {/* Footer */}
                     <div
                         className="mt-8 text-center text-xs"
-                        style={{ color: "var(--color-text-muted)" }}
+                        style={{
+                            color: "var(--color-text-muted)",
+                            opacity: 0.8,
+                        }}
                     >
                         © {new Date().getFullYear()}{" "}
                         {import.meta.env.VITE_APP_TITLE}

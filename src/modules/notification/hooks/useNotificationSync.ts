@@ -1,18 +1,14 @@
 // src/modules/notification/hooks/useNotificationSync.ts
 
 import { useEffect } from "react";
-import { notificationSync } from "../services/notification.sync";
+import { notificationSmart } from "../services/notification.smart";
 
 export function useNotificationSync() {
     useEffect(() => {
-        // first load
-        notificationSync.loadAll();
+        notificationSmart.start();
 
-        // auto refresh tiap 10 detik
-        const timer = setInterval(() => {
-            notificationSync.loadAll();
-        }, 10000);
-
-        return () => clearInterval(timer);
+        return () => {
+            notificationSmart.stop();
+        };
     }, []);
 }

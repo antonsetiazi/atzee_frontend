@@ -3,16 +3,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
-import { useSessionStore } from "@/core/session/session.store";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
 interface Props {
     block: any;
 }
 
+const logoUrl = import.meta.env.VITE_APP_LOGO;
+const appName = import.meta.env.VITE_APP_NAME || "Ustadzku";
+const tagline = import.meta.env.VITE_APP_TAGLINE;
+
 export default function BlockHeader({ block }: Props) {
     const { isMobile } = useBreakpoint();
-    const user = useSessionStore((s) => s.user);
 
     const [isScrolled, setIsScrolled] = useState(false);
 
@@ -38,7 +40,7 @@ export default function BlockHeader({ block }: Props) {
             {/* 🔥 BACKGROUND (BRANDING AWARE) */}
             {/* =============================== */}
             <div
-                className="absolute inset-0 rounded-b-[32px]"
+                className="absolute inset-0 rounded-b-[12px]"
                 style={{
                     background: `
                         linear-gradient(
@@ -52,7 +54,7 @@ export default function BlockHeader({ block }: Props) {
             />
 
             {/* 🔥 Soft overlay (depth effect) */}
-            <div className="absolute inset-0 rounded-b-[32px] bg-black/10" />
+            <div className="absolute inset-0 rounded-b-[12px] bg-black/10" />
 
             {/* 🔥 Blur glow (premium effect) */}
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 blur-3xl rounded-full" />
@@ -62,17 +64,17 @@ export default function BlockHeader({ block }: Props) {
             {/* 🔥 CONTENT */}
             {/* =============================== */}
             <div
-                className={`
+                className={` 
                     relative px-4
                     mb-4
                     transition-all duration-300
-                    ${isScrolled ? "pt-4 pb-4" : "pt-6 pb-8"}
+                    ${isScrolled ? "pt-4 pb-4" : "pt-6 pb-7"}
                 `}
             >
                 {/* 🔥 TOP ROW */}
                 <div className="flex items-center justify-between">
                     {/* Greeting */}
-                    <div>
+                    {/* <div>
                         {block.show_greeting && (
                             <div className="text-white/80 text-sm">Hello,</div>
                         )}
@@ -80,10 +82,31 @@ export default function BlockHeader({ block }: Props) {
                         <div className="text-white text-xl font-semibold tracking-tight">
                             {user?.full_name?.split(" ")[0] || "Selamat Datang"}
                         </div>
+                    </div> */}
+
+                    <div className="flex flex-col">
+                        <span className="text-white text-lg font-semibold">
+                            {appName}
+                        </span>
+                        <p
+                            className="
+                            text-white
+                                    text-[12px]
+                                    font-medium
+                                    uppercase
+                                    tracking-[0.12em]
+                                "
+                            style={{
+                                // color: "var(--color-text-muted)",
+                                opacity: 0.9,
+                            }}
+                        >
+                            {tagline}
+                        </p>
                     </div>
 
                     {/* Avatar */}
-                    {block.show_avatar && (
+                    {/* {block.show_avatar && (
                         <div
                             className="
                             w-10 h-10 rounded-full
@@ -95,16 +118,29 @@ export default function BlockHeader({ block }: Props) {
                         >
                             {user?.full_name?.charAt(0) || "U"}
                         </div>
+                    )} */}
+                    {logoUrl && (
+                        <div
+                            className="flex items-center justify-center rounded-2xl"
+                            style={{
+                                width: 68,
+                                height: 68,
+                                background: "rgba(255,255,255,0.1)",
+                                backdropFilter: "blur(10px)",
+                                boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+                            }}
+                        >
+                            <img src={logoUrl} className="h-14" />
+                        </div>
                     )}
                 </div>
                 {/* 🔥 SUBTITLE */}
-                {block.subtitle && (
+                {/* {block.subtitle && (
                     <div className="text-white/80 text-sm mt-2 max-w-[80%]">
                         {block.subtitle}
                     </div>
-                )}
+                )} */}
                 {/* 🔥 SLOT (future: banner injection) */}
-                <div className="mt-4">{/* extensible slot */}</div>
             </div>
         </div>
     );

@@ -71,13 +71,20 @@ export default function BrandHeader() {
                         >
                             {appName}
                         </span>
-
-                        <span
-                            className="text-xs"
-                            style={{ color: "var(--text-muted)" }}
+                        <p
+                            className="
+                                    text-[12px]
+                                    font-medium
+                                    uppercase
+                                    tracking-[0.12em]
+                                "
+                            style={{
+                                color: "var(--color-text-muted)",
+                                opacity: 0.9,
+                            }}
                         >
                             {tagline}
-                        </span>
+                        </p>
                     </div>
                 </div>
 

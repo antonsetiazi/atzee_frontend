@@ -7,6 +7,11 @@ import { TENANT_CODE } from "@/core/tenant/tenant.config";
 
 import { buildUrl, parseResponse } from "./http.utils";
 import { HttpError } from "./http.error";
+import {
+    getInflightRequest,
+    setInflightRequest,
+    clearInflightRequest,
+} from "./http.cache";
 
 import { refreshTokenApi } from "@/core/auth/auth.api";
 
@@ -30,14 +35,13 @@ function notify(token: string) {
 
 function handleUnauthorized() {
     if (isRedirecting) return;
+
     isRedirecting = true;
 
     const { clearSession } = useSessionStore.getState();
 
-    // clear auth state
     clearSession();
 
-    // redirect to session expired page
     window.location.href = "/session-expired";
 }
 
@@ -52,6 +56,58 @@ export async function request<T>(
     init: InternalRequestInit = {},
 ): Promise<T> {
     const { skipAuth, query, timeout = DEFAULT_TIMEOUT, ...rest } = init;
+
+    const method = (rest.method || "GET").toUpperCase();
+    const url = buildUrl(input, query);
+    const cacheKey = `${method}:${url}`;
+
+    /**
+     * ==================================================
+     * 🔥 DEDUPE GET REQUEST
+     * Jika request sama sedang berjalan → pakai promise lama
+     * ==================================================
+     */
+    if (method === "GET") {
+        const existing = getInflightRequest(cacheKey) as Promise<T> | undefined;
+
+        if (existing) {
+            return existing;
+        }
+    }
+
+    const promise = doRequest<T>({
+        input,
+        url,
+        method,
+        cacheKey,
+        skipAuth,
+        timeout,
+        rest,
+    });
+
+    if (method === "GET") {
+        setInflightRequest(cacheKey, promise);
+    }
+
+    try {
+        return await promise;
+    } finally {
+        if (method === "GET") {
+            clearInflightRequest(cacheKey);
+        }
+    }
+}
+
+async function doRequest<T>(params: {
+    input: RequestInfo;
+    url: string;
+    method: string;
+    cacheKey: string;
+    skipAuth?: boolean;
+    timeout: number;
+    rest: RequestInit;
+}): Promise<T> {
+    const { url, skipAuth, timeout, rest } = params;
 
     const accessToken = useSessionStore.getState().accessToken;
     const user = useSessionStore.getState().user;
@@ -78,7 +134,7 @@ export async function request<T>(
     }
 
     try {
-        const res = await fetch(buildUrl(input, query), {
+        const res = await fetch(url, {
             ...rest,
             headers,
             signal: controller.signal,
@@ -87,8 +143,9 @@ export async function request<T>(
         clearTimeout(timer);
 
         /**
-         * 🔥 GLOBAL AUTH HANDLER
-         * Handle expired session / invalid token
+         * ==========================================
+         * 🔥 HANDLE 401 + REFRESH TOKEN
+         * ==========================================
          */
         if (res.status === 401) {
             const { refreshToken, clearSession } = useSessionStore.getState();
@@ -98,25 +155,24 @@ export async function request<T>(
                 throw new HttpError(401, "Session expired", "UNAUTHORIZED");
             }
 
-            // =========================
-            // 🔥 QUEUE SYSTEM
-            // =========================
+            /**
+             * Jika sedang refresh token,
+             * request lain menunggu
+             */
             if (isRefreshing) {
                 return new Promise<T>((resolve, reject) => {
                     subscribe(async (newToken: string) => {
                         try {
                             headers.set("Authorization", `Bearer ${newToken}`);
 
-                            const retryRes = await fetch(
-                                buildUrl(input, query),
-                                {
-                                    ...rest,
-                                    headers,
-                                    signal: controller.signal,
-                                },
-                            );
+                            const retryRes = await fetch(url, {
+                                ...rest,
+                                headers,
+                                signal: controller.signal,
+                            });
 
                             const data = await parseResponse<T>(retryRes);
+
                             resolve(data);
                         } catch (err) {
                             reject(err);
@@ -139,7 +195,7 @@ export async function request<T>(
 
                 headers.set("Authorization", `Bearer ${tokens.access}`);
 
-                const retryRes = await fetch(buildUrl(input, query), {
+                const retryRes = await fetch(url, {
                     ...rest,
                     headers,
                     signal: controller.signal,
@@ -157,7 +213,9 @@ export async function request<T>(
         }
 
         /**
-         * ✅ SUCCESS RESPONSE
+         * ==========================================
+         * ✅ SUCCESS
+         * ==========================================
          */
         if (res.ok) {
             if (res.status === 204 || res.status === 205) {
@@ -167,7 +225,13 @@ export async function request<T>(
             return await parseResponse<T>(res);
         }
 
+        /**
+         * ==========================================
+         * ❌ ERROR RESPONSE
+         * ==========================================
+         */
         const payload = await parseResponse<any>(res);
+
         const backendError = payload?.error;
 
         const message =

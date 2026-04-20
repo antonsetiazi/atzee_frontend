@@ -1,6 +1,7 @@
 // src/modules/notification/components/NotificationBell.tsx
 
 import { useRef, useState } from "react";
+import { notificationSmart } from "../services/notification.smart";
 import Icon from "@/core/ui/icons/Icon";
 import NotificationDropdown from "./NotificationDropdown";
 import { useClickOutside } from "@/core/ui/hooks/useClickOutside";
@@ -26,7 +27,10 @@ export default function NotificationBell() {
         const next = !open;
         setOpen(next);
 
-        // Optional: saat dibuka, tandai semua sebagai read
+        if (next) {
+            notificationSmart.refreshNow();
+        }
+
         if (next && unread > 0) {
             notificationService.inbox.markAllAsRead();
         }
