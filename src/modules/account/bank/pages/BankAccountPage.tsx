@@ -4,15 +4,24 @@ import { useState } from "react";
 import { HeaderPage } from "@/core/ui/components";
 import { useBanks, BankForm, BankCard, BankEmptyState } from "..";
 import { useBankActions } from "../hooks/useBankActions";
+import { useConfirm } from "@/core/confirm/useConfirm";
 
 export default function BankAccountPage() {
+    const confirm = useConfirm();
     const { data, loading, refetch } = useBanks();
     const { remove, update } = useBankActions();
 
     const [showForm, setShowForm] = useState(false);
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Hapus rekening ini?")) return;
+        const approved = await confirm({
+            title: "Konfirmasi",
+            message: "Yakin hapus rekening ini?",
+            level: "info",
+        });
+
+        if (!approved) return;
+
         await remove(id);
         refetch();
     };

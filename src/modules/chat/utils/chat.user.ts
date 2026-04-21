@@ -1,16 +1,19 @@
 // src/modules/chat/utils/chat.user.ts
 
-import type { ChatRoom } from "@/business/chat/chat.store";
+import type { ChatParticipant, ChatRoom } from "@/business/chat/chat.store";
 
-export function getOtherParticipant(room: ChatRoom, currentUserId: string) {
-    const otherId =
-        room.participants.find((p) => p !== currentUserId) ||
-        room.participants[0];
+export function getOtherParticipant(
+    room: ChatRoom,
+    currentUserId: string,
+): ChatParticipant | null {
+    const participants = room.participants_detail || [];
 
-    return (
-        room.participants_detail?.find((p) => p.id === otherId) || {
-            id: otherId,
-            name: otherId,
-        }
-    );
+    if (!participants.length) return null;
+
+    const me = String(currentUserId);
+
+    const other =
+        participants.find((p) => String(p.id) !== me) || participants[0];
+
+    return other || null;
 }

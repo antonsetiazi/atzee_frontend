@@ -49,26 +49,33 @@ export default function OrderDetailPage() {
 
     const { booking, loading: bookingLoading } = useOrderBooking(order);
 
-    function handleChatNow() {
-        triggerLoginRequired(() => {
+    const handleChatNow = async () => {
+        triggerLoginRequired(async () => {
             if (!order || !user) return;
 
             const targetUserId =
-                order.partner_id ||
-                order.owner_id ||
-                booking?.partner_id ||
-                booking?.ustadz_id;
+                order.partner?.owner_user_id ||
+                order.partner?.core_user_id ||
+                order.selectedPartner?.owner_user_id ||
+                booking?.partner?.owner_user_id ||
+                booking?.ustadz?.owner_user_id;
 
-            const room = chatService.getOrCreateRoom({
+            if (!targetUserId) {
+                alert("User Partner belum tersedia");
+                return;
+            }
+
+            const room = await chatService.getOrCreateRoom({
                 currentUserId: String(user.id),
-                targetUserId: String(targetUserId || "unknown"),
+                targetUserId: String(targetUserId),
+
                 context_type: "order",
                 context_id: String(order.id),
             });
 
             navigate(`/chat/${room.id}`);
         });
-    }
+    };
 
     if (loading || bookingLoading) {
         return <div className="p-4">Loading...</div>;

@@ -74,23 +74,20 @@ export default function ListingDetailPage({ type }: Props) {
     // ================================
     // 🔥 CHAT HANDLER
     // ================================
-    function handleChatNow() {
-        triggerLoginRequired(() => {
+    const handleChatNow = async () => {
+        triggerLoginRequired(async () => {
             if (!data || !user) return;
 
-            const room = chatService.getOrCreateRoom({
+            const room = await chatService.getOrCreateRoom({
                 currentUserId: String(user.id),
-                currentUserName: user.full_name,
-
-                targetUserId: String(data.meta?.owner_id),
-                targetUserName: data.partner.name,
-
+                targetUserId: String(data.owner_user_id),
                 context_type: "service",
                 context_id: String(data.id),
             });
+
             navigate(`/chat/${room.id}`);
         });
-    }
+    };
 
     // ================================
     // 🔥 LOADING STATE

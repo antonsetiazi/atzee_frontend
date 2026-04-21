@@ -113,6 +113,10 @@ export default function MessageBubble({ message, isGrouped }: Props) {
             );
         }
 
+        if (status === "failed") {
+            return <span className="ml-1 text-red-500 font-bold">!</span>;
+        }
+
         return null;
     }
 

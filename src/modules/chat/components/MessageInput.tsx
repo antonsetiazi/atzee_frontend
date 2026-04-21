@@ -4,35 +4,41 @@ import { useState } from "react";
 import { socketClient } from "@/core/realtime/socket.client";
 import { chatStore } from "@/business/chat/chat.store";
 import { useSessionStore } from "@/core/session/session.store";
+import { chatApi } from "../api/chat.api";
 
 export default function MessageInput({ roomId }: { roomId: string }) {
     const { user } = useSessionStore();
     const currentUserId = String(user?.id || "");
     const [text, setText] = useState("");
 
-    const handleSend = () => {
-        if (!text.trim()) return;
+    const handleSend = async () => {
+        const messageText = text.trim();
+
+        if (!messageText) return;
 
         const tempId = `temp-${Date.now()}`;
 
-        // optimistic UI
         chatStore.addMessage(roomId, {
             id: tempId,
             room_id: roomId,
             sender_id: currentUserId,
             type: "text",
-            content: text,
+            content: messageText,
             created_at: new Date().toISOString(),
             status: "sending",
         });
 
-        socketClient.send({
-            type: "chat.send",
-            room_id: roomId,
-            content: text,
-        });
-
         setText("");
+
+        try {
+            const realMsg = await chatApi.sendMessage(roomId, messageText);
+
+            chatStore.replaceTempMessage(roomId, tempId, realMsg);
+        } catch {
+            chatStore.updateMessageStatus(roomId, tempId, "failed");
+
+            setText(messageText);
+        }
     };
 
     const handleTyping = () => {

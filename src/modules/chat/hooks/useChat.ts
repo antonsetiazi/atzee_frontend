@@ -14,20 +14,26 @@ export function useChat() {
             const nextRooms = chatStore.getRooms();
             const nextActiveRoom = chatStore.getActiveRoomId();
 
-            // ================================
-            // ✅ GUARD: prevent infinite loop
-            // ================================
             setRooms((prev) => {
-                const isSame =
+                const same =
                     prev.length === nextRooms.length &&
-                    prev.every((p, i) => p.id === nextRooms[i]?.id);
+                    prev.every((room, i) => {
+                        const next = nextRooms[i];
 
-                return isSame ? prev : nextRooms;
+                        return (
+                            room.id === next?.id &&
+                            room.last_message === next?.last_message &&
+                            room.last_timestamp === next?.last_timestamp &&
+                            room.type === next?.type
+                        );
+                    });
+
+                return same ? prev : nextRooms;
             });
 
-            setActiveRoomState((prev) => {
-                return prev === nextActiveRoom ? prev : nextActiveRoom;
-            });
+            setActiveRoomState((prev) =>
+                prev === nextActiveRoom ? prev : nextActiveRoom,
+            );
         });
 
         return unsubscribe;

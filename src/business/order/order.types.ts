@@ -40,6 +40,13 @@ export interface OrderPartner {
     id: number;
     name: string;
     phone?: string;
+    owner_user_id?: number | null;
+}
+
+export interface OrderSelectedPartner {
+    id: number;
+    name: string;
+    owner_user_id?: number | null;
 }
 
 export interface OrderBooking {
@@ -71,10 +78,7 @@ export interface Order {
 
     partner?: OrderPartner | null;
 
-    selectedPartner?: {
-        id: number;
-        name: string;
-    } | null;
+    selectedPartner?: OrderSelectedPartner | null;
 
     customer?: OrderCustomer | null;
     address?: OrderAddress | null;

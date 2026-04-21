@@ -1,136 +1,76 @@
 // src/business/chat/chat.service.ts
 
 import { chatStore, type ChatRoom } from "./chat.store";
+import { chatApi } from "@/modules/chat/api/chat.api";
 
 /**
- * PARAMS
+ * ======================================================
+ * PARAM TYPES
+ * ======================================================
  */
 interface GetOrCreateRoomParams {
     currentUserId: string;
-    currentUserName?: string;
-
     targetUserId: string;
-    targetUserName?: string;
-
     context_type?: "service" | "booking" | "order";
     context_id?: string;
 }
 
 /**
- * 🔥 PUBLIC API
+ * ======================================================
+ * PUBLIC SERVICE
+ * ======================================================
  */
 export const chatService = {
     getOrCreateRoom,
-    upgradeToTransactional,
 };
 
 /**
- * 🔧 UTILS
+ * ======================================================
+ * GET OR CREATE ROOM
+ * ======================================================
+ *
+ * Room sekarang wajib dibuat dari backend.
+ * Frontend tidak generate room id lagi.
  */
-function generateRoomId() {
-    return "room_" + Math.random().toString(36).slice(2);
+async function getOrCreateRoom(
+    params: GetOrCreateRoomParams,
+): Promise<ChatRoom> {
+    const room = await chatApi.createRoom(params);
+
+    chatStore.setRooms([room]);
+
+    return room as ChatRoom;
 }
 
 /**
- * 🔥 GET OR CREATE ROOM (COMPATIBLE DENGAN SYSTEM KAMU)
+ * ======================================================
+ * UPGRADE ROOM TO TRANSACTIONAL
+ * ======================================================
+ *
+ * Untuk sementara update local store dulu.
+ * Nanti bisa ditambah endpoint backend:
+ * POST /chat/rooms/:id/upgrade/
  */
-function getOrCreateRoom(params: GetOrCreateRoomParams): ChatRoom {
-    const {
-        currentUserId,
-        currentUserName,
-        targetUserId,
-        targetUserName,
-        context_type,
-        context_id,
-    } = params;
+// function upgradeToTransactional(
+//     roomId: string,
+//     context_type: "order" | "booking",
+//     context_id: string,
+// ): void {
+//     const room = chatStore.getRooms().find((r) => r.id === roomId);
 
-    const rooms = chatStore.getRooms();
+//     if (!room) return;
 
-    /**
-     * 🔍 FIND EXISTING ROOM
-     */
-    const existing = rooms.find((room) => {
-        const isSameParticipants =
-            room.participants.includes(currentUserId) &&
-            room.participants.includes(targetUserId);
+//     const updatedRoom: ChatRoom = {
+//         ...room,
+//         type: "transactional",
+//         context_type,
+//         context_id,
+//     };
 
-        const isSameContext =
-            room.context_type === context_type &&
-            room.context_id === context_id;
+//     chatStore.setRooms([updatedRoom]);
 
-        /**
-         * ❗ IMPORTANT
-         * hanya reuse kalau:
-         * - direct (pre-transaction)
-         * - BELUM jadi transactional
-         */
-        const isReusable = room.type === "direct";
-
-        return isSameParticipants && isSameContext && isReusable;
-    });
-
-    if (existing) return existing;
-
-    /**
-     * 🆕 CREATE NEW ROOM
-     */
-    const newRoom: ChatRoom = {
-        id: generateRoomId(),
-        type: "direct",
-        participants: [currentUserId, targetUserId],
-        participants_detail: [
-            {
-                id: currentUserId,
-                name: currentUserName || currentUserId,
-                role: "user",
-            },
-            {
-                id: targetUserId,
-                name: targetUserName || targetUserId,
-                role: "partner",
-            },
-        ],
-
-        context_type,
-        context_id,
-
-        last_message: "",
-        last_timestamp: new Date().toISOString(),
-    };
-
-    chatStore.createRoom(newRoom);
-
-    /**
-     * 🤖 AUTO SYSTEM MESSAGE
-     */
-    chatStore.addSystemMessage(newRoom.id, "Percakapan dimulai");
-
-    return newRoom;
-}
-
-function upgradeToTransactional(
-    roomId: string,
-    context_type: "order" | "booking",
-    context_id: string,
-) {
-    const rooms = chatStore.getRooms();
-    const room = rooms.find((r) => r.id === roomId);
-
-    if (!room) return;
-
-    // 🔥 upgrade
-    room.type = "transactional";
-    room.context_type = context_type;
-    room.context_id = context_id;
-
-    /**
-     * 🤖 SYSTEM MESSAGE
-     */
-    chatStore.addSystemMessage(
-        roomId,
-        "Transaksi telah dibuat dari percakapan ini",
-    );
-
-    // trigger re-render
-    chatStore.setRooms([room]);
-}
+//     chatStore.addSystemMessage(
+//         roomId,
+//         "Transaksi telah dibuat dari percakapan ini",
+//     );
+// }

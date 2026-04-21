@@ -47,7 +47,7 @@ export default function CheckoutMobile({
     return (
         <>
             <HeaderPage title="Checkout" subtitle="" />
-            <div className="p-4">
+            <div className="p-4 pb-[256px]">
                 {/* CONTENT */}
                 <div className="space-y-4">
                     <PartnerSection partner={selectedPartner} />

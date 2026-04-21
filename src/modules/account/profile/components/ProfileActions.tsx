@@ -2,16 +2,24 @@
 
 import { useNavigate } from "react-router-dom";
 import { useAuthService } from "@/app/auth/auth.service";
+import { useConfirm } from "@/core/confirm/useConfirm";
 
 export default function ProfileActions() {
+    const confirm = useConfirm();
     const navigate = useNavigate();
     const { logout } = useAuthService();
 
-    const handleLogout = () => {
-        if (confirm("Are you sure you want to logout?")) {
-            logout();
-            navigate("/login");
-        }
+    const handleLogout = async () => {
+        const approved = await confirm({
+            title: "Konfirmasi",
+            message: "Apakah Anda yakin akan keluar?",
+            level: "info",
+        });
+
+        if (!approved) return;
+
+        logout();
+        navigate("/login");
     };
 
     return (

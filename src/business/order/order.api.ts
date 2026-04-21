@@ -49,12 +49,20 @@ function mapOrder(item: any): Order {
         createdAt: item.created_at,
         bookingId: item.bookingId || null, // 🔥 IMPORTANT
 
+        customer: item.customer
+            ? {
+                  id: item.customer.id,
+                  name: item.customer.name,
+                  phone: item.customer.phone,
+              }
+            : null,
         // 🔥 WAJIB TAMBAH INI
         partner: item.partner
             ? {
                   id: item.partner.id,
                   name: item.partner.name,
                   phone: item.partner.phone,
+                  owner_user_id: item.partner.owner_user_id,
               }
             : null,
 
@@ -62,6 +70,7 @@ function mapOrder(item: any): Order {
             ? {
                   id: item.selected_partner.id,
                   name: item.selected_partner.name,
+                  owner_user_id: item.selected_partner.owner_user_id,
               }
             : null,
     };

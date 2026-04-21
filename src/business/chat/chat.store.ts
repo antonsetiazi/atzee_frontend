@@ -1,6 +1,11 @@
 // src/business/chat/chat.store.ts
 
-export type MessageStatus = "sending" | "sent" | "delivered" | "read";
+export type MessageStatus =
+    | "sending"
+    | "sent"
+    | "delivered"
+    | "read"
+    | "failed";
 
 export interface Message {
     id: string;
@@ -83,9 +88,19 @@ class ChatStore {
 
     setRooms(rooms: ChatRoom[]) {
         rooms.forEach((room) => {
+            const existing = this.rooms[room.id];
+
             this.rooms[room.id] = {
-                ...this.rooms[room.id],
+                ...existing,
                 ...room,
+
+                participants: room.participants?.length
+                    ? room.participants
+                    : existing?.participants || [],
+
+                participants_detail: room.participants_detail?.length
+                    ? room.participants_detail
+                    : existing?.participants_detail || [],
             };
 
             if (!this.unreadCounts[room.id]) {
@@ -224,6 +239,29 @@ class ChatStore {
 
     getTotalUnread(): number {
         return Object.values(this.unreadCounts).reduce((a, b) => a + b, 0);
+    }
+
+    clearAll() {
+        this.rooms = {};
+        this.messages = {};
+        this.unreadCounts = {};
+        this.typingUsers = {};
+        this.activeRoomId = undefined;
+        this.emit();
+    }
+
+    replaceTempMessage(roomId: string, tempId: string, realMsg: Message) {
+        const msgs = this.messages[roomId] || [];
+
+        const index = msgs.findIndex((m) => m.id === tempId);
+
+        if (index >= 0) {
+            msgs[index] = realMsg;
+        } else {
+            msgs.push(realMsg);
+        }
+
+        this.emit();
     }
 
     // ================================

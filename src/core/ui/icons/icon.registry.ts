@@ -56,7 +56,10 @@ import {
     WalletIcon,
     PauseCircleIcon,
 } from "@heroicons/react/20/solid";
-import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+import {
+    ChatBubbleLeftIcon,
+    ShoppingBagIcon,
+} from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
 
 export const iconRegistry: Record<string, any> = {
@@ -78,7 +81,7 @@ export const iconRegistry: Record<string, any> = {
     "log-out": ArrowRightStartOnRectangleIcon,
     "chevron-down": ChevronDownIcon,
     cog: Cog6ToothIcon,
-
+    bubbles: ChatBubbleLeftIcon,
     briefcase: BriefcaseIcon,
     search: MagnifyingGlassCircleIcon,
     calendar: CalendarDateRangeIcon,

@@ -10,6 +10,15 @@ interface ServiceDetailResponse {
     rating: number;
     rating_count: number;
 
+    partner: {
+        id: number;
+        name: string;
+    };
+
+    owner_user_id: number;
+    partner_id: number;
+    service_profile_id: number;
+
     offerings: {
         product_id: number;
         product_name: string;

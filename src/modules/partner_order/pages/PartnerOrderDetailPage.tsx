@@ -18,22 +18,28 @@ export default function PartnerOrderDetailPage() {
 
     const order = id ? getOrderById(id) : null;
 
-    function handleChatNow() {
-        triggerLoginRequired(() => {
+    const handleChatNow = async () => {
+        triggerLoginRequired(async () => {
             if (!order || !user) return;
 
-            const targetUserId = order.userId || order.customer?.id;
+            const targetUserId = order.customer?.id;
 
-            const room = chatService.getOrCreateRoom({
+            if (!targetUserId) {
+                alert("User customer tidak ditemukan");
+                return;
+            }
+
+            const room = await chatService.getOrCreateRoom({
                 currentUserId: String(user.id),
-                targetUserId: String(targetUserId || "unknown"),
+                targetUserId: String(targetUserId),
+
                 context_type: "order",
                 context_id: String(order.id),
             });
 
             navigate(`/chat/${room.id}`);
         });
-    }
+    };
 
     if (!order) {
         return <div className="p-4">Order tidak ditemukan</div>;

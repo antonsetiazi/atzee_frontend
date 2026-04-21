@@ -29,5 +29,9 @@ export interface ListingDetail {
         name: string;
     };
 
+    owner_user_id?: number;
+    partner_id?: number;
+    service_profile_id?: number;
+
     meta?: Record<string, any>;
 }

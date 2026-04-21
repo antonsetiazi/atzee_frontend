@@ -80,6 +80,7 @@ function mapOrder(item: any): Order {
                   id: item.partner.id,
                   name: item.partner.name,
                   phone: item.partner.phone,
+                  owner_user_id: item.partner.owner_user_id,
               }
             : null,
 
@@ -87,6 +88,7 @@ function mapOrder(item: any): Order {
             ? {
                   id: item.selected_partner.id,
                   name: item.selected_partner.name,
+                  owner_user_id: item.selected_partner.owner_user_id,
               }
             : null,
     };

@@ -38,11 +38,6 @@ export default function ChatList({
                 // 🔥 ambil lawan bicara
                 const otherUser = getOtherParticipant(room, currentUserId);
 
-                // const displayName =
-                //     typeof otherUser === "string"
-                //         ? otherUser
-                //         : String(otherUser || "??");
-
                 // 🔥 ambil status online
                 const presence = getPresence(otherUser.id);
 

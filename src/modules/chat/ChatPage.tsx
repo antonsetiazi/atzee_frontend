@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { chatApi } from "./api/chat.api";
+import { chatStore } from "@/business/chat/chat.store";
 import { useChat } from "./hooks/useChat";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
@@ -29,6 +31,20 @@ export default function ChatPage() {
         }
     }, [roomId, setActiveRoom]);
 
+    useEffect(() => {
+        let mounted = true;
+
+        chatApi.getRooms().then((rooms) => {
+            if (!mounted) return;
+            chatStore.setRooms(rooms);
+        });
+
+        return () => {
+            mounted = false;
+        };
+    }, []);
+
+    // console.log(rooms);
     // ================================
     // 📱 MOBILE MODE
     // ================================

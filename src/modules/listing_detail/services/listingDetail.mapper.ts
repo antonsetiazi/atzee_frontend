@@ -39,6 +39,10 @@ export function mapServiceDetailToListingDetail(data: any): ListingDetail {
             name: data.name,
         },
 
+        owner_user_id: data.owner_user_id,
+        partner_id: data.partner_id,
+        service_profile_id: data.service_profile_id,
+
         meta: {
             owner_id: data.id, // 🔥 penting untuk chat
             offerings: data.offerings, // 🔥 kita simpan full di meta
