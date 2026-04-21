@@ -3,8 +3,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { chatStore } from "@/business/chat/chat.store";
+import { getOtherParticipant } from "../utils/chat.user";
 import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
+import { useSessionStore } from "@/core/session/session.store";
 
 function formatDateLabel(dateStr: string) {
     const date = new Date(dateStr);
@@ -43,13 +45,16 @@ function getContextInfo(room: any) {
 }
 
 export default function ChatWindow({ roomId }: { roomId: string }) {
+    const { user } = useSessionStore();
+    const currentUserId = String(user?.id || "");
     const [messages, setMessages] = useState(chatStore.getMessages(roomId));
     const [typingUsers, setTypingUsers] = useState<string[]>([]);
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
     const room = chatStore.getRooms().find((r) => r.id === roomId);
-    const otherUser = room?.participants.find((p) => p !== "user_1");
-    const presence = otherUser ? chatStore.getPresence(otherUser) : null;
+    const otherUser =
+        room && currentUserId ? getOtherParticipant(room, currentUserId) : null;
+    const presence = otherUser ? chatStore.getPresence(otherUser.id) : null;
 
     useEffect(() => {
         return chatStore.subscribe(() => {
@@ -77,11 +82,11 @@ export default function ChatWindow({ roomId }: { roomId: string }) {
                         className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold"
                         style={{ background: "var(--color-primary)" }}
                     >
-                        {otherUser?.slice(0, 2).toUpperCase()}
+                        {otherUser?.name.slice(0, 2).toUpperCase()}
                     </div>
 
                     <div className="flex-1">
-                        <div className="font-medium">{otherUser}</div>
+                        <div className="font-medium">{otherUser?.name}</div>
                         <div className="text-xs text-[var(--text-muted)]">
                             {presence?.is_online ? "Online" : "Offline"}
                         </div>

@@ -1,6 +1,7 @@
 // src/modules/chat/components/MessageBubble.tsx
 
 import type { Message } from "@/business/chat/chat.store";
+import { useSessionStore } from "@/core/session/session.store";
 
 interface Props {
     message: Message;
@@ -8,7 +9,10 @@ interface Props {
 }
 
 export default function MessageBubble({ message, isGrouped }: Props) {
-    const isMine = message.sender_id === "user_1";
+    const { user } = useSessionStore();
+    const currentUserId = String(user?.id || "");
+
+    const isMine = message.sender_id === currentUserId;
 
     // ================================
     // 🤖 SYSTEM MESSAGE (CENTERED)

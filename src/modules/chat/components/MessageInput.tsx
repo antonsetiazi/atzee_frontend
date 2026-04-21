@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { socketClient } from "@/core/realtime/socket.client";
 import { chatStore } from "@/business/chat/chat.store";
+import { useSessionStore } from "@/core/session/session.store";
 
 export default function MessageInput({ roomId }: { roomId: string }) {
+    const { user } = useSessionStore();
+    const currentUserId = String(user?.id || "");
     const [text, setText] = useState("");
 
     const handleSend = () => {
@@ -16,7 +19,7 @@ export default function MessageInput({ roomId }: { roomId: string }) {
         chatStore.addMessage(roomId, {
             id: tempId,
             room_id: roomId,
-            sender_id: "user_1",
+            sender_id: currentUserId,
             type: "text",
             content: text,
             created_at: new Date().toISOString(),

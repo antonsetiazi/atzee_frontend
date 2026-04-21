@@ -12,10 +12,18 @@ export interface Message {
     status: MessageStatus;
 }
 
+export interface ChatParticipant {
+    id: string;
+    name: string;
+    avatar?: string;
+    role?: "user" | "partner" | "admin";
+}
+
 export interface ChatRoom {
     id: string;
     type: "direct" | "transactional";
     participants: string[];
+    participants_detail?: ChatParticipant[];
 
     context_type?: "order" | "booking" | "service";
     context_id?: string;

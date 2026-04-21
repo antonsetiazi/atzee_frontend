@@ -1,6 +1,7 @@
 // src/modules/chat/components/ChatList.tsx
 
 import type { ChatRoom, Presence } from "@/business/chat/chat.store";
+import { getOtherParticipant } from "../utils/chat.user";
 
 interface Props {
     rooms: ChatRoom[];
@@ -14,12 +15,12 @@ interface Props {
 }
 
 // 🔥 Helper: ambil user selain kita
-function getOtherUser(room: ChatRoom, currentUserId: string) {
-    return (
-        room.participants.find((p) => p !== currentUserId) ||
-        room.participants[0]
-    );
-}
+// function getOtherUser(room: ChatRoom, currentUserId: string) {
+//     return (
+//         room.participants.find((p) => p !== currentUserId) ||
+//         room.participants[0]
+//     );
+// }
 
 export default function ChatList({
     rooms,
@@ -35,15 +36,15 @@ export default function ChatList({
                 const unread = getUnread(room.id);
 
                 // 🔥 ambil lawan bicara
-                const otherUser = getOtherUser(room, currentUserId);
+                const otherUser = getOtherParticipant(room, currentUserId);
 
-                const displayName =
-                    typeof otherUser === "string"
-                        ? otherUser
-                        : String(otherUser || "??");
+                // const displayName =
+                //     typeof otherUser === "string"
+                //         ? otherUser
+                //         : String(otherUser || "??");
 
                 // 🔥 ambil status online
-                const presence = getPresence(otherUser);
+                const presence = getPresence(otherUser.id);
 
                 return (
                     <div
@@ -73,7 +74,7 @@ export default function ChatList({
                                     background: "var(--color-primary)",
                                 }}
                             >
-                                {displayName.slice(0, 2).toUpperCase()}
+                                {otherUser.name.slice(0, 2).toUpperCase()}
                             </div>
 
                             {/* 🟢 Online Indicator */}
@@ -94,7 +95,7 @@ export default function ChatList({
                         <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center">
                                 <div className="font-medium truncate">
-                                    {otherUser}
+                                    {otherUser.name}
                                 </div>
 
                                 {room.last_timestamp && (

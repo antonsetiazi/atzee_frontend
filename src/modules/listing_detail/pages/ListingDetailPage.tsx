@@ -80,7 +80,11 @@ export default function ListingDetailPage({ type }: Props) {
 
             const room = chatService.getOrCreateRoom({
                 currentUserId: String(user.id),
-                targetUserId: String(data.meta?.owner_id || "unknown"),
+                currentUserName: user.full_name,
+
+                targetUserId: String(data.meta?.owner_id),
+                targetUserName: data.partner.name,
+
                 context_type: "service",
                 context_id: String(data.id),
             });

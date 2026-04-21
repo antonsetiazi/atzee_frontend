@@ -10,12 +10,14 @@ import PartnerOrderHeader from "./PartnerOrderHeader";
 import PartnerOrderLocationMap from "./PartnerOrderLocationMap";
 import PartnerOrderTimeline from "./PartnerOrderTimeline";
 import PartnerOrderAction from "./PartnerOrderAction";
+import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 
 interface Props {
     order: Order;
+    onChatNow?: () => void;
 }
 
-export default function PartnerOrderDetailView({ order }: Props) {
+export default function PartnerOrderDetailView({ order, onChatNow }: Props) {
     return (
         <>
             <HeaderPage title="Detail Order" />
@@ -44,6 +46,26 @@ export default function PartnerOrderDetailView({ order }: Props) {
 
                 {/* ACTION BUTTONS */}
                 <PartnerOrderAction order={order} />
+
+                {/* CHAT CTA */}
+                {onChatNow && (
+                    <div className="flex justify-end">
+                        <button
+                            onClick={onChatNow}
+                            className="
+                                inline-flex items-center gap-2
+                                px-4 py-2.5 rounded-full
+                                bg-[var(--color-primary)]
+                                text-white text-sm font-medium
+                                shadow-md
+                                active:scale-95 transition
+                            "
+                        >
+                            <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                            Chat Customer
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     );

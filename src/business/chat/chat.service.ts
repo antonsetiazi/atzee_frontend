@@ -7,7 +7,10 @@ import { chatStore, type ChatRoom } from "./chat.store";
  */
 interface GetOrCreateRoomParams {
     currentUserId: string;
+    currentUserName?: string;
+
     targetUserId: string;
+    targetUserName?: string;
 
     context_type?: "service" | "booking" | "order";
     context_id?: string;
@@ -32,7 +35,14 @@ function generateRoomId() {
  * 🔥 GET OR CREATE ROOM (COMPATIBLE DENGAN SYSTEM KAMU)
  */
 function getOrCreateRoom(params: GetOrCreateRoomParams): ChatRoom {
-    const { currentUserId, targetUserId, context_type, context_id } = params;
+    const {
+        currentUserId,
+        currentUserName,
+        targetUserId,
+        targetUserName,
+        context_type,
+        context_id,
+    } = params;
 
     const rooms = chatStore.getRooms();
 
@@ -68,6 +78,18 @@ function getOrCreateRoom(params: GetOrCreateRoomParams): ChatRoom {
         id: generateRoomId(),
         type: "direct",
         participants: [currentUserId, targetUserId],
+        participants_detail: [
+            {
+                id: currentUserId,
+                name: currentUserName || currentUserId,
+                role: "user",
+            },
+            {
+                id: targetUserId,
+                name: targetUserName || targetUserId,
+                role: "partner",
+            },
+        ],
 
         context_type,
         context_id,

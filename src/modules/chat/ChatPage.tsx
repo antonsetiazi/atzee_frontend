@@ -9,8 +9,12 @@ import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import ChatList from "./components/ChatList";
 import ChatWindow from "./components/ChatWindow";
 import { HeaderPage } from "@/core/ui/components";
+import { useSessionStore } from "@/core/session/session.store";
 
 export default function ChatPage() {
+    const { user } = useSessionStore();
+    const currentUserId = String(user?.id || "");
+
     const { roomId } = useParams();
     const navigate = useNavigate();
 
@@ -47,7 +51,7 @@ export default function ChatPage() {
                                 }}
                                 getUnread={getUnread}
                                 getPresence={getPresence}
-                                currentUserId="user_1"
+                                currentUserId={currentUserId}
                             />
                         ) : (
                             <ChatWindow roomId={activeRoom} />
@@ -100,7 +104,7 @@ export default function ChatPage() {
                         }}
                         getUnread={getUnread}
                         getPresence={getPresence}
-                        currentUserId="user_1"
+                        currentUserId={currentUserId}
                     />
                 </div>
             </div>
