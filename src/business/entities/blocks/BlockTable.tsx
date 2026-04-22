@@ -48,7 +48,7 @@ export default function BlockTable({
 
     return (
         <div
-            className="group relative overflow-hidden rounded-2xl transition-all duration-200"
+            className="group relative overflow-hidden transition-all duration-200"
             style={{
                 background: "var(--color-surface)",
                 border: "1px solid var(--color-border)",
@@ -63,9 +63,9 @@ export default function BlockTable({
             />
 
             {/* Body */}
-            <div className="px-6 py-5">
+            <div className="px-3 py-3">
                 {safeData.length > 0 ? (
-                    <div className="overflow-hidden rounded-xl">
+                    <div className="overflow-hidden">
                         <AdaptiveTableRenderer
                             entity={entityKey}
                             schema={block}

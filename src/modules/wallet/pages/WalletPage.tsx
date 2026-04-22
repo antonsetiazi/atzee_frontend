@@ -3,14 +3,12 @@
 import { useWallet } from "../hooks/useWallet";
 import WalletBalanceCard from "../components/WalletBalanceCard";
 import WalletTransactionList from "../components/WalletTransactionList";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 
 export default function WalletPage() {
     const { summary, transactions, loading } = useWallet();
 
-    if (loading) {
-        return <div className="p-5">Loading wallet...</div>;
-    }
+    if (loading) return <PageSkeleton />;
 
     if (!summary) {
         return <div className="p-5">Gagal memuat wallet</div>;

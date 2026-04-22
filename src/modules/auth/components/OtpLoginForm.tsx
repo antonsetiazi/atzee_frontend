@@ -1,8 +1,8 @@
-// src/core/ui/views/auth/OtpLoginForm.tsx
+// src/modules/auth/components/OtpLoginForm.tsx
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthService } from "../../../../app/auth/auth.service";
+import { useAuthService } from "../../../app/auth/auth.service";
 import { Button, OtpInput, TelField } from "@/core/ui/components";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
 

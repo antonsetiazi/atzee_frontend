@@ -1,4 +1,4 @@
-// src/core/ui/views/auth/PasswordLoginForm.tsx
+// src/modules/auth/components/PasswordLoginForm.tsx
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

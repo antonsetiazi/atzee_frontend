@@ -12,6 +12,7 @@ export default function InputField({
     disabled,
     required,
     type = "text",
+    autoComplete,
     onChange,
 }: FieldProps) {
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -39,6 +40,7 @@ export default function InputField({
                 placeholder={placeholder}
                 disabled={disabled}
                 onChange={handleChange}
+                autoComplete={autoComplete ?? "off"}
                 className={input}
                 style={{
                     background: "var(--color-surface)",

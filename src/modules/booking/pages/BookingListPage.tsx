@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { bookingApi, type BookingItem } from "../api/booking.api";
 import BookingCard from "../components/BookingCard";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 
 export default function BookingListPage() {
     const [data, setData] = useState<BookingItem[]>([]);
@@ -28,9 +28,7 @@ export default function BookingListPage() {
         fetch();
     }, []);
 
-    if (loading) {
-        return <div className="p-6">Memuat booking...</div>;
-    }
+    if (loading) return <PageSkeleton />;
 
     return (
         <>

@@ -91,8 +91,8 @@ export default function ListingDetailView({
                             </span>
                         </div>
 
-                        <span>•</span>
-                        <span>{data.sold ?? 0} terjual</span>
+                        {/* <span>•</span>
+                        <span>{data.sold ?? 0} terjual</span> */}
 
                         <span>•</span>
                         <span>{data.location}</span>

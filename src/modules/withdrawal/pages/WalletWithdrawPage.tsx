@@ -1,12 +1,14 @@
 // src/modules/withdrawal/pages/WalletWithdrawPage.tsx
 
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 import WithdrawForm from "../components/WithdrawForm";
 import WithdrawHistoryList from "../components/WithdrawHistoryList";
 import { useWithdraw } from "../hooks/useWithdraw";
 
 export default function WalletWithdrawPage() {
     const { data, loading, refetch } = useWithdraw();
+
+    if (loading) return <PageSkeleton />;
 
     return (
         <>
@@ -27,9 +29,7 @@ export default function WalletWithdrawPage() {
                 <div className="space-y-3">
                     <h3 className="font-semibold">Riwayat Penarikan</h3>
 
-                    {loading ? (
-                        <div className="text-sm text-gray-500">Memuat...</div>
-                    ) : data.length === 0 ? (
+                    {data.length === 0 ? (
                         <div className="text-sm text-gray-400">
                             Belum ada penarikan
                         </div>

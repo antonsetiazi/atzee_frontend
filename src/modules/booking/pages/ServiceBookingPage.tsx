@@ -14,7 +14,7 @@ import { mapServiceDetailToListingDetail } from "@/modules/listing_detail/servic
 import type { ListingDetail } from "@/modules/listing_detail/types/listingDetail.types";
 
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 import { toggleOffering } from "../utils/toggleOffering";
 
 export default function ServiceBookingPage() {
@@ -121,13 +121,7 @@ export default function ServiceBookingPage() {
         }
     }
 
-    if (loading) {
-        return (
-            <div className="p-6 text-center text-[var(--text-muted)]">
-                Memuat detail layanan...
-            </div>
-        );
-    }
+    if (loading) return <PageSkeleton />;
 
     if (error || !data) {
         return (

@@ -7,7 +7,7 @@ import ProfileActions from "../components/ProfileActions";
 import { useProfile } from "../hooks/useProfile";
 import { useProfileActions } from "../hooks/useProfileActions";
 import { useFileUpload } from "@/core/files/hooks/useFileUpload";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 
 export default function ProfilePage() {
     const { data, loading, refetch } = useProfile();
@@ -27,9 +27,7 @@ export default function ProfilePage() {
         }
     };
 
-    if (loading) {
-        return <div className="p-6">Loading...</div>;
-    }
+    if (loading) return <PageSkeleton />;
 
     return (
         <>

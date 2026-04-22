@@ -1,6 +1,6 @@
 // src/modules/partner_schedule/pages/PartnerSchedulePage.tsx
 
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 import { usePartnerSchedule } from "../hooks/usePartnerSchedule";
 import ScheduleCard from "../components/ScheduleCard";
 import { groupByDate, formatDateLabel } from "../utils/groupSchedule";
@@ -9,9 +9,7 @@ import WeeklyCalendar from "../components/WeeklyCalendar";
 export default function PartnerSchedulePage() {
     const { data, loading } = usePartnerSchedule();
 
-    if (loading) {
-        return <div className="p-4">Loading schedule...</div>;
-    }
+    if (loading) return <PageSkeleton />;
     // console.log(data);
 
     const grouped = groupByDate(data);

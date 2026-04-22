@@ -12,6 +12,7 @@ export interface FieldProps {
     type?: string;
     options?: SelectOption[];
     onChange?: (name: string, value: any) => void;
+    autoComplete?: string;
 }
 
 export interface SelectOption {

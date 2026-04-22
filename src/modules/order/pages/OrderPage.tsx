@@ -3,7 +3,7 @@
 import { useNavigate } from "react-router-dom";
 import { useOrders } from "../hooks/useOrders";
 import { formatValue } from "@/shared/utils/formatValue";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 
 function getStatusStyle(status: string) {
     switch (status) {
@@ -39,8 +39,7 @@ export default function OrderPage() {
     const navigate = useNavigate();
     const { orders, loading, error } = useOrders();
 
-    if (loading)
-        return <div className="p-4 text-sm text-gray-500">Loading...</div>;
+    if (loading) return <PageSkeleton />;
 
     if (error) return <div className="p-4 text-red-500">{error}</div>;
 

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Address } from "../types/address.types";
 import { useAddressActions } from "../hooks/useAddressActions";
 import { useNavigate } from "react-router-dom";
-import { Button, HeaderPage } from "@/core/ui/components";
+import { Button, HeaderPage, PageSkeleton } from "@/core/ui/components";
 import AddressEmptyState from "../components/AddressEmptyState";
 
 export default function AddressListPage() {
@@ -33,8 +33,7 @@ export default function AddressListPage() {
         loadAddresses();
     }
 
-    if (loading)
-        return <div className="p-4 text-gray-500 text-center">Loading...</div>;
+    if (loading) return <PageSkeleton />;
 
     return (
         <>

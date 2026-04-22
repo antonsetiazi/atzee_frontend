@@ -14,6 +14,7 @@ export default function PasswordField({
     disabled,
     required,
     onChange,
+    autoComplete,
 }: FieldProps) {
     const [show, setShow] = useState(false);
 
@@ -43,6 +44,7 @@ export default function PasswordField({
                     placeholder={placeholder}
                     disabled={disabled}
                     onChange={handleChange}
+                    autoComplete={autoComplete ?? "new-password"}
                     className={input}
                     style={{
                         background: "var(--color-surface)",

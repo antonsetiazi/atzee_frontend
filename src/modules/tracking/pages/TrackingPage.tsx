@@ -5,15 +5,13 @@ import { useTracking } from "../hooks/useTracking";
 
 import TrackingMap from "../components/TrackingMap";
 import TrackingStatus from "../components/TrackingStatus";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 
 export default function TrackingPage() {
     const { id } = useParams();
     const { data, loading } = useTracking(Number(id));
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    if (loading) return <PageSkeleton />;
 
     if (!data) {
         return <div>Tracking tidak tersedia</div>;

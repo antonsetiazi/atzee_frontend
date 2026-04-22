@@ -1,4 +1,4 @@
-// src/core/ui/views/auth/SessionExpiredPage.tsx
+// src/modules/auth/pages/SessionExpiredPage.tsx
 
 import { Link } from "react-router-dom";
 

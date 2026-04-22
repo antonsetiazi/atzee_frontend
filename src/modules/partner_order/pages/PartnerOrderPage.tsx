@@ -2,7 +2,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { usePartnerOrders } from "../hooks/usePartnerOrders";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 
 function getStatusStyle(status: string) {
     switch (status) {
@@ -25,7 +25,7 @@ export default function PartnerOrderPage() {
     const navigate = useNavigate();
     const { orders, loading, error } = usePartnerOrders();
 
-    if (loading) return <div className="p-4">Loading...</div>;
+    if (loading) return <PageSkeleton />;
     if (error) return <div className="p-4 text-red-500">{error}</div>;
 
     return (

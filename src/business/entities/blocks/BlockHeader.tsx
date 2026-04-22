@@ -10,8 +10,6 @@ interface Props {
 }
 
 const logoUrl = import.meta.env.VITE_APP_LOGO;
-const appName = import.meta.env.VITE_APP_NAME || "Ustadzku";
-const tagline = import.meta.env.VITE_APP_TAGLINE;
 
 export default function BlockHeader({ block }: Props) {
     const { isMobile } = useBreakpoint();
@@ -86,7 +84,7 @@ export default function BlockHeader({ block }: Props) {
 
                     <div className="flex flex-col">
                         <span className="text-white text-lg font-semibold">
-                            {appName}
+                            {block.title}
                         </span>
                         <p
                             className="
@@ -101,7 +99,7 @@ export default function BlockHeader({ block }: Props) {
                                 opacity: 0.9,
                             }}
                         >
-                            {tagline}
+                            {block.subtitle}
                         </p>
                     </div>
 

@@ -18,6 +18,7 @@ import LoginRequiredDialog from "@/core/auth/LoginRequiredDialog";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import ListingSection from "@/modules/listing/components/sections/ListingSection";
 import { useServiceListing } from "@/modules/listing/hooks/useServiceListing";
+import { PageSkeleton } from "@/core/ui/components";
 
 interface Props {
     type: "product" | "service";
@@ -92,13 +93,7 @@ export default function ListingDetailPage({ type }: Props) {
     // ================================
     // 🔥 LOADING STATE
     // ================================
-    if (loading) {
-        return (
-            <div className="p-6 text-center text-[var(--text-muted)]">
-                Memuat detail layanan...
-            </div>
-        );
-    }
+    if (loading) return <PageSkeleton />;
 
     // ================================
     // 🔥 ERROR STATE

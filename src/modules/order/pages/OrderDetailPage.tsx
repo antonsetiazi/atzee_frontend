@@ -10,6 +10,7 @@ import { useOrderBooking } from "../hooks/useOrderBooking";
 import { useSessionStore } from "@/core/session/session.store";
 import { useRequireLogin } from "@/core/auth/useRequireLogin";
 import { chatService } from "@/business/chat/chat.service";
+import { PageSkeleton } from "@/core/ui/components";
 
 export default function OrderDetailPage() {
     const { id } = useParams();
@@ -77,9 +78,7 @@ export default function OrderDetailPage() {
         });
     };
 
-    if (loading || bookingLoading) {
-        return <div className="p-4">Loading...</div>;
-    }
+    if (loading || bookingLoading) return <PageSkeleton />;
 
     if (!order) {
         return <div className="p-4">Order tidak ditemukan</div>;

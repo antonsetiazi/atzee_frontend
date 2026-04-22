@@ -6,8 +6,8 @@ import ToastRenderer from "@/core/feedback/ToastRenderer";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
 import ModalProvider from "@/core/modal/ModalProvider";
 
-import LoginPage from "@/core/ui/views/auth/LoginPage";
-import RegisterPage from "@/core/ui/views/auth/RegisterPage";
+import LoginPage from "@/modules/auth/pages/LoginPage";
+import RegisterPage from "@/modules/auth/pages/RegisterPage";
 
 import AppLayout from "@/core/ui/layout/AppLayout";
 
@@ -18,7 +18,7 @@ import { usePageStore } from "@/core/ui/page/page.store";
 import { buildPageRoutes } from "@/core/routing/PageRoutes";
 import { useSessionStore } from "../session/session.store";
 
-import SessionExpiredPage from "@/core/ui/views/auth/SessionExpiredPage";
+import SessionExpiredPage from "@/modules/auth/pages/SessionExpiredPage";
 
 import ProfilePage from "@/modules/account/profile/pages/ProfilePage";
 import AddressListPage from "@/modules/account/address/pages/AddressListPage";
@@ -35,8 +35,6 @@ import ServiceDetailPage from "@/modules/listing_detail/pages/ServiceDetailPage"
 import ServiceBookingPage from "@/modules/booking/pages/ServiceBookingPage";
 import CheckoutPage from "@/modules/checkout/pages/CheckoutPage";
 import ChatPage from "@/modules/chat/ChatPage";
-// import BookingListPage from "@/modules/booking/pages/BookingListPage";
-// import BookingDetailPage from "@/modules/booking/pages/BookingDetailPage";
 import PageMetaWrapper from "./PageMetaWrapper";
 import TrackingPage from "@/modules/tracking/pages/TrackingPage";
 import PartnerOrderPage from "@/modules/partner_order/pages/PartnerOrderPage";
