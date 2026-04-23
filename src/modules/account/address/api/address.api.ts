@@ -1,6 +1,6 @@
 // src/modules/account/address/api/address.api.ts
 
-import type { Address } from "../types/address.types";
+import type { Address, AddressPayload } from "../types/address.types";
 import {
     httpGet,
     httpPost,
@@ -16,11 +16,14 @@ export function fetchAddress(id: string): Promise<Address> {
     return httpGet(`/account/address/${id}/`);
 }
 
-export function createAddress(data: Address): Promise<Address> {
+export function createAddress(data: AddressPayload): Promise<Address> {
     return httpPost("/account/address/", data);
 }
 
-export function updateAddress(id: string, data: Address): Promise<Address> {
+export function updateAddress(
+    id: string,
+    data: AddressPayload,
+): Promise<Address> {
     return httpPatch(`/account/address/${id}/`, data);
 }
 

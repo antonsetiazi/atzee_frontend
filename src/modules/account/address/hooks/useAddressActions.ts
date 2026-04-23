@@ -1,6 +1,6 @@
 // src/modules/account/address/hooks/useAddressActions.ts
 import { useState, useCallback } from "react";
-import type { Address } from "../types/address.types";
+import type { AddressPayload } from "../types/address.types";
 import {
     fetchAddresses,
     createAddress as apiCreate,
@@ -15,7 +15,7 @@ export function useAddressActions() {
         return await fetchAddresses();
     }, []);
 
-    const createAddress = useCallback(async (data: Address) => {
+    const createAddress = useCallback(async (data: AddressPayload) => {
         setLoading(true);
         try {
             return await apiCreate(data);
@@ -24,14 +24,17 @@ export function useAddressActions() {
         }
     }, []);
 
-    const updateAddress = useCallback(async (id: string, data: Address) => {
-        setLoading(true);
-        try {
-            return await apiUpdate(id, data);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+    const updateAddress = useCallback(
+        async (id: string, data: AddressPayload) => {
+            setLoading(true);
+            try {
+                return await apiUpdate(id, data);
+            } finally {
+                setLoading(false);
+            }
+        },
+        [],
+    );
 
     const deleteAddressFn = useCallback(async (id: string) => {
         setLoading(true);

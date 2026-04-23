@@ -64,6 +64,7 @@ export interface SelectFieldSchema extends BaseFieldSchema {
 
     // ✅ dynamic options
     data_source?: string;
+    request_method?: "GET" | "POST";
 }
 
 export interface TextareaFieldSchema extends BaseFieldSchema {

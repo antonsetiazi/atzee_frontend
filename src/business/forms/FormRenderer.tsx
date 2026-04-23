@@ -3,7 +3,7 @@
 
 import type { FormSchema } from "./form.types";
 import FieldRenderer from "./fields/FieldRenderer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { submitForm } from "./form.submit";
 import { useNavigate } from "react-router-dom";
 import type { TableContext } from "../tables/table.context";
@@ -54,9 +54,9 @@ export default function FormRenderer({
         }
     }, [initialValues]);
 
-    function handleChange(name: string, value: any) {
+    const handleChange = useCallback((name: string, value: any) => {
         setValues((v) => ({ ...v, [name]: value }));
-    }
+    }, []);
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -146,6 +146,7 @@ export default function FormRenderer({
                             error={errors[field.key]}
                             mode={schema.mode}
                             onChange={isViewMode ? undefined : handleChange}
+                            formValues={values}
                         />
                     );
                 }) ?? null}

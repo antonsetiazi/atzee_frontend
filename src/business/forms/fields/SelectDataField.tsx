@@ -1,7 +1,7 @@
 // src/business/forms/fields/SelectDataField.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchFieldOptions } from "@/business/forms/fields/field.api";
 import type {
     FieldProps,
@@ -11,11 +11,13 @@ import { SelectField } from "@/core/ui/components";
 
 interface Props extends FieldProps {
     dataSource?: string;
+    requestMethod?: "GET" | "POST";
     dataOptions?: SelectOption[];
     params?: Record<string, any>;
+    formValues?: Record<string, any>;
 }
 
-export default function SelectDataSourceField({
+export default function SelectDataField({
     name,
     label,
     value,
@@ -26,44 +28,130 @@ export default function SelectDataSourceField({
     dataOptions,
     dataSource,
     params,
+    formValues,
     onChange,
 }: Props) {
     const [options, setOptions] = useState<SelectOption[]>([]);
     const [loading, setLoading] = useState(false);
 
+    /**
+     * cegah onChange("") berulang
+     */
+    const clearedRef = useRef(false);
+
+    /**
+     * Resolve params dynamic:
+     * { country_id: "{{country_id}}" }
+     * => { country_id: 2 }
+     */
+    const resolvedParams = useMemo(() => {
+        return resolveParams(params ?? {}, (key) => formValues?.[key]);
+    }, [params, formValues]);
+
+    /**
+     * dependency stabil
+     */
+    const dependencyKey = useMemo(() => {
+        return JSON.stringify({
+            dataSource,
+            params: resolvedParams,
+        });
+    }, [dataSource, resolvedParams]);
+
     useEffect(() => {
-        let alive = true;
-
-        // 1️⃣ STATIC OPTIONS
-        if (dataOptions && dataOptions.length > 0) {
-            setOptions(dataOptions);
-            return;
-        }
-
-        // 2️⃣ DYNAMIC OPTIONS
-        if (!dataSource) return;
-
-        const source = dataSource;
+        let mounted = true;
 
         async function load() {
-            setLoading(true);
+            /**
+             * STATIC OPTIONS
+             */
+            if (dataOptions?.length) {
+                setOptions(dataOptions);
+                return;
+            }
+
+            /**
+             * NO DATASOURCE
+             */
+            if (!dataSource) {
+                setOptions([]);
+                return;
+            }
+
+            /**
+             * Jika ada dependency kosong
+             * contoh region butuh country_id
+             */
+            const hasEmptyDependency = Object.values(resolvedParams).some(
+                (v) => v === "" || v === null || v === undefined,
+            );
+
+            if (hasEmptyDependency) {
+                if (!mounted) return;
+
+                setOptions([]);
+
+                if (value && !clearedRef.current) {
+                    clearedRef.current = true;
+                    onChange?.(name ?? "", "");
+                }
+
+                return;
+            }
+
+            clearedRef.current = false;
 
             try {
-                const opts = await fetchFieldOptions(source, params ?? {});
-                if (alive) setOptions(opts);
+                setLoading(true);
+
+                const items = await fetchFieldOptions(
+                    dataSource,
+                    resolvedParams,
+                );
+
+                if (!mounted) return;
+
+                setOptions(items);
+
+                /**
+                 * kalau selected value sudah tidak ada
+                 * reset sekali saja
+                 */
+                const exists = items.some(
+                    (item) => String(item.value) === String(value),
+                );
+
+                if (value && !exists && !clearedRef.current) {
+                    clearedRef.current = true;
+                    onChange?.(name ?? "", "");
+                }
             } catch (err) {
                 console.error("Failed loading datasource:", dataSource, err);
+
+                if (mounted) {
+                    setOptions([]);
+                }
             } finally {
-                if (alive) setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                }
             }
         }
 
         load();
 
         return () => {
-            alive = false;
+            mounted = false;
         };
-    }, [dataSource, dataOptions, params]);
+    }, [
+        dependencyKey,
+        dataOptions,
+        dataSource,
+        name,
+        onChange,
+        resolvedParams,
+        value,
+    ]);
 
     return (
         <SelectField
@@ -79,4 +167,27 @@ export default function SelectDataSourceField({
             onChange={onChange}
         />
     );
+}
+
+function resolveParams(
+    params: Record<string, any>,
+    getValue?: (key: string) => any,
+) {
+    const output: Record<string, any> = {};
+
+    Object.entries(params).forEach(([key, val]) => {
+        if (
+            typeof val === "string" &&
+            val.startsWith("{{") &&
+            val.endsWith("}}")
+        ) {
+            const fieldName = val.replace("{{", "").replace("}}", "").trim();
+
+            output[key] = getValue?.(fieldName);
+        } else {
+            output[key] = val;
+        }
+    });
+
+    return output;
 }

@@ -1,13 +1,17 @@
 // src/modules/account/address/components/AddressForm.tsx
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchCountries, fetchRegions, fetchCities } from "../api/geo.api";
+
+import type { Country, Region, City } from "../types/geo.types";
+
 import AddressMapPicker from "./AddressMapPicker";
-import type { Address } from "../types/address.types";
+import type { Address, AddressPayload } from "../types/address.types";
 import { Button } from "@/core/ui/components";
 
 interface Props {
     initial?: Partial<Address>;
-    onSubmit: (data: Address) => Promise<void>;
+    onSubmit: (data: AddressPayload) => Promise<void>;
     loading?: boolean;
 }
 
@@ -17,6 +21,9 @@ export default function AddressForm({ initial, onSubmit, loading }: Props) {
         recipient_name: initial?.recipient_name ?? "",
         phone: initial?.phone ?? "",
         address_line: initial?.address_line ?? "",
+        country_ref: initial?.country_ref ?? undefined,
+        region_ref: initial?.region_ref ?? undefined,
+        city_ref: initial?.city_ref ?? undefined,
         city: initial?.city ?? "",
         region: initial?.region ?? "",
         postal_code: initial?.postal_code ?? "",
@@ -33,6 +40,47 @@ export default function AddressForm({ initial, onSubmit, loading }: Props) {
         is_default: initial?.is_default ?? false,
     });
 
+    const [countries, setCountries] = useState<Country[]>([]);
+    const [regions, setRegions] = useState<Region[]>([]);
+    const [cities, setCities] = useState<City[]>([]);
+
+    useEffect(() => {
+        async function loadCountries() {
+            const data = await fetchCountries();
+            setCountries(data);
+        }
+
+        loadCountries();
+    }, []);
+
+    useEffect(() => {
+        async function loadRegions() {
+            if (!form.country_ref) {
+                setRegions([]);
+                return;
+            }
+
+            const data = await fetchRegions(form.country_ref);
+            setRegions(data);
+        }
+
+        loadRegions();
+    }, [form.country_ref]);
+
+    useEffect(() => {
+        async function loadCities() {
+            if (!form.region_ref) {
+                setCities([]);
+                return;
+            }
+
+            const data = await fetchCities(form.region_ref);
+            setCities(data);
+        }
+
+        loadCities();
+    }, [form.region_ref]);
+
     function update<K extends keyof Address>(key: K, value: Address[K]) {
         setForm((prev) => ({ ...prev, [key]: value }));
     }
@@ -41,11 +89,22 @@ export default function AddressForm({ initial, onSubmit, loading }: Props) {
         e.preventDefault();
 
         const payload = {
-            ...form,
+            label: form.label,
+            recipient_name: form.recipient_name,
+            phone: form.phone,
+            address_line: form.address_line,
+            postal_code: form.postal_code,
+            is_default: form.is_default,
+
+            country_ref_id: form.country_ref,
+            region_ref_id: form.region_ref,
+            city_ref_id: form.city_ref,
+
             latitude:
                 form.latitude !== null
                     ? Number(form.latitude.toFixed(6))
                     : null,
+
             longitude:
                 form.longitude !== null
                     ? Number(form.longitude.toFixed(6))
@@ -123,13 +182,62 @@ export default function AddressForm({ initial, onSubmit, loading }: Props) {
                         onChange={(e) => update("address_line", e.target.value)}
                     />
 
-                    <div className="grid grid-cols-2 gap-3">
-                        <input
+                    <div className="space-y-3">
+                        {/* Country */}
+                        <select
                             className={inputCls}
-                            placeholder="City"
-                            value={form.city}
-                            onChange={(e) => update("city", e.target.value)}
-                        />
+                            value={form.country_ref ?? ""}
+                            onChange={(e) => {
+                                const val = Number(e.target.value) || undefined;
+
+                                update("country_ref", val);
+                                update("region_ref", undefined);
+                                update("city_ref", undefined);
+                            }}
+                        >
+                            <option value="">Select Country</option>
+                            {countries.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                    {item.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* Region */}
+                        <select
+                            className={inputCls}
+                            value={form.region_ref ?? ""}
+                            onChange={(e) => {
+                                const val = Number(e.target.value) || undefined;
+
+                                update("region_ref", val);
+                                update("city_ref", undefined);
+                            }}
+                        >
+                            <option value="">Select Region</option>
+                            {regions.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                    {item.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* City */}
+                        <select
+                            className={inputCls}
+                            value={form.city_ref ?? ""}
+                            onChange={(e) => {
+                                const val = Number(e.target.value) || undefined;
+                                update("city_ref", val);
+                            }}
+                        >
+                            <option value="">Select City</option>
+                            {cities.map((item) => (
+                                <option key={item.id} value={item.id}>
+                                    {item.name}
+                                </option>
+                            ))}
+                        </select>
 
                         <input
                             className={inputCls}

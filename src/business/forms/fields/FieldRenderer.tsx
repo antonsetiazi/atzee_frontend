@@ -27,6 +27,7 @@ interface Props {
     value?: any;
     error?: string;
     mode?: "create" | "edit" | "view";
+    formValues?: Record<string, any>;
     onChange?: (name: string, value: any) => void;
 }
 
@@ -35,6 +36,7 @@ export default function FieldRenderer({
     value,
     error,
     mode,
+    formValues,
     onChange,
 }: Props) {
     if (field.hidden) return null;
@@ -155,8 +157,10 @@ export default function FieldRenderer({
                     error={error}
                     disabled={field.disabled}
                     dataSource={field.data_source}
+                    requestMethod={field.request_method}
                     dataOptions={field.options}
                     params={(field as any).params}
+                    formValues={formValues}
                     onChange={onChange}
                 />
             );

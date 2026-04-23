@@ -6,12 +6,14 @@ import { useAddressActions } from "../hooks/useAddressActions";
 import { useNavigate } from "react-router-dom";
 import { Button, HeaderPage, PageSkeleton } from "@/core/ui/components";
 import AddressEmptyState from "../components/AddressEmptyState";
+import { useConfirm } from "@/core/confirm/useConfirm";
 
 export default function AddressListPage() {
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [loading, setLoading] = useState(true);
     const { deleteAddress, getAddresses } = useAddressActions();
     const navigate = useNavigate();
+    const confirm = useConfirm();
 
     const loadAddresses = useCallback(async () => {
         setLoading(true);
@@ -28,7 +30,14 @@ export default function AddressListPage() {
     }, [loadAddresses]);
 
     async function handleDelete(id: string) {
-        if (!confirm("Are you sure to delete this address?")) return;
+        const approved = await confirm({
+            title: "Konfirmasi",
+            message: "Yakin akan hapus?",
+            level: "info",
+        });
+
+        if (!approved) return;
+
         await deleteAddress(id);
         loadAddresses();
     }
