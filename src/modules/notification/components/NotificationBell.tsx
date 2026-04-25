@@ -6,7 +6,7 @@ import Icon from "@/core/ui/icons/Icon";
 import NotificationDropdown from "./NotificationDropdown";
 import { useClickOutside } from "@/core/ui/hooks/useClickOutside";
 import { useNotifications } from "../hooks/useNotifications";
-import { notificationService } from "../services/notification.service";
+// import { notificationService } from "../services/notification.service";
 import { useNotificationSync } from "../hooks/useNotificationSync";
 
 export default function NotificationBell() {
@@ -31,9 +31,9 @@ export default function NotificationBell() {
             notificationSmart.refreshNow();
         }
 
-        if (next && unread > 0) {
-            notificationService.inbox.markAllAsRead();
-        }
+        // if (next && unread > 0) {
+        //     notificationService.inbox.markAllAsRead();
+        // }
     };
 
     return (

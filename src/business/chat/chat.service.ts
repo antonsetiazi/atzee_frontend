@@ -41,36 +41,3 @@ async function getOrCreateRoom(
 
     return room as ChatRoom;
 }
-
-/**
- * ======================================================
- * UPGRADE ROOM TO TRANSACTIONAL
- * ======================================================
- *
- * Untuk sementara update local store dulu.
- * Nanti bisa ditambah endpoint backend:
- * POST /chat/rooms/:id/upgrade/
- */
-// function upgradeToTransactional(
-//     roomId: string,
-//     context_type: "order" | "booking",
-//     context_id: string,
-// ): void {
-//     const room = chatStore.getRooms().find((r) => r.id === roomId);
-
-//     if (!room) return;
-
-//     const updatedRoom: ChatRoom = {
-//         ...room,
-//         type: "transactional",
-//         context_type,
-//         context_id,
-//     };
-
-//     chatStore.setRooms([updatedRoom]);
-
-//     chatStore.addSystemMessage(
-//         roomId,
-//         "Transaksi telah dibuat dari percakapan ini",
-//     );
-// }

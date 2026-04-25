@@ -1,7 +1,7 @@
 // src/modules/chat/components/MessageInput.tsx
 
 import { useState } from "react";
-import { socketClient } from "@/core/realtime/socket.client";
+import { ws } from "@/core/realtime/ws";
 import { chatStore } from "@/business/chat/chat.store";
 import { useSessionStore } from "@/core/session/session.store";
 import { chatApi } from "../api/chat.api";
@@ -33,6 +33,12 @@ export default function MessageInput({ roomId }: { roomId: string }) {
         try {
             const realMsg = await chatApi.sendMessage(roomId, messageText);
 
+            ws.send({
+                type: "chat.message",
+                room_id: roomId,
+                content: messageText,
+            });
+
             chatStore.replaceTempMessage(roomId, tempId, realMsg);
         } catch {
             chatStore.updateMessageStatus(roomId, tempId, "failed");
@@ -42,7 +48,7 @@ export default function MessageInput({ roomId }: { roomId: string }) {
     };
 
     const handleTyping = () => {
-        socketClient.send({
+        ws.send({
             type: "chat.typing",
             room_id: roomId,
         });

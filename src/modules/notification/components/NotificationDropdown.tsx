@@ -43,15 +43,29 @@ export default function NotificationDropdown({ open, items }: Props) {
                 </div>
 
                 {items.length > 0 && (
-                    <button
-                        onClick={() => notificationService.inbox.clearAll()}
-                        className="text-xs hover:underline"
-                        style={{
-                            color: "var(--text-muted)",
-                        }}
-                    >
-                        Clear all
-                    </button>
+                    <div className="flex gap-3 text-xs">
+                        <button
+                            onClick={() =>
+                                notificationService.inbox.markAllAsRead()
+                            }
+                            className="hover:underline"
+                            style={{
+                                color: "var(--text-muted)",
+                            }}
+                        >
+                            Mark read
+                        </button>
+
+                        <button
+                            onClick={() => notificationService.inbox.clearAll()}
+                            className="hover:underline"
+                            style={{
+                                color: "var(--text-muted)",
+                            }}
+                        >
+                            Clear all
+                        </button>
+                    </div>
                 )}
             </div>
 

@@ -7,6 +7,7 @@ import { registerNotificationListeners } from "@/modules/notification/services/n
 import { registerOrderListeners } from "@/business/order/order.service";
 import { useSessionStore } from "@/core/session/session.store";
 import { AuthBootstrap } from "@/core/bootstrap/services/auth.bootstrap";
+import { registerNotificationRealtime } from "@/modules/notification/services/notification.realtime";
 
 export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
     const initialized = useRef(false);
@@ -25,6 +26,8 @@ export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
 
             registerNotificationListeners();
             registerOrderListeners();
+
+            registerNotificationRealtime();
 
             setReady(true);
         }

@@ -9,6 +9,7 @@ export const input = `
     focus:ring-2
     focus:ring-[var(--color-primary)]/20
     focus:border-[var(--color-primary)]
+    
 `;
 
 export const error = "text-xs mt-1";

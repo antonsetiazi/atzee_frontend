@@ -45,7 +45,7 @@ export default function SelectField({
                 onChange={handleChange}
                 className={input}
                 style={{
-                    background: "var(--color-surface)",
+                    background: "white",
                     border: `1px solid ${
                         errorMessage
                             ? "var(--color-error)"

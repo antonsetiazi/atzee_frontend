@@ -40,7 +40,7 @@ export default function TextAreaField({
                 rows={4}
                 className={input}
                 style={{
-                    background: "var(--color-surface)",
+                    background: "white",
                     border: `1px solid ${
                         errorMessage
                             ? "var(--color-error)"

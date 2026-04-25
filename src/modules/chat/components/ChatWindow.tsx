@@ -1,6 +1,6 @@
 // src/modules/chat/components/ChatWindow.tsx
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
     chatStore,
@@ -56,39 +56,53 @@ function getContextInfo(room?: ChatRoom) {
 
 export default function ChatWindow({ roomId }: { roomId: string }) {
     const { user } = useSessionStore();
-
     const currentUserId = String(user?.id || "");
 
-    const [room, setRoom] = useState<ChatRoom | undefined>(() =>
-        chatStore.getRooms().find((r) => String(r.id) === String(roomId)),
-    );
-
-    const [messages, setMessages] = useState<Message[]>(
-        chatStore.getMessages(roomId),
-    );
-
-    const [typingUsers, setTypingUsers] = useState<string[]>(
-        chatStore.getTypingUsers(roomId),
-    );
-
+    const [scrollTick, setScrollTick] = useState(0);
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
-    const otherUser =
-        room && currentUserId ? getOtherParticipant(room, currentUserId) : null;
+    // ================================
+    // 🔥 LOCAL STATE (FORCE REACTIVITY)
+    // ================================
+    // const [, forceUpdate] = useState(0);
+
+    useEffect(() => {
+        const unsub = chatStore.subscribe(() => {
+            setScrollTick((v) => v + 1);
+        });
+
+        return unsub;
+    }, []);
+
+    // ================================
+    // 📦 DERIVED DATA (AUTO REACTIVE)
+    // ================================
+    const room = useMemo(() => {
+        return chatStore
+            .getRooms()
+            .find((r) => String(r.id) === String(roomId));
+    }, [roomId]);
+
+    const messages = chatStore.getMessages(roomId);
+    const typingUsers = chatStore.getTypingUsers(roomId);
+
+    const otherUser = useMemo(() => {
+        if (!room) return null;
+        return getOtherParticipant(room, currentUserId);
+    }, [room, currentUserId]);
 
     const presence = otherUser
         ? chatStore.getPresence(otherUser.id)
         : undefined;
 
-    /**
-     * load messages ketika room berubah
-     */
+    // ================================
+    // 📥 LOAD DATA
+    // ================================
     useEffect(() => {
         let mounted = true;
 
         chatApi.getMessages(roomId).then((msgs: Message[]) => {
             if (!mounted) return;
-
             chatStore.setMessages(roomId, msgs);
         });
 
@@ -99,46 +113,12 @@ export default function ChatWindow({ roomId }: { roomId: string }) {
         };
     }, [roomId]);
 
-    /**
-     * subscribe store
-     */
+    // ================================
+    // 📜 AUTO SCROLL
+    // ================================
     useEffect(() => {
-        const unsubscribe = chatStore.subscribe(() => {
-            const nextRoom = chatStore
-                .getRooms()
-                .find((r) => String(r.id) === String(roomId));
-
-            setRoom((prev) => {
-                if (!nextRoom && !prev) return prev;
-                if (!nextRoom) return undefined;
-                if (!prev) return nextRoom;
-
-                if (
-                    prev.id === nextRoom.id &&
-                    prev.last_message === nextRoom.last_message &&
-                    prev.last_timestamp === nextRoom.last_timestamp
-                ) {
-                    return prev;
-                }
-
-                return nextRoom;
-            });
-
-            setMessages([...chatStore.getMessages(roomId)]);
-            setTypingUsers(chatStore.getTypingUsers(roomId));
-        });
-
-        return unsubscribe;
-    }, [roomId]);
-
-    /**
-     * auto scroll bawah
-     */
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView({
-            behavior: "smooth",
-        });
-    }, [messages]);
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [scrollTick]);
 
     const context = getContextInfo(room);
 

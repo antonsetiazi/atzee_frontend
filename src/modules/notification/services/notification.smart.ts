@@ -1,6 +1,7 @@
 // src/modules/notification/services/notification.smart.ts
 
 import { notificationSync } from "./notification.sync";
+import { ws } from "@/core/realtime/ws";
 
 let timer: number | null = null;
 let lastActivity = Date.now();
@@ -17,6 +18,10 @@ function clearTimer() {
     }
 }
 
+function isRealtimeConnected() {
+    return ws.getStatus() === "connected";
+}
+
 function getNextInterval() {
     const hidden = document.hidden;
     const idle = Date.now() - lastActivity > IDLE_LIMIT;
@@ -28,6 +33,15 @@ function getNextInterval() {
 }
 
 async function runLoop() {
+    /**
+     * jika realtime hidup,
+     * polling skip
+     */
+    if (isRealtimeConnected()) {
+        schedule();
+        return;
+    }
+
     try {
         await notificationSync.loadAll();
     } catch {
@@ -40,7 +54,13 @@ async function runLoop() {
 function schedule() {
     clearTimer();
 
-    const next = getNextInterval();
+    /**
+     * realtime hidup:
+     * polling pelan sekali (fallback)
+     */
+    const next = isRealtimeConnected()
+        ? 300000 // 5 menit sekali backup sync
+        : getNextInterval();
 
     timer = window.setTimeout(runLoop, next);
 }
@@ -53,6 +73,9 @@ export const notificationSmart = {
     start() {
         markActive();
 
+        /**
+         * first load inbox tetap jalan
+         */
         notificationSync.loadAll();
         schedule();
 

@@ -56,6 +56,8 @@ class ChatStore {
 
     private listeners: Listener[] = [];
 
+    private roomListeners: Record<string, Listener[]> = {};
+
     // ================================
     // 🔔 SUBSCRIBE
     // ================================
@@ -66,8 +68,29 @@ class ChatStore {
         };
     }
 
+    subscribeRoom(roomId: string, listener: Listener) {
+        if (!this.roomListeners[roomId]) {
+            this.roomListeners[roomId] = [];
+        }
+
+        this.roomListeners[roomId].push(listener);
+
+        return () => {
+            this.roomListeners[roomId] = this.roomListeners[roomId].filter(
+                (l) => l !== listener,
+            );
+        };
+    }
+
     private emit() {
         this.listeners.forEach((l) => l());
+    }
+
+    private emitRoom(roomId: string) {
+        const listeners = this.roomListeners[roomId];
+        if (!listeners) return;
+
+        listeners.forEach((l) => l());
     }
 
     // ================================
@@ -138,6 +161,7 @@ class ChatStore {
     setMessages(roomId: string, msgs: Message[]) {
         this.messages[roomId] = this.deduplicate(msgs);
         this.emit();
+        this.emitRoom(roomId);
     }
 
     addMessage(roomId: string, msg: Message) {
@@ -164,6 +188,7 @@ class ChatStore {
         }
 
         this.emit();
+        this.emitRoom(roomId);
     }
 
     addSystemMessage(roomId: string, content: string) {
@@ -191,6 +216,7 @@ class ChatStore {
             msg.status = status;
             this.emit();
         }
+        this.emitRoom(roomId);
     }
 
     getMessages(roomId: string): Message[] {

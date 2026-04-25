@@ -127,7 +127,7 @@ export default function BlockForm({
     if (loadingData) return <LoadingState />;
 
     return (
-        <div key={idx}>
+        <div key={idx} className="mb-4">
             <FormRenderer
                 key={idx}
                 entity={schema.entity}

@@ -11,6 +11,10 @@ let toasts: Notification[] = [];
 const listeners: Listener[] = [];
 const toastListeners: ToastListener[] = [];
 
+function existsById(list: Notification[], id: string) {
+    return list.some((item) => item.id === id);
+}
+
 function notifyInbox() {
     listeners.forEach((listener) => listener([...inbox]));
 }
@@ -39,6 +43,10 @@ export const notificationStore = {
     },
 
     addInbox(notification: Notification) {
+        if (existsById(inbox, notification.id)) {
+            return;
+        }
+
         inbox.unshift(notification);
         notifyInbox();
     },
@@ -75,6 +83,10 @@ export const notificationStore = {
     },
 
     addToast(notification: Notification) {
+        if (existsById(toasts, notification.id)) {
+            return;
+        }
+
         const last = toasts[toasts.length - 1];
 
         // =========================
