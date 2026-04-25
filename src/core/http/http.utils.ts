@@ -42,9 +42,44 @@ export async function parseResponse<T>(res: Response): Promise<T> {
 
     if (!text) return undefined as T;
 
+    let json: any;
+
+    try {
+        json = JSON.parse(text);
+    } catch {
+        return text as unknown as T;
+    }
+
+    /**
+     * Backend Success Standard:
+     * {
+     *   data: ...,
+     *   message: "...",
+     *   meta: ...
+     * }
+     */
+    if (json && typeof json === "object" && "data" in json) {
+        if ("meta" in json || "message" in json) {
+            return json as T;
+        }
+
+        return json.data as T;
+    }
+
+    /**
+     * selain itu return raw
+     */
+    return json as T;
+}
+
+export async function parseJsonResponse(res: Response) {
+    const text = await res.text();
+
+    if (!text) return null;
+
     try {
         return JSON.parse(text);
     } catch {
-        return text as unknown as T;
+        return text;
     }
 }

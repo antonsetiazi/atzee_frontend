@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthService } from "@/app/auth/auth.service";
 import { Button, EmailField, PasswordField } from "@/core/ui/components";
+import { useFormError } from "@/core/response";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
 const EMAIL = import.meta.env.VITE_DEFAULT_LOGIN_EMAIL;
@@ -14,14 +15,14 @@ export function PasswordLoginForm() {
     const [email, setEmail] = useState(EMAIL); // default untuk dev
     const [password, setPassword] = useState(PASSWORD);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { error, clearError, handleError, getFieldError } = useFormError();
 
     const auth = useAuthService();
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setLoading(true);
-        setError(null);
+        clearError();
 
         try {
             await auth.loginPassword({
@@ -32,8 +33,7 @@ export function PasswordLoginForm() {
 
             navigate("/dashboard", { replace: true });
         } catch (err) {
-            console.error(err);
-            setError("Invalid credentials");
+            handleError(err);
         } finally {
             setLoading(false);
         }
@@ -59,7 +59,7 @@ export function PasswordLoginForm() {
                 label="Email"
                 placeholder="you@example.com"
                 value={email}
-                error={error ?? undefined}
+                error={getFieldError("email")}
                 required
                 disabled={loading}
                 onChange={(_, value) => setEmail(value)}
@@ -69,7 +69,7 @@ export function PasswordLoginForm() {
                 name="password"
                 label="Password"
                 value={password}
-                error={error ?? undefined}
+                error={getFieldError("password") || error || undefined}
                 required
                 disabled={loading}
                 onChange={(_, value) => setPassword(value)}

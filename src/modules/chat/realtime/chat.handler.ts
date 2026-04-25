@@ -38,7 +38,7 @@ class ChatRealtimeHandler {
      * ======================================================
      */
     private handle(event: any) {
-        console.log("[CHAT HANDLER]", event);
+        // console.log("[CHAT HANDLER]", event);
 
         if (!event?.type) return;
 

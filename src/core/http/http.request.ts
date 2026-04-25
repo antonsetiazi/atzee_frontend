@@ -6,7 +6,7 @@ import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { TENANT_CODE } from "@/core/tenant/tenant.config";
 
 import { buildUrl, parseResponse } from "./http.utils";
-import { HttpError } from "./http.error";
+import { AppResponseError, getResponseKind } from "@/core/response";
 import {
     getInflightRequest,
     setInflightRequest,
@@ -14,6 +14,7 @@ import {
 } from "./http.cache";
 
 import { refreshTokenApi } from "@/core/auth/auth.api";
+import { parseJsonResponse } from "./http.utils";
 
 const DEFAULT_TIMEOUT = 30000;
 
@@ -152,7 +153,13 @@ async function doRequest<T>(params: {
 
             if (!refreshToken) {
                 handleUnauthorized();
-                throw new HttpError(401, "Session expired", "UNAUTHORIZED");
+
+                throw new AppResponseError({
+                    status: 401,
+                    message: "Session expired",
+                    kind: "auth",
+                    code: "UNAUTHORIZED",
+                });
             }
 
             /**
@@ -222,7 +229,40 @@ async function doRequest<T>(params: {
                 return undefined as T;
             }
 
-            return await parseResponse<T>(res);
+            const raw = await parseJsonResponse(res);
+
+            const method = (rest.method || "GET").toUpperCase();
+
+            const successMethods = ["POST", "PUT", "PATCH", "DELETE"];
+
+            if (successMethods.includes(method) && raw?.message) {
+                useFeedbackStore.getState().push({
+                    type: "success",
+                    title: "Success",
+                    message: raw.message,
+                });
+            }
+
+            if (raw && typeof raw === "object" && "data" in raw) {
+                const hasMeta = "meta" in raw;
+                const hasMessage = "message" in raw;
+
+                /**
+                 * Jika ada meta/message
+                 * berarti structured envelope
+                 * return full object
+                 */
+                if (hasMeta || hasMessage) {
+                    return raw as T;
+                }
+
+                /**
+                 * kalau hanya data saja
+                 */
+                return raw.data as T;
+            }
+
+            return raw as T;
         }
 
         /**
@@ -234,32 +274,43 @@ async function doRequest<T>(params: {
 
         const backendError = payload?.error;
 
+        const kind = getResponseKind(res.status);
+
         const message =
-            backendError?.message || `Request failed with status ${res.status}`;
+            backendError?.message ||
+            payload?.detail ||
+            `Request failed with status ${res.status}`;
 
-        const error = new HttpError(
-            res.status,
+        const error = new AppResponseError({
+            status: res.status,
             message,
-            backendError?.code,
-            backendError?.details,
-        );
-
-        useFeedbackStore.getState().push({
-            type: "error",
-            title: error.code || "Request Error",
-            message: error.message,
+            kind,
+            code: backendError?.code,
+            fieldErrors: backendError?.details,
         });
+
+        /**
+         * Hanya technical error yang muncul global toast
+         */
+        if (kind === "network" || kind === "server") {
+            useFeedbackStore.getState().push({
+                type: "error",
+                title: "System Error",
+                message,
+            });
+        }
 
         throw error;
     } catch (err: any) {
         clearTimeout(timer);
 
         if (err.name === "AbortError") {
-            const error = new HttpError(
-                0,
-                "Request timeout, silakan coba lagi",
-                "TIMEOUT",
-            );
+            const error = new AppResponseError({
+                status: 0,
+                message: "Request timeout, silakan coba lagi",
+                kind: "network",
+                code: "TIMEOUT",
+            });
 
             useFeedbackStore.getState().push({
                 type: "error",
@@ -270,12 +321,13 @@ async function doRequest<T>(params: {
             throw error;
         }
 
-        if (!(err instanceof HttpError)) {
-            const error = new HttpError(
-                0,
-                "Network error, periksa koneksi Anda",
-                "NETWORK_ERROR",
-            );
+        if (!(err instanceof AppResponseError)) {
+            const error = new AppResponseError({
+                status: 0,
+                message: "Network error, periksa koneksi Anda",
+                kind: "network",
+                code: "NETWORK_ERROR",
+            });
 
             useFeedbackStore.getState().push({
                 type: "error",
