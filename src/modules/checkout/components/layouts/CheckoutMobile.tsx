@@ -17,6 +17,7 @@ interface Props {
     fees: { name: string; amount: number }[];
     subtotal: number;
     total: number;
+    paymentMethod: string | null;
 
     onPay: () => void;
     onCancel: () => void;
@@ -34,6 +35,7 @@ export default function CheckoutMobile({
     fees,
     subtotal,
     total,
+    paymentMethod,
     onPay,
     onCancel,
     isSubmitting,
@@ -42,7 +44,8 @@ export default function CheckoutMobile({
     addressModalOpen,
     setAddressModalOpen,
 }: Props) {
-    const isValid = items.length > 0;
+    const isValid =
+        items.length > 0 && selectedAddress && selectedPartner && paymentMethod;
 
     return (
         <>

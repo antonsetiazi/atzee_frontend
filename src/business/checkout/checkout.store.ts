@@ -9,7 +9,7 @@ class CheckoutStore {
         items: [],
         bookingId: null,
         paymentStatus: "idle",
-        paymentMethod: "gateway",
+        paymentMethod: null,
 
         selectedPartnerId: null,
         selectedPartner: null,

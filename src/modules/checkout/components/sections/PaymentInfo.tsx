@@ -39,6 +39,12 @@ export default function PaymentInfo() {
                     Virtual Account, E-Wallet, dan metode lainnya
                 </p>
             </button>
+
+            {!paymentMethod && (
+                <p className="text-sm text-red-500">
+                    Pilih metode pembayaran terlebih dahulu
+                </p>
+            )}
         </div>
     );
 }

@@ -22,14 +22,21 @@ export default function CheckoutView({
 }: Props) {
     const { isMobile } = useBreakpoint();
     const [addressModalOpen, setAddressModalOpen] = useState(false);
-    const { selectedAddress, selectedPartner, fees, subtotal, total } =
-        useCheckout();
+    const {
+        selectedAddress,
+        selectedPartner,
+        fees,
+        subtotal,
+        total,
+        paymentMethod,
+    } = useCheckout();
 
     const sharedProps = {
         items,
         fees,
         subtotal,
         total,
+        paymentMethod,
         onPay,
         onCancel,
         isSubmitting,

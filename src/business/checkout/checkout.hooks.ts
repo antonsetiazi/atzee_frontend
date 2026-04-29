@@ -21,7 +21,7 @@ export function useCheckout() {
         }, 200);
 
         return () => clearTimeout(timeout);
-    }, [state.items, state.selectedPartnerId]);
+    }, [state.items, state.selectedPartnerId, state.addressId]);
 
     return {
         ...state,

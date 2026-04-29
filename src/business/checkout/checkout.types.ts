@@ -1,6 +1,6 @@
 // src/business/checkout/checkout.types.ts
 
-export type PaymentMethod = "wallet" | "midtrans" | string;
+export type PaymentMethod = "wallet" | "midtrans" | null | string;
 
 export type PaymentStatus = "idle" | "pending" | "paid" | "failed";
 

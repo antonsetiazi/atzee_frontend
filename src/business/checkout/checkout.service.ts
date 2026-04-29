@@ -119,6 +119,10 @@ export const checkoutService = {
             throw new Error("Partner belum dipilih");
         }
 
+        if (!state.paymentMethod) {
+            throw new Error("Metode pembayaran belum dipilih");
+        }
+
         /* ---------- SET STATE ---------- */
 
         checkoutStore.setState({
@@ -205,6 +209,7 @@ export const checkoutService = {
                 price: i.price, // 🔥 penting untuk preview
             })),
             selected_partner_id: state.selectedPartnerId,
+            address_id: state.addressId,
         });
 
         checkoutStore.setState({
