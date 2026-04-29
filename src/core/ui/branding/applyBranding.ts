@@ -56,23 +56,40 @@ export function applyBranding(branding: BrandingConfig) {
     // ==============================
     // Typography
     // ==============================
-    if (theme.font) {
-        setVar(root, "--font-family", theme.font.family);
-        setVar(root, "--font-size", theme.font.size);
-        setVar(root, "--font-weight", theme.font.weight);
-    }
+    // if (theme.font) {
+    //     setVar(root, "--font-family", theme.font.family);
+    //     setVar(root, "--font-size", theme.font.size);
+    //     setVar(root, "--font-weight", theme.font.weight);
+    // }
 
     // ==============================
     // Favicon
     // ==============================
     if (branding.faviconUrl) {
-        let favicon = document.querySelector("link[rel='icon']");
-        if (!favicon) {
-            favicon = document.createElement("link");
-            favicon.setAttribute("rel", "icon");
-            document.head.appendChild(favicon);
+        // hapus favicon lama
+        document
+            .querySelectorAll("link[rel*='icon']")
+            .forEach((el) => el.remove());
+
+        const favicon = document.createElement("link");
+        favicon.rel = "icon";
+
+        // auto detect type
+        if (branding.faviconUrl.endsWith(".svg")) {
+            favicon.type = "image/svg+xml";
+        } else if (branding.faviconUrl.endsWith(".png")) {
+            favicon.type = "image/png";
+        } else if (
+            branding.faviconUrl.endsWith(".jpg") ||
+            branding.faviconUrl.endsWith(".jpeg")
+        ) {
+            favicon.type = "image/jpeg";
         }
-        favicon.setAttribute("href", branding.faviconUrl);
+
+        // cache bust
+        favicon.href = branding.faviconUrl + "?v=" + Date.now();
+
+        document.head.appendChild(favicon);
     }
 
     // ==============================

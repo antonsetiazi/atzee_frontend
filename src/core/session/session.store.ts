@@ -76,15 +76,20 @@ export const useSessionStore = create<SessionState & SessionActions>((set) => ({
 
     reloadSession: async () => {
         try {
-            const user = await fetchSession();
-            set({
-                user,
+            const profile = await fetchSession();
+
+            set((state) => ({
+                user: state.user
+                    ? {
+                          ...state.user,
+                          ...profile,
+                      }
+                    : profile,
                 isAuthenticated: true,
-            });
+            }));
         } catch (error: any) {
             console.error("Failed to reload session", error);
 
-            // Jika token invalid → hapus token & reset session
             if (error.status === 401) {
                 useSessionStore.getState().clearSession();
             }

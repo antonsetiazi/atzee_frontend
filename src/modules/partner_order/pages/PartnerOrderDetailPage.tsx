@@ -1,15 +1,15 @@
 // src/modules/partner_order/pages/PartnerOrderDetailPage.tsx
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { usePartnerOrders } from "../hooks/usePartnerOrders";
 import PartnerOrderDetailView from "../components/PartnerOrderDetailView";
 import { useSessionStore } from "@/core/session/session.store";
 import { useRequireLogin } from "@/core/auth/useRequireLogin";
 import { chatService } from "@/business/chat/chat.service";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function PartnerOrderDetailPage() {
     const { id } = useParams();
-    const navigate = useNavigate();
 
     const { getOrderById } = usePartnerOrders();
     const { user } = useSessionStore();
@@ -37,7 +37,7 @@ export default function PartnerOrderDetailPage() {
                 context_id: String(order.id),
             });
 
-            navigate(`/chat/${room.id}`);
+            SmartNavigate.go(`/chat/${room.id}`);
         });
     };
 

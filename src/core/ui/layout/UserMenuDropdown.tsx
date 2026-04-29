@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useAuthService } from "@/app/auth/auth.service";
-import { useNavigate } from "react-router-dom";
 import Icon from "@/core/ui/icons/Icon";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface UserMenuDropdownProps {
     name?: string;
@@ -15,8 +15,6 @@ export default function UserMenuDropdown({
     avatarUrl,
 }: UserMenuDropdownProps) {
     const { logout } = useAuthService();
-    const navigate = useNavigate();
-
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -103,7 +101,7 @@ export default function UserMenuDropdown({
                         label="Account Profile"
                         onClick={() => {
                             setOpen(false);
-                            navigate("/account/profile");
+                            SmartNavigate.go("/account/profile");
                         }}
                     />
 
@@ -112,7 +110,7 @@ export default function UserMenuDropdown({
                         label="Business Profile"
                         onClick={() => {
                             setOpen(false);
-                            navigate("/business/profile");
+                            SmartNavigate.go("/business/profile");
                         }}
                     />
 
@@ -121,7 +119,7 @@ export default function UserMenuDropdown({
                         label="Settings"
                         onClick={() => {
                             setOpen(false);
-                            navigate("/account/settings");
+                            SmartNavigate.go("/account/settings");
                         }}
                     />
 

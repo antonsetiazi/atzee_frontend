@@ -3,6 +3,7 @@
 import { refreshTokenApi } from "@/core/auth/auth.api";
 import { isTokenExpired } from "@/core/auth/token.utils";
 import { useSessionStore } from "@/core/session/session.store";
+import { buildUserFromAccessToken } from "@/core/auth/auth.identity";
 
 export async function AuthBootstrap() {
     const store = useSessionStore.getState();
@@ -21,6 +22,9 @@ export async function AuthBootstrap() {
             // 🔥 update access token baru
             useSessionStore.setState({
                 accessToken: res.access,
+                refreshToken: res.refresh,
+                user: buildUserFromAccessToken(res.access),
+                isAuthenticated: true,
             });
 
             accessToken = res.access;
@@ -30,6 +34,13 @@ export async function AuthBootstrap() {
             useSessionStore.setState({ isBootstrapped: true });
             return;
         }
+    }
+
+    if (accessToken) {
+        useSessionStore.setState({
+            user: buildUserFromAccessToken(accessToken),
+            isAuthenticated: true,
+        });
     }
 
     // 🔥 STEP 2: baru fetch user

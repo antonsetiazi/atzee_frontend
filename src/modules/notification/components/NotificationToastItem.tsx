@@ -1,17 +1,15 @@
 // src/modules/notification/components/NotificationToastItem.tsx
 
 import type { Notification } from "../types/notification.types";
-import { useNavigate } from "react-router-dom";
 import { getNotificationUrl } from "../services/notification.navigate";
 import { notificationStore } from "../store/notification.store";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     item: Notification;
 }
 
 export default function NotificationToastItem({ item }: Props) {
-    const navigate = useNavigate();
-
     const handleClick = () => {
         const url = getNotificationUrl(item);
 
@@ -19,7 +17,7 @@ export default function NotificationToastItem({ item }: Props) {
         notificationStore.removeToast(item.id);
 
         if (url) {
-            navigate(url);
+            SmartNavigate.go(url);
         }
     };
 

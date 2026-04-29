@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/entities/blocks/BlockCardList.tsx
 
-import { formatValue } from "@/shared/utils/formatValue";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
+import { formatValue } from "@/shared/utils/formatValue";
 
 interface Props {
     block: any;
@@ -19,7 +19,6 @@ export default function BlockCardList({
     value,
     onSelect,
 }: Props) {
-    const navigate = useNavigate();
     const [internalSelected, setInternalSelected] = useState<any>(null);
     const selected = value ?? internalSelected;
     const safeData = Array.isArray(data) ? data : [];
@@ -37,7 +36,7 @@ export default function BlockCardList({
             // replace {id}
             to = to.replace("{id}", val);
 
-            navigate(to);
+            SmartNavigate.go(to);
             return;
         }
 

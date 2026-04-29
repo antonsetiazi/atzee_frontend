@@ -42,7 +42,7 @@ export default function LoginPage() {
             className="
                 relative min-h-screen overflow-hidden
                 flex items-center justify-center
-                px-4 py-8
+                px-2 py-8
             "
             style={{
                 background: `
@@ -128,7 +128,7 @@ export default function LoginPage() {
                         "0 25px 60px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08)",
                 }}
             >
-                <div className={isMobile ? "p-6" : "p-8"}>
+                <div className={isMobile ? "p-3" : "p-8"}>
                     {/* Header */}
                     <div className="mb-8 text-center">
                         {logoUrl && (

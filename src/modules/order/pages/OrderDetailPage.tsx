@@ -1,7 +1,7 @@
 // src/modules/order/pages/OrderDetailPage.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useOrders } from "../hooks/useOrders";
 import OrderDetailView from "../components/OrderDetailView";
@@ -11,10 +11,10 @@ import { useSessionStore } from "@/core/session/session.store";
 import { useRequireLogin } from "@/core/auth/useRequireLogin";
 import { chatService } from "@/business/chat/chat.service";
 import { PageSkeleton } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function OrderDetailPage() {
     const { id } = useParams();
-    const navigate = useNavigate();
 
     const { getOrderById } = useOrders();
     const { user } = useSessionStore();
@@ -74,7 +74,7 @@ export default function OrderDetailPage() {
                 context_id: String(order.id),
             });
 
-            navigate(`/chat/${room.id}`);
+            SmartNavigate.go(`/chat/${room.id}`);
         });
     };
 

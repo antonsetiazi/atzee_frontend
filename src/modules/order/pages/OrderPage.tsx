@@ -1,9 +1,9 @@
 // src/modules/order/pages/OrderPage.tsx
 
-import { useNavigate } from "react-router-dom";
 import { useOrders } from "../hooks/useOrders";
 import { formatValue } from "@/shared/utils/formatValue";
 import { HeaderPage, PageSkeleton } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 function getStatusStyle(status: string) {
     switch (status) {
@@ -36,7 +36,6 @@ function getStatusLabel(status: string) {
 }
 
 export default function OrderPage() {
-    const navigate = useNavigate();
     const { orders, loading, error } = useOrders();
 
     if (loading) return <PageSkeleton />;
@@ -62,7 +61,9 @@ export default function OrderPage() {
                     {orders.map((order) => (
                         <div
                             key={order.id}
-                            onClick={() => navigate(`/orders/${order.id}`)}
+                            onClick={() =>
+                                SmartNavigate.go(`/orders/${order.id}`)
+                            }
                             className="
                             p-4 rounded-2xl border border-[var(--color-border)]
                             hover:shadow-md transition cursor-pointer

@@ -42,8 +42,6 @@ export default function TableDesktop({
     onSearch,
     context,
 }: Props) {
-    // const navigate = useNavigate();
-
     const [searchValue, setSearchValue] = useState("");
     const [sortState, setSortState] = useState<
         { field: string; direction: "asc" | "desc" }[]

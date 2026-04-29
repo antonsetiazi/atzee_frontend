@@ -1,12 +1,11 @@
 // src/modules/account/profile/components/ProfileActions.tsx
 
-import { useNavigate } from "react-router-dom";
 import { useAuthService } from "@/app/auth/auth.service";
 import { useConfirm } from "@/core/confirm/useConfirm";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function ProfileActions() {
     const confirm = useConfirm();
-    const navigate = useNavigate();
     const { logout } = useAuthService();
 
     const handleLogout = async () => {
@@ -19,7 +18,7 @@ export default function ProfileActions() {
         if (!approved) return;
 
         logout();
-        navigate("/login");
+        SmartNavigate.go("/login");
     };
 
     return (
@@ -39,7 +38,7 @@ export default function ProfileActions() {
         >
             {/* CHANGE PASSWORD */}
             <button
-                onClick={() => navigate("/account/password")}
+                onClick={() => SmartNavigate.go("/account/password")}
                 className="
                     w-full
                     rounded-xl
@@ -65,7 +64,7 @@ export default function ProfileActions() {
 
             {/* ADDRESS */}
             <button
-                onClick={() => navigate("/account/address")}
+                onClick={() => SmartNavigate.go("/account/address")}
                 className="
                     w-full
                     rounded-xl
@@ -91,7 +90,7 @@ export default function ProfileActions() {
 
             {/* BANK */}
             <button
-                onClick={() => navigate("/account/bank")}
+                onClick={() => SmartNavigate.go("/account/bank")}
                 className="
                     w-full
                     rounded-xl

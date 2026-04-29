@@ -3,11 +3,11 @@
 
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import type { ListingItem } from "../types/listing.shared";
 import { useServiceListing } from "../hooks/useServiceListing";
 import { useProductListing } from "../hooks/useProductListing";
 import ListingView from "../components/ListingView";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 // import CategorySlider from "@/modules/category/components/CategorySlider";
 
 interface Props {
@@ -15,7 +15,6 @@ interface Props {
 }
 
 export default function ListingPage({ type }: Props) {
-    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const categoryFromUrl = searchParams.get("category");
     const productData = useProductListing();
@@ -43,11 +42,11 @@ export default function ListingPage({ type }: Props) {
 
     function handleItemClick(item: ListingItem) {
         if (item.type === "product") {
-            navigate(`/product/${item.id}`);
+            SmartNavigate.go(`/product/${item.id}`);
             return;
         }
 
-        navigate(`/service/${item.id}`);
+        SmartNavigate.go(`/service/${item.id}`);
     }
 
     return (

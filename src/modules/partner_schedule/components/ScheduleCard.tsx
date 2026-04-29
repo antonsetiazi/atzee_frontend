@@ -1,11 +1,9 @@
 // src/modules/partner_schedule/components/ScheduleCard.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useNavigate } from "react-router-dom";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function ScheduleCard({ item }: { item: any }) {
-    const navigate = useNavigate();
-
     const start = new Date(item.start_time);
     const end = new Date(item.end_time);
     const now = new Date();
@@ -38,7 +36,7 @@ export default function ScheduleCard({ item }: { item: any }) {
 
     return (
         <div
-            onClick={() => navigate(`/partner/orders/${item.id}`)}
+            onClick={() => SmartNavigate.go(`/partner/orders/${item.id}`)}
             className="p-4 rounded-2xl border border-[var(--color-border)] bg-white space-y-2 cursor-pointer"
         >
             <div className="flex justify-between items-center">

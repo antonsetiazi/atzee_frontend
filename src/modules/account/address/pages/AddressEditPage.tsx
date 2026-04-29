@@ -1,16 +1,16 @@
 // src/modules/account/address/pages/AddressEditPage.tsx
 
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddressForm from "../components/AddressForm";
 import { useAddressActions } from "../hooks/useAddressActions";
 import { fetchAddress } from "../api/address.api";
 import type { Address } from "../types/address.types";
 import { HeaderPage } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function AddressEditPage() {
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
     const { updateAddress, loading } = useAddressActions();
     const [address, setAddress] = useState<Address | null>(null);
     const [pageLoading, setPageLoading] = useState(true);
@@ -29,7 +29,7 @@ export default function AddressEditPage() {
 
     async function handleSubmit(data: Address) {
         await updateAddress(id!, data);
-        navigate("/account/address");
+        SmartNavigate.back();
     }
 
     return (

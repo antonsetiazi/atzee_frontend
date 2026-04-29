@@ -1,16 +1,15 @@
 // src/modules/auth/components/OtpLoginForm.tsx
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuthService } from "../../../app/auth/auth.service";
 import { Button, OtpInput, TelField } from "@/core/ui/components";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
 
 export default function OtpLoginForm() {
     const auth = useAuthService();
-    const navigate = useNavigate();
 
     const [step, setStep] = useState<"phone" | "otp">("phone");
 
@@ -28,7 +27,7 @@ export default function OtpLoginForm() {
             await auth.loginOtp(phone, code, TENANT_CODE);
             await runUserBootstrap();
 
-            navigate("/dashboard", { replace: true });
+            SmartNavigate.toDashboard();
         } catch (err) {
             console.error(err);
             setError("Invalid OTP");

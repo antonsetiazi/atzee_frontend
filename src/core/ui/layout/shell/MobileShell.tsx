@@ -1,5 +1,6 @@
 // src/core/ui/layout/shell/MobileShell.tsx
 
+// import { Link } from "react-router-dom";
 import { usePageStore } from "../../page/page.store";
 import Sidebar from "../Sidebar";
 import { useShell } from "./ShellContext";
@@ -12,8 +13,7 @@ export default function MobileShell({
 }) {
     const { drawerOpen, closeDrawer } = useShell();
     const { showBottomNav } = usePageStore();
-    const bottomNavHeight = 64; // px
-
+    const bottomNavHeight = 56; // px
     return (
         <div
             className="relative flex h-screen flex-col overflow-hidden"
@@ -62,6 +62,7 @@ export default function MobileShell({
                     }}
                 >
                     {children}
+                    {/* <Link to="/dev/native">TEST PAGE</Link> */}
                 </main>
                 {/* 🔥 Bottom Navigation */}
                 {showBottomNav && (

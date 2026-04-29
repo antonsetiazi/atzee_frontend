@@ -60,8 +60,8 @@
 
   /* ================= Typography ================= */
 
-  /* --font-family: 'Inter', sans-serif; */
-  --font-size: 16px;
+  --font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size: 14px;
   --font-weight: 400;
 
   --text-brand: var(--color-primary);
@@ -70,14 +70,16 @@
 
 body {
   margin: 0;
-  /* display: flex; */
-  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
   
   /* font-family: var(--font-family); */
   font-size: var(--font-size);
   font-weight: var(--font-weight);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 
   background: var(--color-background);
   color: var(--text-primary);
@@ -208,4 +210,15 @@ a:hover {
 
 .animate-slide-in {
     animation: slide-in 0.25s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

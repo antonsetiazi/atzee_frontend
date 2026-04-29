@@ -1,8 +1,8 @@
 // src/core/ui/components/mobile_header/MobileHeader.tsx
 
-import { useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     title?: string;
@@ -24,14 +24,13 @@ export default function MobileHeader({
     sticky = true,
     showBack = true,
 }: Props) {
-    const navigate = useNavigate();
     const { isMobile } = useBreakpoint();
 
     if (!isMobile) return null;
 
     function handleBack() {
         if (onBack) return onBack();
-        navigate(-1);
+        SmartNavigate.back();
     }
 
     return (

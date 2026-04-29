@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import type { FeedbackMessage } from "./feedback.types";
+import { generateId } from "../identity/id.generator";
 
 interface FeedbackState {
     messages: FeedbackMessage[];
@@ -15,7 +16,7 @@ export const useFeedbackStore = create<FeedbackState>((set) => ({
 
     push: (msg) =>
         set((state) => ({
-            messages: [...state.messages, { ...msg, id: crypto.randomUUID() }],
+            messages: [...state.messages, { ...msg, id: generateId() }],
         })),
 
     remove: (id) =>

@@ -11,6 +11,7 @@ export type FieldType =
     | "date"
     | "time"
     | "datetime"
+    | "color"
     | "file"
     | "json"
     | "duration";
@@ -54,6 +55,10 @@ export interface TimeFieldSchema extends BaseFieldSchema {
 
 export interface DateTimeFieldSchema extends BaseFieldSchema {
     type: "datetime";
+}
+
+export interface ColorFieldSchema extends BaseFieldSchema {
+    type: "color";
 }
 
 export interface SelectFieldSchema extends BaseFieldSchema {
@@ -110,6 +115,7 @@ export type FormFieldSchema =
     | DateFieldSchema
     | TimeFieldSchema
     | DateTimeFieldSchema
+    | ColorFieldSchema
     | FileFieldSchema
     | JsonFieldSchema
     | DurationFieldSchema;

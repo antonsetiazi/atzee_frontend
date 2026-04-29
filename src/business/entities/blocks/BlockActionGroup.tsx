@@ -2,8 +2,6 @@
 // src/business/entities/blocks/BlockActionGroup.tsx
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 import {
     httpPost,
     httpPatch,
@@ -16,6 +14,7 @@ import { usePermissionStore } from "@/core/permissions/permission.store";
 import Icon from "@/core/ui/icons/Icon";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { Button } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 type Props = {
     block: any;
@@ -28,7 +27,6 @@ export default function BlockActionGroup({
     entityId,
     entityData,
 }: Props) {
-    const navigate = useNavigate();
     const reloadSession = useSessionStore((s: any) => s.reloadSession);
 
     const [loadingIndex, setLoadingIndex] = useState<number | null>(null);
@@ -64,7 +62,7 @@ export default function BlockActionGroup({
         }
 
         if (affects === "reload") {
-            navigate(0);
+            SmartNavigate.back();
         }
     };
 
@@ -99,7 +97,7 @@ export default function BlockActionGroup({
 
             // 🔹 NAVIGATE
             if (action.type === "navigate" && action.to) {
-                navigate(resolveUrl(action.to)!);
+                SmartNavigate.go(resolveUrl(action.to)!);
                 return;
             }
 

@@ -63,6 +63,7 @@ export { default as TelField } from "./fields/TelField";
 export { default as TextField } from "./fields/TextField";
 export { default as TextAreaField } from "./fields/TextAreaField";
 export { default as TimeField } from "./fields/TimeField";
+export { default as ColorField } from "./fields/ColorField";
 
 // list
 export { default as ListTile } from "./list/ListTile";

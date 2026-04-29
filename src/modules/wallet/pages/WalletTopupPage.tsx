@@ -1,7 +1,6 @@
 // src/modules/wallet/pages/WalletTopupPage.tsx
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { HeaderPage, Button } from "@/core/ui/components";
 import { useSnapPayment } from "@/core/payment/useSnapPayment";
@@ -10,14 +9,13 @@ import { walletService } from "../services/wallet.service";
 import { notificationService } from "@/modules/notification/services/notification.service";
 
 import { eventBus } from "@/core/event/event.bus";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 
 const QUICK_AMOUNTS = [50000, 100000, 200000, 500000, 1000000];
 
 export default function WalletTopupPage() {
-    const navigate = useNavigate();
-
     const [amount, setAmount] = useState<number>(0);
     const [loading, setLoading] = useState(false);
 
@@ -53,13 +51,13 @@ export default function WalletTopupPage() {
                         eventBus.emit("wallet.topup.success", {
                             amount,
                         });
-                        navigate("/wallet");
+                        SmartNavigate.go("/wallet");
                     },
                     onPending: () => {
                         eventBus.emit("wallet.topup.pending", {
                             amount,
                         });
-                        navigate("/wallet");
+                        SmartNavigate.go("/wallet");
                     },
                     onError: () => {
                         eventBus.emit("wallet.topup.failed", {

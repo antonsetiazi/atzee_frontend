@@ -19,7 +19,7 @@ export default function RegisterPage() {
             className="
                 relative min-h-screen overflow-hidden
                 flex items-center justify-center
-                px-4 py-8
+                px-2 py-8
             "
             style={{
                 background: `
@@ -40,7 +40,7 @@ export default function RegisterPage() {
                     border: "1px solid rgba(255,255,255,0.12)",
                 }}
             >
-                <div className={isMobile ? "p-6" : "p-8"}>
+                <div className={isMobile ? "p-3" : "p-8"}>
                     <div className="mb-8 text-center">
                         {logoUrl && (
                             <img src={logoUrl} className="mx-auto mb-5 h-20" />

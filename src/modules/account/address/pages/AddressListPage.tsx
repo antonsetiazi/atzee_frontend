@@ -3,16 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Address } from "../types/address.types";
 import { useAddressActions } from "../hooks/useAddressActions";
-import { useNavigate } from "react-router-dom";
 import { Button, HeaderPage, PageSkeleton } from "@/core/ui/components";
 import AddressEmptyState from "../components/AddressEmptyState";
 import { useConfirm } from "@/core/confirm/useConfirm";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function AddressListPage() {
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [loading, setLoading] = useState(true);
     const { deleteAddress, getAddresses } = useAddressActions();
-    const navigate = useNavigate();
     const confirm = useConfirm();
 
     const loadAddresses = useCallback(async () => {
@@ -52,7 +51,11 @@ export default function AddressListPage() {
             />
             <div className="p-4 space-y-6">
                 <div className="flex justify-end">
-                    <Button onClick={() => navigate("/account/address/create")}>
+                    <Button
+                        onClick={() =>
+                            SmartNavigate.go("/account/address/create")
+                        }
+                    >
                         Tambah Alamat Baru
                     </Button>
                 </div>
@@ -93,7 +96,7 @@ export default function AddressListPage() {
                                 <div className="mt-4 flex gap-2">
                                     <button
                                         onClick={() =>
-                                            navigate(
+                                            SmartNavigate.go(
                                                 `/account/address/edit/${a.id}`,
                                             )
                                         }

@@ -4,15 +4,14 @@
 import { HeaderPage } from "@/core/ui/components";
 import AddressForm from "../components/AddressForm";
 import { useAddressActions } from "../hooks/useAddressActions";
-import { useNavigate } from "react-router-dom";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function AddressCreatePage() {
     const { createAddress, loading } = useAddressActions();
-    const navigate = useNavigate();
 
     async function handleSubmit(data: any) {
         await createAddress(data);
-        navigate("/account/address");
+        SmartNavigate.back();
     }
 
     return (

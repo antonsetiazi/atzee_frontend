@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { generateId } from "../identity/id.generator";
 import { useAuditStore } from "./audit.store";
 import type { ActionType } from "./audit.types";
 
@@ -21,7 +22,7 @@ export const useAudit = () => {
             ...params,
             userId,
             userName,
-            id: crypto.randomUUID(),
+            id: generateId(),
             timestamp: new Date().toISOString(),
         });
     };

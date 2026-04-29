@@ -1,12 +1,13 @@
 // src/core/ui/layout/BrandHeader.tsx
 
-import { useNavigate } from "react-router-dom";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
+import { useBrandingStore } from "../branding/branding.store";
 
 export default function BrandHeader() {
+    const branding = useBrandingStore((s) => s.branding);
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
-    const navigate = useNavigate();
 
-    const logoUrl = import.meta.env.VITE_APP_LOGO;
+    const logoUrl = branding?.logoUrl || import.meta.env.VITE_APP_LOGO;
     const appName = import.meta.env.VITE_APP_NAME || "Ustadzku";
     const tagline = import.meta.env.VITE_APP_TAGLINE;
 
@@ -46,7 +47,7 @@ export default function BrandHeader() {
                 {/* LEFT */}
                 <div
                     className="flex items-center gap-4 cursor-pointer"
-                    onClick={() => navigate("/")}
+                    onClick={() => SmartNavigate.go("/")}
                 >
                     {/* Logo Container (🔥 upgrade feel) */}
                     {logoUrl && (

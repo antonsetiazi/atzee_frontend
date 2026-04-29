@@ -1,10 +1,10 @@
 // src/module/account/bank/components/BankSelector.tsx
 
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useBanks } from "../hooks/useBanks";
 import BankCard from "./BankCard";
 import BankEmptyState from "./BankEmptyState";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function BankSelector({
     value,
@@ -13,7 +13,6 @@ export default function BankSelector({
     value: string | null;
     onChange: (id: string) => void;
 }) {
-    const navigate = useNavigate();
     const { data, loading } = useBanks();
 
     useEffect(() => {
@@ -32,7 +31,9 @@ export default function BankSelector({
     }
 
     if (data.length === 0) {
-        return <BankEmptyState onAdd={() => navigate("/account/bank")} />;
+        return (
+            <BankEmptyState onAdd={() => SmartNavigate.go("/account/bank")} />
+        );
     }
 
     return (

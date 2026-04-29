@@ -1,15 +1,13 @@
 // src/business/entities/blocks/BlockHeader.tsx
-// src/business/entities/blocks/BlockHeader.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
+import NotificationMobileButton from "@/modules/notification/components/NotificationMobileButton";
 
 interface Props {
     block: any;
 }
-
-const logoUrl = import.meta.env.VITE_APP_LOGO;
 
 export default function BlockHeader({ block }: Props) {
     const { isMobile } = useBreakpoint();
@@ -70,18 +68,7 @@ export default function BlockHeader({ block }: Props) {
                 `}
             >
                 {/* 🔥 TOP ROW */}
-                <div className="flex items-center justify-between">
-                    {/* Greeting */}
-                    {/* <div>
-                        {block.show_greeting && (
-                            <div className="text-white/80 text-sm">Hello,</div>
-                        )}
-
-                        <div className="text-white text-xl font-semibold tracking-tight">
-                            {user?.full_name?.split(" ")[0] || "Selamat Datang"}
-                        </div>
-                    </div> */}
-
+                <div className="flex items-start justify-between gap-4">
                     <div className="flex flex-col">
                         <span className="text-white text-lg font-semibold">
                             {block.title}
@@ -103,42 +90,10 @@ export default function BlockHeader({ block }: Props) {
                         </p>
                     </div>
 
-                    {/* Avatar */}
-                    {/* {block.show_avatar && (
-                        <div
-                            className="
-                            w-10 h-10 rounded-full
-                            bg-white/20 backdrop-blur-md
-                            flex items-center justify-center
-                            text-white font-bold
-                            border border-white/20
-                        "
-                        >
-                            {user?.full_name?.charAt(0) || "U"}
-                        </div>
-                    )} */}
-                    {logoUrl && (
-                        <div
-                            className="flex items-center justify-center rounded-2xl"
-                            style={{
-                                width: 68,
-                                height: 68,
-                                background: "rgba(255,255,255,0.1)",
-                                backdropFilter: "blur(10px)",
-                                boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-                            }}
-                        >
-                            <img src={logoUrl} className="h-14" />
-                        </div>
-                    )}
-                </div>
-                {/* 🔥 SUBTITLE */}
-                {/* {block.subtitle && (
-                    <div className="text-white/80 text-sm mt-2 max-w-[80%]">
-                        {block.subtitle}
+                    <div className="flex items-center">
+                        <NotificationMobileButton />
                     </div>
-                )} */}
-                {/* 🔥 SLOT (future: banner injection) */}
+                </div>
             </div>
         </div>
     );

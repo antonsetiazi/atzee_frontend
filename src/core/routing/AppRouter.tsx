@@ -1,6 +1,13 @@
 // src/core/routing/AppRouter.tsx
 
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import {
+    BrowserRouter,
+    Route,
+    Routes,
+    Navigate,
+    useNavigate,
+} from "react-router-dom";
 
 import ToastRenderer from "@/core/feedback/ToastRenderer";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
@@ -46,18 +53,31 @@ import WalletWithdrawPage from "@/modules/withdrawal/pages/WalletWithdrawPage";
 import WalletTopupPage from "@/modules/wallet/pages/WalletTopupPage";
 import NotificationToastContainer from "@/modules/notification/components/NotificationToastContainer";
 
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
+import NativeBridgeTestPage from "@/modules/dev/pages/NativeBridgeTestPage";
+
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
     import.meta.env.VITE_DEFAULT_DASHBOARD_ROUTE || "/dashboard";
+
+function NavigationRegistrar() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        SmartNavigate.register(navigate);
+    }, [navigate]);
+
+    return null;
+}
 
 export default function AppRouter() {
     const pages = usePageStore((s) => s.pages);
     const { isAuthenticated, isHydrated } = useSessionStore();
 
     if (!isHydrated) return null;
-
     return (
         <BrowserRouter>
+            <NavigationRegistrar />
             {/* GLOBAL FEEDBACK UI */}
             <ToastRenderer />
             <RedirectRootHandler />
@@ -69,6 +89,7 @@ export default function AppRouter() {
                 {/* PUBLIC */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/dev/native" element={<NativeBridgeTestPage />} />
 
                 {/* APP */}
                 <Route path="/" element={<AppLayout />}>

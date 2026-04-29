@@ -1,17 +1,15 @@
 // src/modules/booking/pages/BookingListPage.tsx
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { bookingApi, type BookingItem } from "../api/booking.api";
 import BookingCard from "../components/BookingCard";
 import { HeaderPage, PageSkeleton } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function BookingListPage() {
     const [data, setData] = useState<BookingItem[]>([]);
     const [loading, setLoading] = useState(true);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetch() {
@@ -44,7 +42,9 @@ export default function BookingListPage() {
                         <BookingCard
                             key={b.id}
                             booking={b}
-                            onClick={() => navigate(`/bookings/${b.id}`)}
+                            onClick={() =>
+                                SmartNavigate.go(`/bookings/${b.id}`)
+                            }
                         />
                     ))
                 )}

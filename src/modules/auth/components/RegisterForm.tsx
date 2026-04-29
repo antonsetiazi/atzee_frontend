@@ -1,9 +1,7 @@
 // src/modules/auth/components/RegisterForm.tsx
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { httpPost } from "@/core/http/http.client";
 
 import {
@@ -14,12 +12,11 @@ import {
 } from "@/core/ui/components";
 
 import RegisterRoleSwitcher from "./RegisterRoleSwitcher";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
 
 export default function RegisterForm() {
-    const navigate = useNavigate();
-
     const [registerAs, setRegisterAs] = useState<"user" | "partner">("user");
 
     const [fullName, setFullName] = useState("");
@@ -48,7 +45,7 @@ export default function RegisterForm() {
                 { skipAuth: true },
             );
 
-            navigate("/login", { replace: true });
+            SmartNavigate.replace("/login");
         } catch (err: any) {
             console.error(err);
             setError(err?.message || "Registrasi gagal. Silakan coba lagi.");

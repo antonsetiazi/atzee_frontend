@@ -1,7 +1,7 @@
 // src/modules/chat/ChatPage.tsx
 
 import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { chatApi } from "./api/chat.api";
 import { chatStore } from "@/business/chat/chat.store";
@@ -12,13 +12,13 @@ import ChatList from "./components/ChatList";
 import ChatWindow from "./components/ChatWindow";
 import { HeaderPage } from "@/core/ui/components";
 import { useSessionStore } from "@/core/session/session.store";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function ChatPage() {
     const { user } = useSessionStore();
     const currentUserId = String(user?.id || "");
 
     const { roomId } = useParams();
-    const navigate = useNavigate();
 
     const { isMobile } = useBreakpoint();
 
@@ -63,7 +63,7 @@ export default function ChatPage() {
                                 activeRoom={activeRoom}
                                 onSelect={(id) => {
                                     setActiveRoom(id);
-                                    navigate(`/chat/${id}`);
+                                    SmartNavigate.go(`/chat/${id}`);
                                 }}
                                 getUnread={getUnread}
                                 getPresence={getPresence}
@@ -116,7 +116,7 @@ export default function ChatPage() {
                         activeRoom={activeRoom}
                         onSelect={(id) => {
                             setActiveRoom(id);
-                            navigate(`/chat/${id}`);
+                            SmartNavigate.go(`/chat/${id}`);
                         }}
                         getUnread={getUnread}
                         getPresence={getPresence}

@@ -16,7 +16,7 @@ export default function MobileListingLayout(props: any) {
                 onChangeFilters={props.onChangeFilters}
             />
 
-            <div className="p-4 space-y-4">
+            <div className="p-2 space-y-4">
                 <ListingControls
                     mobile
                     sort={props.sort}

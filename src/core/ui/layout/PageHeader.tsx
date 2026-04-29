@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSessionStore } from "@/core/session/session.store";
-import { useNavigate } from "react-router-dom";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface PageHeaderProps {
     title?: string;
@@ -19,7 +19,6 @@ export default function PageHeader({
     variant = "default",
 }: PageHeaderProps) {
     const [query, setQuery] = useState("");
-    const navigate = useNavigate();
     const user = useSessionStore((s) => s.user);
 
     const [isScrolled, setIsScrolled] = useState(false);
@@ -121,7 +120,7 @@ export default function PageHeader({
                                 </div>
                             ) : (
                                 <button
-                                    onClick={() => navigate("/login")}
+                                    onClick={() => SmartNavigate.go("/login")}
                                     className="
                                         bg-white/20 backdrop-blur
                                         text-white text-sm px-3 py-1.5

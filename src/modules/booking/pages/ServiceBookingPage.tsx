@@ -1,7 +1,7 @@
 // src/modules/booking/pages/ServiceBookingPage.tsx
 
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import BookingView from "../components/BookingView";
 import { bookingService } from "../services/booking.service";
@@ -16,10 +16,10 @@ import type { ListingDetail } from "@/modules/listing_detail/types/listingDetail
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import { HeaderPage, PageSkeleton } from "@/core/ui/components";
 import { toggleOffering } from "../utils/toggleOffering";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function ServiceBookingPage() {
     const { id } = useParams();
-    const navigate = useNavigate();
     const { isMobile } = useBreakpoint();
 
     const [selectedOfferings, setSelectedOfferings] = useState<number[]>([]);
@@ -114,7 +114,7 @@ export default function ServiceBookingPage() {
             };
 
             initFromBooking(enrichedResult);
-            navigate("/checkout");
+            SmartNavigate.go("/checkout");
         } catch (err) {
             console.error(err);
             alert("Gagal booking");

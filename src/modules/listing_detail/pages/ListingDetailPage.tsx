@@ -1,7 +1,7 @@
 // src/modules/listing_detail/pages/ListingDetailPage.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
     ArrowLeftIcon,
     ChatBubbleLeftRightIcon,
@@ -19,6 +19,7 @@ import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import ListingSection from "@/modules/listing/components/sections/ListingSection";
 import { useServiceListing } from "@/modules/listing/hooks/useServiceListing";
 import { PageSkeleton } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     type: "product" | "service";
@@ -26,7 +27,6 @@ interface Props {
 
 export default function ListingDetailPage({ type }: Props) {
     const { id } = useParams();
-    const navigate = useNavigate();
     const { isMobile } = useBreakpoint();
 
     const { user } = useSessionStore();
@@ -40,11 +40,11 @@ export default function ListingDetailPage({ type }: Props) {
 
     function handleClick(item: any) {
         if (item.type === "service") {
-            navigate(`/service/${item.id}`);
+            SmartNavigate.go(`/service/${item.id}`);
             return;
         }
 
-        navigate(`/product/${item.id}`);
+        SmartNavigate.go(`/product/${item.id}`);
     }
 
     // ================================
@@ -55,12 +55,12 @@ export default function ListingDetailPage({ type }: Props) {
 
         triggerLoginRequired(() => {
             if (data.type === "service") {
-                navigate(`/service/${data.id}/booking`);
+                SmartNavigate.go(`/service/${data.id}/booking`);
                 return;
             }
 
             // 🔥 product → order
-            navigate(`/order/create?type=product&id=${data.id}`);
+            SmartNavigate.go(`/order/create?type=product&id=${data.id}`);
         });
     }
 
@@ -68,7 +68,7 @@ export default function ListingDetailPage({ type }: Props) {
         if (!data) return;
 
         triggerLoginRequired(() => {
-            navigate(`/order/create?type=${data.type}&id=${data.id}`);
+            SmartNavigate.go(`/order/create?type=${data.type}&id=${data.id}`);
         });
     }
 
@@ -86,7 +86,7 @@ export default function ListingDetailPage({ type }: Props) {
                 context_id: String(data.id),
             });
 
-            navigate(`/chat/${room.id}`);
+            SmartNavigate.go(`/chat/${room.id}`);
         });
     };
 
@@ -183,8 +183,8 @@ export default function ListingDetailPage({ type }: Props) {
             <div className="fixed top-0 left-0 right-0 z-40 px-4 pt-4">
                 <button
                     onClick={() => {
-                        if (window.history.length > 1) navigate(-1);
-                        else navigate("/");
+                        if (window.history.length > 1) SmartNavigate.back();
+                        else SmartNavigate.go("/");
                     }}
                     className="
                         group

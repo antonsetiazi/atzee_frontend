@@ -2,6 +2,7 @@
 // src/business/transaction_workspace/engine/useTransactionEngine.ts
 
 import { useReducer } from "react";
+import { generateId } from "@/core/identity/id.generator";
 import { transactionReducer } from "./transaction.reducer";
 import type {
     TransactionState,
@@ -25,7 +26,7 @@ export function useTransactionEngine(
 
     const addItem = (product: any) => {
         const line: TransactionLineState = {
-            id: crypto.randomUUID(),
+            id: generateId(),
             product_id: product.id,
             name: product.name,
             quantity: product.quantity ?? 1,

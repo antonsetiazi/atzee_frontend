@@ -13,6 +13,7 @@ export async function refreshTokenApi(refresh: string): Promise<{
     access: string;
     refresh: string;
 }> {
+    console.log("refreshTokenApi");
     return httpPost("/auth/refresh/", { refresh }, { skipAuth: true });
 }
 

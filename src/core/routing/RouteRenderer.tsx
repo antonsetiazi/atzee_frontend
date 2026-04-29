@@ -7,7 +7,6 @@ import PermissionGuard from "@/core/permissions/PermissionGuard";
 
 export function renderRoute(route: AppRoute) {
     const Element = route.element;
-
     return (
         <Route
             key={route.path}

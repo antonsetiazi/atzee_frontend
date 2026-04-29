@@ -1,22 +1,20 @@
 // src/modules/listing/components/sections/ListingHeader.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { useNavigate } from "react-router-dom";
 
 export default function ListingHeader({
     filters,
     onChangeFilters,
     mobile,
 }: any) {
-    const navigate = useNavigate();
-
     return (
         <div
             className={`flex gap-2 ${mobile ? "sticky top-0 z-20 p-4 border-b border-[var(--color-border)] bg-[var(--color-background)]" : "mb-4"}`}
         >
             {mobile && (
-                <button onClick={() => navigate(-1)}>
+                <button onClick={() => SmartNavigate.back()}>
                     <ArrowLeftIcon className="w-5 h-5" />
                 </button>
             )}

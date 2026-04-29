@@ -2,9 +2,9 @@
 // src/business/entities/blocks/BlockTable.tsx
 
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AdaptiveTableRenderer from "../../tables/AdaptiveTableRenderer";
 import type { TableContext } from "../../tables/table.context";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     block: any;
@@ -21,8 +21,6 @@ export default function BlockTable({
     entityKey,
     id,
 }: Props) {
-    const navigate = useNavigate();
-
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -38,12 +36,12 @@ export default function BlockTable({
 
     const tableContext = useMemo<TableContext>(
         () => ({
-            navigate: (path: string) => navigate(path),
+            navigate: (path: string) => SmartNavigate.go(path),
             refresh: () => {}, // 🔥 no-op (page-level refresh only)
             entityKey,
             parent_id: id,
         }),
-        [navigate, entityKey, id],
+        [entityKey, id],
     );
 
     return (

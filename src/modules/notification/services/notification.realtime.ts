@@ -4,6 +4,7 @@ import { useRealtimeStore } from "@/core/realtime";
 import { notificationStore } from "../store/notification.store";
 import { notificationSmart } from "./notification.smart";
 import type { Notification } from "../types/notification.types";
+import { generateId } from "@/core/identity/id.generator";
 
 let initialized = false;
 
@@ -13,7 +14,7 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 function normalizeNotification(raw: Record<string, unknown>): Notification {
     return {
-        id: String(raw.id ?? crypto.randomUUID()),
+        id: String(raw.id ?? generateId()),
         title: String(raw.title ?? "Notification"),
         message: String(raw.message ?? ""),
         type:

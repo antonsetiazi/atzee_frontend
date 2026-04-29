@@ -30,10 +30,6 @@ export default function NotificationBell() {
         if (next) {
             notificationSmart.refreshNow();
         }
-
-        // if (next && unread > 0) {
-        //     notificationService.inbox.markAllAsRead();
-        // }
     };
 
     return (

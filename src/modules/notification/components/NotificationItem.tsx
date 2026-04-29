@@ -2,16 +2,14 @@
 
 import type { Notification } from "../types/notification.types";
 import { notificationService } from "../services/notification.service";
-import { useNavigate } from "react-router-dom";
 import { getNotificationUrl } from "../services/notification.navigate";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     item: Notification;
 }
 
 export default function NotificationItem({ item }: Props) {
-    const navigate = useNavigate();
-
     const handleClick = () => {
         if (!item.read) {
             notificationService.inbox.markAsRead(item.id);
@@ -20,7 +18,7 @@ export default function NotificationItem({ item }: Props) {
         const url = getNotificationUrl(item);
 
         if (url) {
-            navigate(url);
+            SmartNavigate.go(url);
         }
     };
 

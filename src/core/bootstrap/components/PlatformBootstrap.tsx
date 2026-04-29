@@ -20,16 +20,19 @@ export function PlatformBootstrap({ children }: { children: React.ReactNode }) {
         initialized.current = true;
 
         async function init() {
-            await TenantBootstrap();
-            await AuthBootstrap();
-            await runUserBootstrap();
+            try {
+                await TenantBootstrap();
+                await AuthBootstrap();
+                await runUserBootstrap();
 
-            registerNotificationListeners();
-            registerOrderListeners();
-
-            registerNotificationRealtime();
-
-            setReady(true);
+                registerNotificationListeners();
+                registerOrderListeners();
+                registerNotificationRealtime();
+            } catch (error) {
+                console.error("Platform bootstrap failed:", error);
+            } finally {
+                setReady(true);
+            }
         }
 
         init();

@@ -1,8 +1,8 @@
 // src/modules/partner_order/pages/PartnerOrderPage.tsx
 
-import { useNavigate } from "react-router-dom";
 import { usePartnerOrders } from "../hooks/usePartnerOrders";
 import { HeaderPage, PageSkeleton } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 function getStatusStyle(status: string) {
     switch (status) {
@@ -22,7 +22,6 @@ function getStatusStyle(status: string) {
 }
 
 export default function PartnerOrderPage() {
-    const navigate = useNavigate();
     const { orders, loading, error } = usePartnerOrders();
 
     if (loading) return <PageSkeleton />;
@@ -39,7 +38,9 @@ export default function PartnerOrderPage() {
                 {orders.map((order) => (
                     <div
                         key={order.id}
-                        onClick={() => navigate(`/partner/orders/${order.id}`)}
+                        onClick={() =>
+                            SmartNavigate.go(`/partner/orders/${order.id}`)
+                        }
                         className="p-4 rounded-2xl border border-[var(--color-border)] bg-white cursor-pointer"
                     >
                         <div className="flex justify-between">

@@ -1,16 +1,16 @@
 // src/core/ui/layout/AppTopbar.tsx
 
 import { useNavigationStore } from "@/core/ui/navigation/navigation.store";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Icon from "@/core/ui/icons/Icon";
 import UserMenuDropdown from "./UserMenuDropdown";
 import { useSessionStore } from "@/core/session/session.store";
 import { AuthButton } from "@/core/ui/components";
 import { NotificationBell } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function AppTopbar() {
     const items = useNavigationStore((s) => s.topbar);
-    const navigate = useNavigate();
     const location = useLocation();
     const user = useSessionStore((s) => s.user);
 
@@ -42,9 +42,10 @@ export default function AppTopbar() {
                                 <button
                                     key={item.target}
                                     onClick={() =>
-                                        item.route && navigate(item.route)
+                                        item.route &&
+                                        SmartNavigate.go(item.route)
                                     }
-                                    className="relative flex items-center gap-2 text-sm font-medium transition-all duration-200"
+                                    className="relative flex items-center gap-2 text-md font-light transition-all duration-200"
                                     style={{
                                         color: active
                                             ? "#ffffff"
@@ -74,7 +75,7 @@ export default function AppTopbar() {
                     {!user ? (
                         <AuthButton
                             variant="primary"
-                            onClick={() => navigate("/login")}
+                            onClick={() => SmartNavigate.go("/login")}
                         >
                             <Icon name="login" size="sm" />
                             Login

@@ -1,8 +1,8 @@
 // src/modules/category/components/CategoryCard.tsx
 
-import { useNavigate } from "react-router-dom";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import type { CategoryItem } from "../types/category.types";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     item: CategoryItem;
@@ -10,10 +10,8 @@ interface Props {
 }
 
 export default function CategoryCard({ item, isMobile = true }: Props) {
-    const navigate = useNavigate();
-
     function handleClick() {
-        navigate(`/services?category=${item.code}`);
+        SmartNavigate.go(`/services?category=${item.code}`);
     }
 
     return (

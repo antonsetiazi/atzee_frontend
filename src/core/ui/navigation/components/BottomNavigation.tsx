@@ -1,19 +1,17 @@
 // src/core/ui/navigation/components/BottomNavigation.tsx
 
 import { useNavigationStore } from "@/core/ui/navigation/navigation.store";
-import { useNavigate } from "react-router-dom";
 import Icon from "@/core/ui/icons/Icon";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function BottomNavigation() {
-    const navigate = useNavigate();
     const items = useNavigationStore((s) => s.bottom);
-    // console.log(items);
 
     if (!items.length) return null;
 
     return (
         <div
-            className="flex justify-around items-center h-16 px-2 rounded-t-3xl"
+            className="flex justify-around items-center h-14 px-2rounded-t-3xl"
             style={{
                 background: "var(--color-surface)",
                 borderTop: "1px solid var(--color-border)",
@@ -26,8 +24,10 @@ export default function BottomNavigation() {
                 return (
                     <button
                         key={item.target}
-                        onClick={() => item.route && navigate(item.route)}
-                        className="relative flex flex-col items-center justify-center flex-1 py-2 transition-all duration-200"
+                        onClick={() =>
+                            item.route && SmartNavigate.go(item.route)
+                        }
+                        className="relative flex flex-col items-center justify-center flex-1 py-1 transition-all duration-200"
                         style={{
                             color: isActive
                                 ? "var(--color-primary)"

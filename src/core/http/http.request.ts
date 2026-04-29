@@ -5,7 +5,7 @@ import { useSessionStore } from "@/core/session/session.store";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { TENANT_CODE } from "@/core/tenant/tenant.config";
 
-import { buildUrl, parseResponse } from "./http.utils";
+import { buildUrl, parseJsonResponse, unwrapResponse } from "./http.utils";
 import { AppResponseError, getResponseKind } from "@/core/response";
 import {
     getInflightRequest,
@@ -14,7 +14,7 @@ import {
 } from "./http.cache";
 
 import { refreshTokenApi } from "@/core/auth/auth.api";
-import { parseJsonResponse } from "./http.utils";
+import { buildUserFromAccessToken } from "@/core/auth/auth.identity";
 
 const DEFAULT_TIMEOUT = 30000;
 
@@ -99,6 +99,10 @@ export async function request<T>(
     }
 }
 
+function normalizeTokenResponse(res: any) {
+    return res?.data ?? res;
+}
+
 async function doRequest<T>(params: {
     input: RequestInfo;
     url: string;
@@ -178,9 +182,18 @@ async function doRequest<T>(params: {
                                 signal: controller.signal,
                             });
 
-                            const data = await parseResponse<T>(retryRes);
+                            // const data = await parseResponse<T>(retryRes);
+                            const retryRaw = await parseJsonResponse(retryRes);
 
-                            resolve(data);
+                            if (
+                                retryRaw &&
+                                typeof retryRaw === "object" &&
+                                ("meta" in retryRaw || "message" in retryRaw)
+                            ) {
+                                return retryRaw as T;
+                            }
+
+                            resolve(unwrapResponse<T>(retryRaw));
                         } catch (err) {
                             reject(err);
                         }
@@ -191,12 +204,16 @@ async function doRequest<T>(params: {
             isRefreshing = true;
 
             try {
-                const tokens = await refreshTokenApi(refreshToken);
+                const rawTokens = await refreshTokenApi(refreshToken);
+                const tokens = normalizeTokenResponse(rawTokens);
 
-                useSessionStore.setState({
-                    accessToken: tokens.access,
-                    refreshToken: tokens.refresh,
-                });
+                if (!tokens?.access || !tokens?.refresh) {
+                    throw new Error("Invalid refresh token response");
+                }
+
+                const user = buildUserFromAccessToken(tokens.access);
+
+                useSessionStore.getState().setSession(tokens, user);
 
                 notify(tokens.access);
 
@@ -208,7 +225,17 @@ async function doRequest<T>(params: {
                     signal: controller.signal,
                 });
 
-                return await parseResponse<T>(retryRes);
+                const retryRaw = await parseJsonResponse(retryRes);
+
+                if (
+                    retryRaw &&
+                    typeof retryRaw === "object" &&
+                    ("meta" in retryRaw || "message" in retryRaw)
+                ) {
+                    return retryRaw as T;
+                }
+
+                return unwrapResponse<T>(retryRaw);
             } catch (err) {
                 pendingRequests = [];
                 clearSession();
@@ -270,7 +297,7 @@ async function doRequest<T>(params: {
          * ❌ ERROR RESPONSE
          * ==========================================
          */
-        const payload = await parseResponse<any>(res);
+        const payload = await parseJsonResponse(res);
 
         const backendError = payload?.error;
 

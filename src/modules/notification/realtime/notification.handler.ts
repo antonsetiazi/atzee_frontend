@@ -4,6 +4,7 @@
 import { ws } from "@/core/realtime/ws";
 import { notificationStore } from "../store/notification.store";
 import type { Notification } from "../types/notification.types";
+import { generateId } from "@/core/identity/id.generator";
 
 class NotificationRealtimeHandler {
     private initialized = false;
@@ -66,7 +67,7 @@ class NotificationRealtimeHandler {
 
     private normalize(raw: any): Notification {
         return {
-            id: String(raw?.id ?? crypto.randomUUID()),
+            id: String(raw?.id ?? generateId()),
 
             title: String(raw?.title ?? "Notification"),
 

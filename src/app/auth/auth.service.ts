@@ -1,4 +1,5 @@
 // src/app/auth/auth.service.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
     loginApi,
@@ -6,17 +7,23 @@ import {
     requestOtpApi,
     fetchAuthConfig,
 } from "@/core/auth/auth.api";
-import type { LoginPayload } from "../../core/auth/auth.types";
+import type { LoginPayload, LoginResponse } from "@/core/auth/auth.types";
 import { useSessionStore } from "@/core/session/session.store";
 import { usePermissionStore } from "@/core/permissions/permission.store";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
-import { jwtDecode } from "jwt-decode";
+import { buildUserFromAccessToken } from "@/core/auth/auth.identity";
 
-interface JwtPayload {
-    user_id: string;
-    username: string;
-    role_id?: string;
-    active_tenant: string;
+/* ==================================================
+   NORMALIZER
+================================================== */
+function normalizeAuthResponse(res: any): LoginResponse {
+    const body = res?.data ?? res;
+
+    if (!body?.user || !body?.tokens) {
+        throw new Error("Invalid auth response");
+    }
+
+    return body;
 }
 
 export function useAuthService() {
@@ -37,29 +44,30 @@ export function useAuthService() {
     }
 
     async function loginOtp(phone: string, otp: string, tenant_code: string) {
-        const res = await loginOtpApi({
+        const raw = await loginOtpApi({
             phone,
             otp,
             tenant_code,
         });
 
-        const jwt = jwtDecode<JwtPayload>(res.tokens.access);
+        const res = normalizeAuthResponse(raw);
+
         const userWithRole = {
             ...res.user,
-            role_id: jwt.role_id,
+            ...buildUserFromAccessToken(res.tokens.access),
         };
 
         useSessionStore.getState().setSession(res.tokens, userWithRole);
     }
 
     async function loginPassword(payload: LoginPayload) {
-        const res = await loginApi(payload);
+        const raw = await loginApi(payload);
 
-        // 🔥 decode token untuk ambil role_id
-        const jwt = jwtDecode<JwtPayload>(res.tokens.access);
+        const res = normalizeAuthResponse(raw);
+
         const userWithRole = {
             ...res.user,
-            role_id: jwt.role_id,
+            ...buildUserFromAccessToken(res.tokens.access),
         };
 
         useSessionStore.getState().setSession(res.tokens, userWithRole);

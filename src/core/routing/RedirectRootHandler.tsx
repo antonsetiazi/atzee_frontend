@@ -1,8 +1,9 @@
 // src/core/routing/RedirectRootHandler.tsx
 
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useSessionStore } from "../session/session.store";
+import { SmartNavigate } from "../navigation/SmartNavigate";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -11,7 +12,6 @@ const DEFAULT_DASHBOARD_ROUTE =
 export default function RedirectRootHandler() {
     const { isAuthenticated, isHydrated } = useSessionStore();
     const location = useLocation();
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!isHydrated) return;
@@ -19,12 +19,12 @@ export default function RedirectRootHandler() {
         // hanya redirect jika berada di root "/"
         if (location.pathname === "/") {
             if (isAuthenticated) {
-                navigate(DEFAULT_DASHBOARD_ROUTE, { replace: true });
+                SmartNavigate.replace(DEFAULT_DASHBOARD_ROUTE);
             } else {
-                navigate(DEFAULT_GUEST_ROUTE, { replace: true });
+                SmartNavigate.replace(DEFAULT_GUEST_ROUTE);
             }
         }
-    }, [isAuthenticated, isHydrated, location.pathname, navigate]);
+    }, [isAuthenticated, isHydrated, location.pathname]);
 
     return null;
 }

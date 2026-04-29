@@ -6,10 +6,16 @@ import AvatarUploader from "./AvatarUploader";
 interface Props {
     user: any;
     onUpload: (file: File) => Promise<void>;
+    onPickNative?: () => void;
     uploading?: boolean;
 }
 
-export default function ProfileHeader({ user, onUpload, uploading }: Props) {
+export default function ProfileHeader({
+    user,
+    onUpload,
+    // onPickNative,
+    uploading,
+}: Props) {
     return (
         <div
             className="
@@ -86,6 +92,13 @@ export default function ProfileHeader({ user, onUpload, uploading }: Props) {
                         </span>
                     </div>
                 )}
+
+                {/* <button
+                    onClick={onPickNative}
+                    className="px-4 py-2 bg-black text-white rounded"
+                >
+                    Pick from Camera (Native)
+                </button> */}
             </div>
         </div>
     );

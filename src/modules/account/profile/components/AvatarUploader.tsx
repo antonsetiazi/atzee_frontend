@@ -1,6 +1,7 @@
 // src/modules/account/profile/components/AvatarUploader.tsx
 
 import { useMemo, useState } from "react";
+import { compressAvatar } from "@/core/media/image.compress";
 
 interface Props {
     avatarUrl?: string | null;
@@ -22,10 +23,18 @@ export default function AvatarUploader({
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const url = URL.createObjectURL(file);
-        setPreview(url);
+        try {
+            // preview original agar cepat tampil
+            const previewUrl = URL.createObjectURL(file);
+            setPreview(previewUrl);
 
-        await onUpload(file);
+            // compress sebelum upload
+            const optimizedFile = await compressAvatar(file);
+
+            await onUpload(optimizedFile);
+        } catch (error) {
+            console.error("Avatar upload failed:", error);
+        }
     };
 
     const imageSrc = preview || avatarUrl;

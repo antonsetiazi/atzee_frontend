@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/entities/blocks/BlockListView.tsx
 
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import { formatValue } from "@/shared/utils/formatValue";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
     block: any;
@@ -18,7 +18,6 @@ export default function BlockListView({
     value,
     onSelect,
 }: Props) {
-    const navigate = useNavigate();
     const [internalSelected, setInternalSelected] = useState<any>(null);
 
     const selected = value ?? internalSelected;
@@ -34,7 +33,7 @@ export default function BlockListView({
         ) {
             let to = block.tile.action.to;
             to = to.replace("{id}", val);
-            navigate(to);
+            SmartNavigate.go(to);
             return;
         }
 

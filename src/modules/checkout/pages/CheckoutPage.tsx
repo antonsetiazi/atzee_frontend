@@ -1,19 +1,17 @@
 // src/modules/checkout/pages/CheckoutPage.tsx
 
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import CheckoutView from "../components/CheckoutView";
 import { useCheckout } from "../hooks/useCheckout";
 
 import { useSnapPayment } from "@/core/payment/useSnapPayment";
 import { notificationService } from "@/modules/notification/services/notification.service";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 const CLIENT_KEY = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 
 export default function CheckoutPage() {
-    const navigate = useNavigate();
-
     const {
         items,
         confirmPayment,
@@ -33,9 +31,9 @@ export default function CheckoutPage() {
        =========================== */
     useEffect(() => {
         if (!items.length) {
-            navigate("/");
+            SmartNavigate.go("/");
         }
-    }, [items, navigate]);
+    }, [items]);
 
     /* ===========================
        🚀 HANDLE PAY
@@ -70,7 +68,7 @@ export default function CheckoutPage() {
 
             // 🔥 WALLET (DIRECT)
             if (res.type === "direct") {
-                navigate(`/payment?order_id=${res.payment_id}`);
+                SmartNavigate.go(`/payment?order_id=${res.payment_id}`);
                 return;
             }
 
@@ -78,10 +76,10 @@ export default function CheckoutPage() {
             if (res.type === "popup" && res.payload.token) {
                 pay(res.payload.token, {
                     onSuccess: () => {
-                        navigate(`/payment?order_id=${res.payment_id}`);
+                        SmartNavigate.go(`/payment?order_id=${res.payment_id}`);
                     },
                     onPending: () => {
-                        navigate(`/payment?order_id=${res.payment_id}`);
+                        SmartNavigate.go(`/payment?order_id=${res.payment_id}`);
                     },
                     onError: () => {
                         notificationService.toast.error(
@@ -102,7 +100,7 @@ export default function CheckoutPage() {
             }
 
             if (res.type === "instruction") {
-                navigate(`/payment?order_id=${res.payment_id}`);
+                SmartNavigate.go(`/payment?order_id=${res.payment_id}`);
                 return;
             }
 
@@ -121,7 +119,7 @@ export default function CheckoutPage() {
         try {
             await cancelCurrentBooking();
             notificationService.toast.info("Booking berhasil dibatalkan");
-            navigate("/services");
+            SmartNavigate.go("/services");
         } catch (err) {
             console.error(err);
             notificationService.toast.error("Gagal membatalkan booking");

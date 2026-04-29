@@ -5,7 +5,6 @@ import type { FormSchema } from "./form.types";
 import FieldRenderer from "./fields/FieldRenderer";
 import { useEffect, useState, useCallback } from "react";
 import { submitForm } from "./form.submit";
-import { useNavigate } from "react-router-dom";
 import type { TableContext } from "../tables/table.context";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { clearEntityCacheByPrefix } from "../entities/cache/entity.cache";
@@ -16,6 +15,7 @@ import { expandDotNotation, flattenObject } from "./form.utils";
 import { buildDefaultValues } from "./form.defaults";
 import { handleCoreAffects } from "@/core/utils/coreAffects";
 import { Button } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     entity: string;
@@ -38,7 +38,6 @@ export default function FormRenderer({
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const navigate = useNavigate();
     const feedback = useFeedbackStore();
     // const pages = usePageStore.getState().pages;
     const isViewMode = schema.mode === "view";
@@ -106,7 +105,7 @@ export default function FormRenderer({
                     .replace(":id", String(response[param]))
                     .replace(":parent_id", String(parentId));
 
-                navigate(path);
+                SmartNavigate.go(path);
             }
         } catch (err: any) {
             if (err?.fieldErrors) {

@@ -1,7 +1,7 @@
 // src/modules/auth/components/PasswordLoginForm.tsx
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import { useAuthService } from "@/app/auth/auth.service";
 import { Button, EmailField, PasswordField } from "@/core/ui/components";
 import { useFormError } from "@/core/response";
@@ -11,7 +11,6 @@ const EMAIL = import.meta.env.VITE_DEFAULT_LOGIN_EMAIL;
 const PASSWORD = import.meta.env.VITE_DEFAULT_LOGIN_PASSWORD;
 
 export function PasswordLoginForm() {
-    const navigate = useNavigate();
     const [email, setEmail] = useState(EMAIL); // default untuk dev
     const [password, setPassword] = useState(PASSWORD);
     const [loading, setLoading] = useState(false);
@@ -31,8 +30,9 @@ export function PasswordLoginForm() {
                 tenant_code: TENANT_CODE,
             });
 
-            navigate("/dashboard", { replace: true });
+            SmartNavigate.loginSuccess();
         } catch (err) {
+            console.log("error", err);
             handleError(err);
         } finally {
             setLoading(false);

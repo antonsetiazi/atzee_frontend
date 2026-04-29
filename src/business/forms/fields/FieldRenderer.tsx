@@ -9,6 +9,7 @@ import JsonField from "./JsonField";
 import DurationField from "./DurationField";
 
 import {
+    ColorField,
     DateField,
     DateTimeField,
     EmailField,
@@ -185,6 +186,19 @@ export default function FieldRenderer({
                     field={field}
                     value={value}
                     error={error}
+                    onChange={onChange}
+                />
+            );
+
+        case "color":
+            return (
+                <ColorField
+                    name={field.key}
+                    label={field.label}
+                    value={value}
+                    error={error}
+                    required={field.required}
+                    disabled={field.disabled}
                     onChange={onChange}
                 />
             );

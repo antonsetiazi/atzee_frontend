@@ -16,6 +16,7 @@ export interface LoginResponse {
         username: string;
         full_name: string;
         tenant_id: string;
+        role_id?: string;
     };
 }
 
