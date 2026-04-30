@@ -2,7 +2,7 @@
 // src/business/workflows/WorkflowActionRenderer.tsx
 
 import type { WorkflowAction } from "./workflow.types";
-import { usePermission } from "@/core/permissions/usePermission";
+import { usePermission } from "@/core/permissions/hooks/usePermission";
 
 function evaluateWhen(when: Record<string, any> | undefined, entityData: any) {
     if (!when) return true;

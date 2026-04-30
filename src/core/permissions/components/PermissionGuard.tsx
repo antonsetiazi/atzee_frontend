@@ -1,7 +1,7 @@
-// src/core/permissions/PermissionGuard.tsx
+// src/core/permissions/components/PermissionGuard.tsx
 
 import { Navigate, Outlet } from "react-router-dom";
-import { usePermissionStore } from "@/core/permissions/permission.store";
+import { usePermissionStore } from "@/core/permissions/store/permission.store";
 
 interface Props {
     permission?: string;

@@ -1,6 +1,6 @@
 // src/business/workflows/WorkflowActions.tsx
 
-import { Can } from "../../core/permissions/Can";
+import { Can } from "../../core/permissions/components/Can";
 import type { WorkflowAction } from "./types";
 
 interface Props {

@@ -2,7 +2,7 @@
 // src/business/actions/ActionRenderer.tsx
 
 import type { EntityAction } from "./action.types";
-import { usePermission } from "@/core/permissions/usePermission";
+import { usePermission } from "@/core/permissions/hooks/usePermission";
 import { useNavigate } from "react-router-dom";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { useConfirmStore } from "@/core/confirm/confirm.store";

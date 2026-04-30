@@ -9,7 +9,7 @@ import {
 } from "@/core/auth/auth.api";
 import type { LoginPayload, LoginResponse } from "@/core/auth/auth.types";
 import { useSessionStore } from "@/core/session/session.store";
-import { usePermissionStore } from "@/core/permissions/permission.store";
+import { usePermissionStore } from "@/core/permissions/store/permission.store";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
 import { buildUserFromAccessToken } from "@/core/auth/auth.identity";
 

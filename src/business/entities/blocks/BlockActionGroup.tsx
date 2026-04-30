@@ -10,7 +10,7 @@ import {
 } from "@/core/http/http.client";
 
 import { useSessionStore } from "@/core/session/session.store";
-import { usePermissionStore } from "@/core/permissions/permission.store";
+import { usePermissionStore } from "@/core/permissions/store/permission.store";
 import Icon from "@/core/ui/icons/Icon";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { Button } from "@/core/ui/components";

@@ -1,4 +1,6 @@
-import { usePermissionStore } from "./permission.store";
+// src/core/permissions/hooks/usePermission.ts
+
+import { usePermissionStore } from "../store/permission.store";
 
 export function usePermission() {
     const permissions = usePermissionStore((state) => state.permissions);

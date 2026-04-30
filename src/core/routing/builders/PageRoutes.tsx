@@ -3,7 +3,7 @@
 
 import { Route } from "react-router-dom";
 import { lazy } from "react";
-import PermissionGuard from "@/core/permissions/PermissionGuard";
+import PermissionGuard from "@/core/permissions/components/PermissionGuard";
 import PageMetaWrapper from "../wrappers/PageMetaWrapper";
 
 const EntityPage = lazy(() => import("@/business/entities/pages/EntityPage"));

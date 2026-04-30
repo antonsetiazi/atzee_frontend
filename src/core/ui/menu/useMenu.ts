@@ -1,5 +1,5 @@
 import { getMenu } from "./menuRegistry";
-import { usePermission } from "../../permissions/usePermission";
+import { usePermission } from "../../permissions/hooks/usePermission";
 import type { MenuItem } from "./types";
 
 function filterMenu(

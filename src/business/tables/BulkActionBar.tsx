@@ -1,7 +1,7 @@
 // src/business/tables/BulkActionBar.tsx
 
+import { hasPermission } from "@/core/permissions/utils/hasPermission";
 import type { BulkAction } from "./types";
-import { hasPermission } from "@/core/permissions/xxxxpermissionGuard";
 
 interface Props {
     actions: BulkAction[];

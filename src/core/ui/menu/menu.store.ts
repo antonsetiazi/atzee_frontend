@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import type { MenuItem } from "./menu.types";
-import { usePermissionStore } from "@/core/permissions/permission.store";
+import { usePermissionStore } from "@/core/permissions/store/permission.store";
 
 interface MenuState {
     items: MenuItem[];

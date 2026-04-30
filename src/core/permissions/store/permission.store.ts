@@ -1,4 +1,4 @@
-// src/core/permissions/permission.store.ts
+// src/core/permissions/store/permission.store.ts
 
 import { create } from "zustand";
 

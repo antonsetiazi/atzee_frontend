@@ -1,4 +1,4 @@
-// src/core/permissions/permission.api.ts
+// src/core/permissions/api/permission.api.ts
 
 import { httpGet } from "@/core/http/http.client";
 

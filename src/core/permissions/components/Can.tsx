@@ -1,4 +1,6 @@
-import { hasPermission } from "./xxxxpermissionGuard";
+// src/core/permissions/components/Can.tsx
+
+import { hasPermission } from "../utils/hasPermission";
 
 interface Props {
     permission?: string;
