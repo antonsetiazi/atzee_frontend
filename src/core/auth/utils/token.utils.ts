@@ -1,4 +1,4 @@
-// src/core/auth/token.utils.ts
+// src/core/auth/utils/token.utils.ts
 
 import { jwtDecode } from "jwt-decode";
 

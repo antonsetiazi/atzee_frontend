@@ -1,4 +1,4 @@
-// src/core/auth/auth.api.ts
+// src/core/auth/api/auth.api.ts
 
 import type {
     AuthConfig,
@@ -6,7 +6,7 @@ import type {
     VerifyOtpPayload,
     LoginPayload,
     LoginResponse,
-} from "./auth.types";
+} from "../types/auth.types";
 import { httpPost, httpGet } from "@/core/http/http.client";
 
 export async function refreshTokenApi(refresh: string): Promise<{

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { usePartnerOrders } from "../hooks/usePartnerOrders";
 import PartnerOrderDetailView from "../components/PartnerOrderDetailView";
 import { useSessionStore } from "@/core/session/session.store";
-import { useRequireLogin } from "@/core/auth/useRequireLogin";
+import { useRequireLogin } from "@/core/auth/hooks/useRequireLogin";
 import { chatService } from "@/business/chat/chat.service";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 

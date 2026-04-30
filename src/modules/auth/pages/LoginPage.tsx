@@ -11,7 +11,7 @@ import { useAuthService } from "@/app/auth/auth.service";
 import LoginMethodSwitcher from "../components/LoginMethodSwitcher";
 import { PasswordLoginForm } from "../components/PasswordLoginForm";
 import OtpLoginForm from "../components/OtpLoginForm";
-import type { AuthMethod } from "@/core/auth/auth.types";
+import type { AuthMethod } from "@/core/auth/types/auth.types";
 
 export default function LoginPage() {
     useDocumentTitle("Login");

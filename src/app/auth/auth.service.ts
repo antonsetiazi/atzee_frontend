@@ -6,12 +6,12 @@ import {
     loginOtpApi,
     requestOtpApi,
     fetchAuthConfig,
-} from "@/core/auth/auth.api";
-import type { LoginPayload, LoginResponse } from "@/core/auth/auth.types";
+} from "@/core/auth/api/auth.api";
+import type { LoginPayload, LoginResponse } from "@/core/auth/types/auth.types";
 import { useSessionStore } from "@/core/session/session.store";
 import { usePermissionStore } from "@/core/permissions/store/permission.store";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
-import { buildUserFromAccessToken } from "@/core/auth/auth.identity";
+import { buildUserFromAccessToken } from "@/core/auth/identity/auth.identity";
 
 /* ==================================================
    NORMALIZER

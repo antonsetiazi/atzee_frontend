@@ -1,4 +1,5 @@
-// src/core/auth/useRequireLogin.ts
+// src/core/auth/hooks/useRequireLogin.ts
+
 import { useState } from "react";
 import { useSessionStore } from "@/core/session/session.store";
 

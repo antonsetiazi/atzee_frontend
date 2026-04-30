@@ -1,8 +1,8 @@
 // src/core/realtime/ws.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { refreshTokenApi } from "@/core/auth/auth.api";
-import { isTokenExpired } from "@/core/auth/token.utils";
+import { refreshTokenApi } from "@/core/auth/api/auth.api";
+import { isTokenExpired } from "@/core/auth/utils/token.utils";
 import { useSessionStore } from "@/core/session/session.store";
 
 type WsStatus =

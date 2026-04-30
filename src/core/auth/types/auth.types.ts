@@ -1,4 +1,4 @@
-// src/core/auth/auth.types.ts
+// src/core/auth/types/auth.types.ts
 
 export interface LoginPayload {
     email: string;

@@ -6,15 +6,12 @@ import {
     ArrowLeftIcon,
     ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
-
 import ListingDetailView from "../components/ListingDetailView";
 import { useListingDetail } from "../hooks/useListingDetail";
-
 import { chatService } from "@/business/chat/chat.service";
-
 import { useSessionStore } from "@/core/session/session.store";
-import { useRequireLogin } from "@/core/auth/useRequireLogin";
-import LoginRequiredDialog from "@/core/auth/LoginRequiredDialog";
+import { useRequireLogin } from "@/core/auth/hooks/useRequireLogin";
+import LoginRequiredDialog from "@/core/auth/components/LoginRequiredDialog";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import ListingSection from "@/modules/listing/components/sections/ListingSection";
 import { useServiceListing } from "@/modules/listing/hooks/useServiceListing";

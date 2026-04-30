@@ -1,4 +1,4 @@
-// src/core/auth/LoginRequiredDialog.tsx
+// src/core/auth/components/LoginRequiredDialog.tsx
 import AlertDialog from "@/core/ui/components/alert_dialog/AlertDialog";
 import AlertDialogHeader from "@/core/ui/components/alert_dialog/AlertDialogHeader";
 import AlertDialogContent from "@/core/ui/components/alert_dialog/AlertDialogContent";

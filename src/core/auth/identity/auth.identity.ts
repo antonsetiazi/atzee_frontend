@@ -1,4 +1,4 @@
-// src/core/auth/auth.identity.ts
+// src/core/auth/identity/auth.identity.ts
 
 import { jwtDecode } from "jwt-decode";
 import type { SessionUser } from "@/core/session/session.types";

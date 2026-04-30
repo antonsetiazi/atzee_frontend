@@ -1,9 +1,9 @@
 // src/core/bootstrap/services/auth.bootstrap.ts
 
-import { refreshTokenApi } from "@/core/auth/auth.api";
-import { isTokenExpired } from "@/core/auth/token.utils";
+import { refreshTokenApi } from "@/core/auth/api/auth.api";
+import { isTokenExpired } from "@/core/auth/utils/token.utils";
 import { useSessionStore } from "@/core/session/session.store";
-import { buildUserFromAccessToken } from "@/core/auth/auth.identity";
+import { buildUserFromAccessToken } from "@/core/auth/identity/auth.identity";
 
 export async function AuthBootstrap() {
     const store = useSessionStore.getState();

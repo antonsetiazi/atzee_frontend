@@ -13,8 +13,8 @@ import {
     clearInflightRequest,
 } from "./http.cache";
 
-import { refreshTokenApi } from "@/core/auth/auth.api";
-import { buildUserFromAccessToken } from "@/core/auth/auth.identity";
+import { refreshTokenApi } from "@/core/auth/api/auth.api";
+import { buildUserFromAccessToken } from "@/core/auth/identity/auth.identity";
 
 const DEFAULT_TIMEOUT = 30000;
 

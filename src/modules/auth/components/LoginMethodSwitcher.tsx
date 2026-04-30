@@ -1,6 +1,6 @@
 // src/modules/auth/components/LoginMethodSwitcher.tsx
 
-import type { AuthMethod } from "@/core/auth/auth.types";
+import type { AuthMethod } from "@/core/auth/types/auth.types";
 import { Button } from "@/core/ui/components";
 
 interface Props {

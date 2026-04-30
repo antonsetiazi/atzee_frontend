@@ -8,7 +8,7 @@ import OrderDetailView from "../components/OrderDetailView";
 import { getOrderDetailApi } from "@/business/order/order.api";
 import { useOrderBooking } from "../hooks/useOrderBooking";
 import { useSessionStore } from "@/core/session/session.store";
-import { useRequireLogin } from "@/core/auth/useRequireLogin";
+import { useRequireLogin } from "@/core/auth/hooks/useRequireLogin";
 import { chatService } from "@/business/chat/chat.service";
 import { PageSkeleton } from "@/core/ui/components";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
