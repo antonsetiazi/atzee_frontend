@@ -1,15 +1,13 @@
 // src/core/ui/layout/BrandHeader.tsx
 
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
-import { useBrandingStore } from "../branding/branding.store";
+import { useBranding } from "@/core/branding/hooks/useBranding";
 
 export default function BrandHeader() {
-    const branding = useBrandingStore((s) => s.branding);
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
-
-    const logoUrl = branding?.logoUrl || import.meta.env.VITE_APP_LOGO;
-    const appName = import.meta.env.VITE_APP_NAME || "Ustadzku";
     const tagline = import.meta.env.VITE_APP_TAGLINE;
+
+    const { logoUrl, appName } = useBranding();
 
     return (
         <div

@@ -1,7 +1,7 @@
-// src/core/ui/branding/branding.store.ts
+// src/core/branding/store/branding.store.ts
 
 import { create } from "zustand";
-import type { BrandingConfig } from "./branding.types";
+import type { BrandingConfig } from "../types/branding.types";
 
 type BrandingState = {
     branding: BrandingConfig | null;

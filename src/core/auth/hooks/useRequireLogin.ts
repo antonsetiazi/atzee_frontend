@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSessionStore } from "@/core/session/session.store";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export function useRequireLogin() {
     const { isAuthenticated } = useSessionStore();
@@ -21,7 +22,7 @@ export function useRequireLogin() {
 
     function handleLogin() {
         // arahkan ke halaman login
-        window.location.href = "/login";
+        SmartNavigate.go("/login");
     }
 
     function handleClose() {

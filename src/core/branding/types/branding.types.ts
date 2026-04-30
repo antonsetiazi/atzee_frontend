@@ -1,4 +1,4 @@
-// src/core/ui/branding/branding.types.ts
+// src/core/branding/types/branding.types.ts
 
 export type BrandingConfig = {
     appName: string;

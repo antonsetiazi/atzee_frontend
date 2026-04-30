@@ -41,12 +41,6 @@ src/
 │   │   ├── useFeedback.ts
 │   │   ├── ToastRenderer.tsx
 │   │   └── ErrorBoundary.tsx
-│   ├── vertical/
-│   │   ├── uiOverride.registry.ts
-│   │   ├── uiOverride.types.ts
-│   │   ├── vertical.registry.ts
-│   │   ├── vertical.types.ts
-│   │   └── loadVerticals.ts
 │   ├── audit/
 │   │   ├── audit.types.ts
 │   │   ├── audit.store.ts

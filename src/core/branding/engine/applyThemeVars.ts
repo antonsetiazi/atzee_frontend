@@ -1,14 +1,10 @@
-// src/core/ui/branding/applyBranding.ts
+// src/core/branding/engine/applyThemeVars.ts
 
-import type { BrandingConfig } from "./branding.types";
+import type { BrandingConfig } from "../types/branding.types";
 
-export function applyBranding(branding: BrandingConfig) {
+export function applyThemeVars(theme: BrandingConfig["theme"]) {
     const root = document.documentElement;
-    const { theme } = branding;
 
-    // ==============================
-    // Mode
-    // ==============================
     root.dataset.theme = theme.mode;
 
     // ==============================
@@ -61,54 +57,8 @@ export function applyBranding(branding: BrandingConfig) {
     //     setVar(root, "--font-size", theme.font.size);
     //     setVar(root, "--font-weight", theme.font.weight);
     // }
-
-    // ==============================
-    // Favicon
-    // ==============================
-    if (branding.faviconUrl) {
-        // hapus favicon lama
-        document
-            .querySelectorAll("link[rel*='icon']")
-            .forEach((el) => el.remove());
-
-        const favicon = document.createElement("link");
-        favicon.rel = "icon";
-
-        // auto detect type
-        if (branding.faviconUrl.endsWith(".svg")) {
-            favicon.type = "image/svg+xml";
-        } else if (branding.faviconUrl.endsWith(".png")) {
-            favicon.type = "image/png";
-        } else if (
-            branding.faviconUrl.endsWith(".jpg") ||
-            branding.faviconUrl.endsWith(".jpeg")
-        ) {
-            favicon.type = "image/jpeg";
-        }
-
-        // cache bust
-        favicon.href = branding.faviconUrl + "?v=" + Date.now();
-
-        document.head.appendChild(favicon);
-    }
-
-    // ==============================
-    // simpan logo ke global variable (clean)
-    // ==============================
-    if (branding.logoUrl) {
-        document.documentElement.style.setProperty(
-            "--app-logo",
-            `url(${branding.logoUrl})`,
-        );
-    }
-
-    // ==============================
-    // App Name
-    // ==============================
-    document.title = branding.appName;
 }
 
-// Helper (biar clean & reusable)
 function setVar(root: HTMLElement, name: string, value?: string) {
     if (value) {
         root.style.setProperty(name, value);
