@@ -29,8 +29,7 @@ src/
 │   │   ├── route.types.ts
 │   │   ├── redirect.ts
 │   │   ├── PermissionGuard.tsx
-│   │   ├── PrivateRoute.tsx
-│   │   └── EntryRedirect.tsx
+│   │   └── PrivateRoute.tsx
 │   ├── session/
 │   │   ├── session.store.ts
 │   │   └── session.types.ts

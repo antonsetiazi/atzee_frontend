@@ -1,9 +1,9 @@
-// src/core/routing/RedirectRootHandler.tsx
+// src/core/routing/handlers/RedirectRootHandler.tsx
 
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useSessionStore } from "../session/session.store";
-import { SmartNavigate } from "../navigation/SmartNavigate";
+import { useSessionStore } from "../../session/session.store";
+import { SmartNavigate } from "../../navigation/SmartNavigate";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =

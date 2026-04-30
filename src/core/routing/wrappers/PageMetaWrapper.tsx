@@ -1,4 +1,4 @@
-// src/core/routing/PageMetaWrapper.tsx
+// src/core/routing/wrappers/PageMetaWrapper.tsx
 
 import { useEffect } from "react";
 import { usePageStore, type PageMeta } from "@/core/ui/page/page.store";

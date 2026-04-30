@@ -1,8 +1,8 @@
-// src/core/routing/RouteRenderer.tsx
+// src/core/routing/renderers/renderRoute.tsx
 
 import { Route } from "react-router-dom";
-import type { AppRoute } from "./route.types";
-import PrivateRoute from "./PrivateRoute";
+import type { AppRoute } from "../types/route.types";
+import PrivateRoute from "../guards/PrivateRoute";
 import PermissionGuard from "@/core/permissions/PermissionGuard";
 
 export function renderRoute(route: AppRoute) {

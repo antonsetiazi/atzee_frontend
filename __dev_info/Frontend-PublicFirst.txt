@@ -50,9 +50,7 @@
                 </AppBootstrap>
             }
         >
-            <Route index element={<EntryRedirect />} />
             {usersRoutes.map(renderRoute)}
-            {MenuRoutes(visibleMenus)}
             {PageRoutes()}
         </Route>
 

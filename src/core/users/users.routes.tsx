@@ -1,7 +1,7 @@
 // src/core/users/users.routes.tsx
 
 import { lazy } from "react";
-import type { AppRoute } from "@/core/routing/route.types";
+import type { AppRoute } from "@/core/routing/types/route.types";
 
 export const usersRoutes: AppRoute[] = [
     {

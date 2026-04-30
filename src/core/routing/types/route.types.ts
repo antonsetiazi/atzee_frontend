@@ -1,4 +1,4 @@
-// src/core/routing/route.types.ts
+// src/core/routing/types/route.types.ts
 
 import type { ComponentType } from "react";
 

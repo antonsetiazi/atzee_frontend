@@ -1,7 +1,7 @@
 // src/business/entities/entity.routes.ts
 
 import { lazy } from "react";
-import type { AppRoute } from "@/core/routing/route.types";
+import type { AppRoute } from "@/core/routing/types/route.types";
 
 export const entityRoutes: AppRoute[] = [
     {

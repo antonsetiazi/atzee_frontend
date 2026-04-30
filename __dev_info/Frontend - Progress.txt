@@ -10,7 +10,6 @@ src/core/session/session.types.ts
 src/core/session/session.store.ts
 src/core/permissions/permission.store.ts
 src/core/routing/redirect.ts
-src/core/routing/EntryRedirect.tsx
 
 SESSION 1A — LOGIN UI (MINIMAL & PLATFORM-SAFE)
 src/core/auth/LoginForm.tsx
@@ -159,48 +158,3 @@ src/core/ui/branding/applyBranding.ts
 src/core/ui/branding/BrandingProvider.tsx
 src/core/tenant/tenant.store.ts (UPDATE)
 src/core/tenant/tenant.api.ts (UPDATE)
-
-
-ROUTING SEMENTARA:
-======================================
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-import LoginPage from "@/core/auth/LoginPage";
-import EntryRedirect from "@/core/routing/EntryRedirect";
-import AppLayout from "@/core/ui/layout/AppLayout";
-import { renderRoute } from "@/core/routing/RouteRenderer";
-
-import { ErrorBoundary } from "@/core/feedback/ErrorBoundary";
-import ToastRenderer from "@/core/feedback/ToastRenderer";
-
-// sementara
-import { productRoutes } from "./business/products/product.routes";
-
-function App() {
-    return (
-        <ErrorBoundary>
-            <BrowserRouter>
-                {/* GLOBAL FEEDBACK UI */}
-                <ToastRenderer />
-
-                <Routes>
-                    <Route path="/" element={<EntryRedirect />} />
-                    <Route path="/login" element={<LoginPage />} />
-
-                    <Route element={<AppLayout />}>
-                        {productRoutes.map(renderRoute)}
-
-                        <Route
-                            path="/dashboard"
-                            element={<div>Dashboard</div>}
-                        />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-        </ErrorBoundary>
-    );
-}
-
-export default App;
-
-

@@ -18,11 +18,11 @@ import RegisterPage from "@/modules/auth/pages/RegisterPage";
 
 import AppLayout from "@/core/ui/layout/AppLayout";
 
-import { renderRoute } from "@/core/routing/RouteRenderer";
+import { renderRoute } from "@/core/routing/renderers/renderRoute";
 import { usersRoutes } from "@/core/users/users.routes";
 
 import { usePageStore } from "@/core/ui/page/page.store";
-import { buildPageRoutes } from "@/core/routing/PageRoutes";
+import { buildPageRoutes } from "@/core/routing/builders/PageRoutes";
 import { useSessionStore } from "../session/session.store";
 
 import SessionExpiredPage from "@/modules/auth/pages/SessionExpiredPage";
@@ -42,12 +42,12 @@ import ServiceDetailPage from "@/modules/listing_detail/pages/ServiceDetailPage"
 import ServiceBookingPage from "@/modules/booking/pages/ServiceBookingPage";
 import CheckoutPage from "@/modules/checkout/pages/CheckoutPage";
 import ChatPage from "@/modules/chat/ChatPage";
-import PageMetaWrapper from "./PageMetaWrapper";
+import PageMetaWrapper from "./wrappers/PageMetaWrapper";
 import TrackingPage from "@/modules/tracking/pages/TrackingPage";
 import PartnerOrderPage from "@/modules/partner_order/pages/PartnerOrderPage";
 import PartnerOrderDetailPage from "@/modules/partner_order/pages/PartnerOrderDetailPage";
 import PartnerSchedulePage from "@/modules/partner_schedule/pages/PartnerSchedulePage";
-import RedirectRootHandler from "./RedirectRootHandler";
+import RedirectRootHandler from "./handlers/RedirectRootHandler";
 import WalletPage from "@/modules/wallet/pages/WalletPage";
 import WalletWithdrawPage from "@/modules/withdrawal/pages/WalletWithdrawPage";
 import WalletTopupPage from "@/modules/wallet/pages/WalletTopupPage";
@@ -212,13 +212,6 @@ export default function AppRouter() {
                         path="/wallet/withdraw"
                         element={<WalletWithdrawPage />}
                     />
-
-                    {/* <Route path="/bookings" element={<BookingListPage />} />
-                    <Route
-                        path="/bookings/:id"
-                        element={<BookingDetailPage />}
-                    /> */}
-
                     <Route path="/tracking/:id" element={<TrackingPage />} />
                 </Route>
 

@@ -1,5 +1,7 @@
+// src/core/routing/guards/PrivateRoute.tsx
+
 import { Navigate, Outlet } from "react-router-dom";
-import { useSessionStore } from "../session/session.store";
+import { useSessionStore } from "../../session/session.store";
 
 interface Props {
     children: React.ReactNode;

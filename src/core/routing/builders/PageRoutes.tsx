@@ -1,10 +1,10 @@
-// src/core/routing/PageRoutes.tsx
+// src/core/routing/builders/PageRoutes.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Route } from "react-router-dom";
 import { lazy } from "react";
 import PermissionGuard from "@/core/permissions/PermissionGuard";
-import PageMetaWrapper from "./PageMetaWrapper";
+import PageMetaWrapper from "../wrappers/PageMetaWrapper";
 
 const EntityPage = lazy(() => import("@/business/entities/pages/EntityPage"));
 

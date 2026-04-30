@@ -1,4 +1,4 @@
-import type { AppRoute } from "@/core/routing/route.types";
+import type { AppRoute } from "@/core/routing/types/route.types";
 import type { MenuItem } from "@/core/ui/menu/menu.types";
 
 export interface VerticalModule {

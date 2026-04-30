@@ -1,4 +1,4 @@
-// src/core/routing/PageTransition.tsx
+// src/core/ui/layout/transitions/PageTransition.tsx
 
 import { useLocation } from "react-router-dom";
 
