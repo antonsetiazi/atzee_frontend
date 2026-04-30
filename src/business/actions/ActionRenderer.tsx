@@ -4,11 +4,11 @@
 import type { EntityAction } from "./action.types";
 import { usePermission } from "@/core/permissions/usePermission";
 import { useNavigate } from "react-router-dom";
-import { httpDelete } from "@/core/http/http.client";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { useConfirmStore } from "@/core/confirm/confirm.store";
 import { iconRegistry } from "@/core/ui/icons/icon.registry";
 import { clearEntityCacheByPrefix } from "../entities/cache/entity.cache";
+import { submitForm } from "../forms/form.submit";
 
 interface Props<T> {
     entity: string;
@@ -83,23 +83,62 @@ export function ActionRenderer<T>({
                         return;
                     }
 
-                    if (action.type === "delete" && action.endpoint) {
-                        const url = resolvePath(action.endpoint, row, context);
+                    // ========================================
+                    // 🗑 DELETE (FIXED)
+                    // ========================================
 
+                    if (action.type === "delete" && action.endpoint) {
                         try {
-                            await httpDelete(url);
+                            if (
+                                !row ||
+                                typeof row !== "object" ||
+                                !("id" in row)
+                            ) {
+                                console.warn("Row does not have id");
+                                return;
+                            }
+
+                            const payload = {
+                                id: row?.id,
+                            };
+
+                            const res = await submitForm(payload, {
+                                submit_to: action.endpoint,
+                                method: "POST",
+                            });
 
                             feedback.push({
                                 type: "success",
-                                title: "Deleted",
-                                message: `Data berhasil dihapus`,
+                                title: action.success_title || "Deleted",
+                                message:
+                                    action.success_message ||
+                                    res?.message ||
+                                    "Data berhasil dihapus",
                             });
 
+                            // ✅ DEFAULT refresh (WAJIB)
                             clearEntityCacheByPrefix(`table:${entity}`);
-                            context.refresh();
-                        } catch (err) {
+
+                            // ✅ OPTIONAL refresh dari backend
+                            if (action.refresh_cache?.length) {
+                                action.refresh_cache.forEach((prefix) => {
+                                    clearEntityCacheByPrefix(prefix);
+                                });
+                            }
+
+                            window.dispatchEvent(
+                                new CustomEvent("entity:refresh", {
+                                    detail: { entity },
+                                }),
+                            );
+                        } catch (err: any) {
                             console.error("Delete failed:", err);
-                            alert("Failed to delete. See console for details.");
+
+                            feedback.push({
+                                type: "error",
+                                title: "Error",
+                                message: err?.message || "Gagal menghapus data",
+                            });
                         }
 
                         return;

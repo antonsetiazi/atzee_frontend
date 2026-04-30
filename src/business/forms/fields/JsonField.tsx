@@ -12,24 +12,27 @@ interface Props {
 }
 
 export default function JsonField({ field, value, error, onChange }: Props) {
-    // initialize once
-    const [text, setText] = useState<string>(() => {
-        if (value === undefined || value === null) return "";
-        try {
-            return JSON.stringify(value, null, 2);
-        } catch {
-            return "";
-        }
-    });
+    const [draft, setDraft] = useState<string | null>(null);
+
+    // 🔥 source of truth:
+    const displayValue =
+        draft !== null
+            ? draft
+            : value !== undefined && value !== null
+              ? JSON.stringify(value, null, 2)
+              : "";
 
     const handleChange = (val: string) => {
-        setText(val);
+        setDraft(val);
 
         try {
             const parsed = val ? JSON.parse(val) : null;
             onChange?.(field.key, parsed);
+
+            // kalau valid → reset draft (sync ke value)
+            setDraft(null);
         } catch {
-            // invalid JSON → do not propagate yet
+            // invalid JSON → tetap di draft mode
         }
     };
 
@@ -42,13 +45,22 @@ export default function JsonField({ field, value, error, onChange }: Props) {
 
             <textarea
                 className="border rounded p-2 font-mono text-sm"
+                style={{
+                    background: "white",
+                    border: `1px solid ${
+                        error ? "var(--color-error)" : "var(--color-border)"
+                    }`,
+                    color: "var(--text-primary)",
+                }}
                 rows={6}
-                value={text}
+                value={displayValue}
                 onChange={(e) => handleChange(e.target.value)}
                 placeholder="Enter valid JSON"
             />
 
-            {error && <span className="text-red-500 text-xs">{error}</span>}
+            {error && (
+                <span style={{ color: "var(--color-error)" }}>{error}</span>
+            )}
         </div>
     );
 }

@@ -60,6 +60,23 @@ export function useEntityData({
 }) {
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
+    const [refreshIndex, setRefreshIndex] = useState(0);
+
+    useEffect(() => {
+        const handler = (e: any) => {
+            // optional: filter entity
+            if (!e.detail?.entity || e.detail.entity === entityKey) {
+                // console.log("🔄 Refresh entity:", entityKey);
+                setRefreshIndex((i) => i + 1);
+            }
+        };
+
+        window.addEventListener("entity:refresh", handler);
+
+        return () => {
+            window.removeEventListener("entity:refresh", handler);
+        };
+    }, [entityKey]);
 
     useEffect(() => {
         if (!schema?.data_source) return;
@@ -138,7 +155,7 @@ export function useEntityData({
         return () => {
             alive = false;
         };
-    }, [schema, context, id, entityKey]);
+    }, [schema, context, id, entityKey, refreshIndex]);
 
     return { data, loading };
 }

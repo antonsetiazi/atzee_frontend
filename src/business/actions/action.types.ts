@@ -14,7 +14,8 @@ export type EntityActionType =
     | "delete"
     | "custom"
     | "navigate"
-    | "redirect";
+    | "redirect"
+    | "submit";
 
 export interface EntityAction<T = any> {
     key: string;
@@ -32,6 +33,11 @@ export interface EntityAction<T = any> {
     endpoint?: string; // untuk delete / custom API
 
     execute: (context: ActionContext<T>) => Promise<void> | void;
+
+    // 🔥 NEW (sync dengan backend)
+    refresh_cache?: string[];
+    success_title?: string;
+    success_message?: string;
 }
 
 export interface ActionContext<T = any> {

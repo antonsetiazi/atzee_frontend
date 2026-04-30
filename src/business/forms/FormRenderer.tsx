@@ -124,6 +124,7 @@ export default function FormRenderer({
     }
     // console.log(schema.redirect_to);
     // console.log(schema);
+    // console.log(initialValues);
 
     return (
         <form
