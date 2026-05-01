@@ -6,13 +6,13 @@ import { useDocumentTitle } from "@/core/ui/document/useDocumentTitle";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
 import RegisterForm from "../components/RegisterForm";
+import { useBranding } from "@/core/branding/hooks/useBranding";
 
 export default function RegisterPage() {
     useDocumentTitle("Register");
 
     const { isMobile } = useBreakpoint();
-
-    const logoUrl = import.meta.env.VITE_APP_LOGO;
+    const { logoUrl } = useBranding();
 
     return (
         <div

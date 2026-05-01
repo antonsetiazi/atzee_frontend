@@ -1,8 +1,10 @@
 // src/core/ui/layout/Footer.tsx
 
+import { useBranding } from "@/core/branding/hooks/useBranding";
+
 export default function Footer() {
-    const TITLE = import.meta.env.VITE_APP_TITLE;
-    const VERSION = import.meta.env.VITE_APP_VERSION;
+    const { appName } = useBranding();
+    const VERSION = import.meta.env.VITE_BUILD_VERSION;
     const COPYRIGHT = import.meta.env.VITE_APP_COPYRIGHT;
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
 
@@ -32,7 +34,7 @@ export default function Footer() {
                             className="font-semibold tracking-wide"
                             style={{ color: "#ffffff" }}
                         >
-                            {TITLE}
+                            {appName}
                         </span>
 
                         <span style={{ color: "rgba(255,255,255,0.35)" }}>

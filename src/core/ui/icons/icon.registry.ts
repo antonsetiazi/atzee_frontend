@@ -50,17 +50,14 @@ import {
     ChevronDownIcon,
     Cog6ToothIcon,
     BriefcaseIcon,
-    MagnifyingGlassCircleIcon,
     CalendarDateRangeIcon,
     CreditCardIcon,
     WalletIcon,
     PauseCircleIcon,
 } from "@heroicons/react/20/solid";
-import {
-    ChatBubbleLeftIcon,
-    ShoppingBagIcon,
-} from "@heroicons/react/24/outline";
+import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
+import { ReceiptText, UserRoundSearch } from "lucide-react";
 
 export const iconRegistry: Record<string, any> = {
     // Action Icons
@@ -83,7 +80,7 @@ export const iconRegistry: Record<string, any> = {
     cog: Cog6ToothIcon,
     bubbles: ChatBubbleLeftIcon,
     briefcase: BriefcaseIcon,
-    search: MagnifyingGlassCircleIcon,
+    search: UserRoundSearch,
     calendar: CalendarDateRangeIcon,
     "credit-card": CreditCardIcon,
     eye: EyeIcon,
@@ -123,5 +120,5 @@ export const iconRegistry: Record<string, any> = {
     transaction: DocumentCurrencyDollarIcon,
     login: LockClosedIcon,
     bell: BellIcon,
-    order: ShoppingBagIcon,
+    order: ReceiptText,
 };

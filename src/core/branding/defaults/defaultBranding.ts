@@ -4,6 +4,7 @@ import type { BrandingConfig } from "../types/branding.types";
 
 export const defaultBranding: BrandingConfig = {
     appName: "Atzee",
+    tagline: "",
     logoUrl: "/branding/default/logo.png",
     faviconUrl: "/branding/default/logo.svg",
     theme: {

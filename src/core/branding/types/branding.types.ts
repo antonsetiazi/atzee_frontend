@@ -2,6 +2,7 @@
 
 export type BrandingConfig = {
     appName: string;
+    tagline: string;
     logoUrl: string;
     faviconUrl?: string;
 

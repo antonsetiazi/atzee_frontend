@@ -5,9 +5,8 @@ import { useBranding } from "@/core/branding/hooks/useBranding";
 
 export default function BrandHeader() {
     const MAX_WIDTH = import.meta.env.VITE_APP_MAX_WIDTH;
-    const tagline = import.meta.env.VITE_APP_TAGLINE;
 
-    const { logoUrl, appName } = useBranding();
+    const { logoUrl, appName, tagline } = useBranding();
 
     return (
         <div

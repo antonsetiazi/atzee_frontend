@@ -12,17 +12,17 @@ import LoginMethodSwitcher from "../components/LoginMethodSwitcher";
 import { PasswordLoginForm } from "../components/PasswordLoginForm";
 import OtpLoginForm from "../components/OtpLoginForm";
 import type { AuthMethod } from "@/core/auth/types/auth.types";
+import { useBranding } from "@/core/branding/hooks/useBranding";
 
 export default function LoginPage() {
     useDocumentTitle("Login");
 
     const { isMobile } = useBreakpoint();
     const auth = useAuthService();
+    const { logoUrl, tagline } = useBranding();
 
     const [methods, setMethods] = useState<AuthMethod[]>([]);
     const [method, setMethod] = useState<AuthMethod>("password");
-
-    const logoUrl = import.meta.env.VITE_APP_LOGO;
 
     useEffect(() => {
         async function loadConfig() {
@@ -195,7 +195,7 @@ export default function LoginPage() {
                                     color: "var(--color-text-muted)",
                                 }}
                             >
-                                {import.meta.env.VITE_APP_TAGLINE}
+                                {tagline}
                             </p>
 
                             <div

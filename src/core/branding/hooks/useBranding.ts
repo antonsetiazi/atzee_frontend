@@ -12,6 +12,7 @@ export function useBranding() {
         branding: resolved,
 
         appName: resolved.appName,
+        tagline: resolved.tagline,
         logoUrl: resolved.logoUrl,
         faviconUrl: resolved.faviconUrl,
 

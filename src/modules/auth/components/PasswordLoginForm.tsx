@@ -7,12 +7,10 @@ import { Button, EmailField, PasswordField } from "@/core/ui/components";
 import { useFormError } from "@/core/response";
 
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
-const EMAIL = import.meta.env.VITE_DEFAULT_LOGIN_EMAIL;
-const PASSWORD = import.meta.env.VITE_DEFAULT_LOGIN_PASSWORD;
 
 export function PasswordLoginForm() {
-    const [email, setEmail] = useState(EMAIL); // default untuk dev
-    const [password, setPassword] = useState(PASSWORD);
+    const [email, setEmail] = useState(""); // default untuk dev
+    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const { error, clearError, handleError, getFieldError } = useFormError();
 

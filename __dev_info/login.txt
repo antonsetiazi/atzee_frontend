@@ -1,0 +1,9 @@
+
+email:      customer@ustadzku.com
+password:   Customer123!
+
+email:      karim@ustadzku.com
+password:   Partner123!
+
+email:      admin@ustadzku.com
+password:   Admin123!
