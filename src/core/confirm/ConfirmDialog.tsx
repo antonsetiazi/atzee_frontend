@@ -7,7 +7,7 @@ import {
     AlertDialogContent,
     AlertDialogFooter,
 } from "@/core/ui/components";
-import { button } from "@/core/ui/ui.class";
+import { button } from "@/core/ui/class/button.ui.class";
 
 export default function ConfirmDialog() {
     const { current, close } = useConfirmStore();

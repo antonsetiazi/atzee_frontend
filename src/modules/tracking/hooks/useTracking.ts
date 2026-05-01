@@ -1,8 +1,8 @@
 // src/modules/tracking/hooks/useTracking.ts
 
 import { useEffect, useState } from "react";
-import { trackingService } from "@/business/tracking/tracking.service";
-import type { OrderTrackingData } from "@/business/tracking/tracking.types";
+import { trackingService } from "@/engine/tracking/tracking.service";
+import type { OrderTrackingData } from "@/engine/tracking/tracking.types";
 
 export function useTracking(orderId: number) {
     const [data, setData] = useState<OrderTrackingData | null>(null);

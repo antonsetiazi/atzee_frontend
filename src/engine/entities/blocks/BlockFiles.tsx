@@ -3,7 +3,11 @@
 
 import { useEffect, useState, useCallback } from "react";
 import LoadingState from "@/shared/ui/LoadingState";
-import { deleteFile, fetchFiles, uploadFile } from "@/business/files/file.api";
+import {
+    deleteFile,
+    fetchFiles,
+    uploadFile,
+} from "@/engine/files/api/file.api";
 import { useSessionStore } from "@/core/session/session.store";
 import { handleCoreAffects } from "@/core/utils/coreAffects";
 import { useConfirm } from "@/core/confirm/useConfirm";

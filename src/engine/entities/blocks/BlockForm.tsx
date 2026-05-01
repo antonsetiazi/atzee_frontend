@@ -3,9 +3,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
-import FormRenderer from "../../../business/forms/FormRenderer";
+import FormRenderer from "@/core/form-engine/FormRenderer";
 import LoadingState from "@/shared/ui/LoadingState";
-import type { FormContext } from "@/business/forms/form.context";
+import type { FormContext } from "@/core/ui/context/UIContext";
 
 interface Props {
     entityKey: string;

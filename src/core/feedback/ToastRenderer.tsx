@@ -1,7 +1,5 @@
 // src/core/feedback/ToastRenderer.tsx
 
-// src/core/feedback/ToastRenderer.tsx
-
 import { useEffect } from "react";
 import { useFeedbackStore } from "./feedback.store";
 import type { FeedbackMessage } from "./feedback.types";

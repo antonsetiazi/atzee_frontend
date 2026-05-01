@@ -4,9 +4,9 @@
 import React from "react";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
-import WorkflowContainer from "@/business/workflows/WorkflowContainer";
-import { executeWorkflowAction } from "@/business/workflows/workflow.executor";
-import { TransactionWorkspace } from "@/business/transaction_workspace/TransactionWorkspace";
+import WorkflowContainer from "@/modules/workflow/components/WorkflowContainer";
+import { executeWorkflowAction } from "@/engine/workflows/executor/workflow.executor";
+import { TransactionWorkspace } from "@/modules/transaction_workspace/TransactionWorkspace";
 
 import BlockStat from "../blocks/BlockStat";
 import BlockHeader from "../blocks/BlockHeader";

@@ -4,15 +4,15 @@
 import { useEffect, useState, useCallback } from "react";
 import LoadingState from "@/shared/ui/LoadingState";
 import EmptyState from "@/shared/ui/EmptyState";
-import { button } from "@/core/ui/ui.class";
+import { button } from "@/core/ui/class/button.ui.class";
 import {
     attachTag,
     createTag,
     detachTag,
     fetchAttachedTags,
     fetchTags,
-} from "@/business/tags/tag.api";
-import { inputBase } from "@/business/forms/fields/field.ui";
+} from "@/engine/tags/api/tag.api";
+import { inputBase } from "@/core/ui/class/field.ui.class";
 
 interface Props {
     block: any;

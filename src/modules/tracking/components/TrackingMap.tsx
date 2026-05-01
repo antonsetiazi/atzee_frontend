@@ -2,7 +2,7 @@
 
 import MapView from "@/core/ui/map/MapView";
 import MapMarker from "@/core/ui/map/MapMarker";
-import type { OrderTrackingData } from "@/business/tracking/tracking.types";
+import type { OrderTrackingData } from "@/engine/tracking/tracking.types";
 import { Polyline } from "react-leaflet";
 
 interface Props {

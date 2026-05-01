@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useMemo, useState } from "react";
-import AdaptiveTableRenderer from "../../../business/tables/AdaptiveTableRenderer";
-import type { TableContext } from "../../../business/tables/table.context";
+import AdaptiveTableRenderer from "@/engine/ui/table/renderers/AdaptiveTableRenderer";
+import type { TableContext } from "@/core/ui/context/UIContext";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {

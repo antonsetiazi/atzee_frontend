@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState } from "react";
-import { useUISchemaStore } from "../../../business/schema/ui-schema.store";
+import { useUISchemaStore } from "@/core/ui-schema/ui-schema.store";
 
 export function useEntitySchema(entityKey: string) {
     const [schema, setSchema] = useState<any>(null);

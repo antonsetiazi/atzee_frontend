@@ -1,6 +1,6 @@
 // src/modules/tracking/components/TrackingStatus.tsx
 
-import type { OrderTrackingData } from "@/business/tracking/tracking.types";
+import type { OrderTrackingData } from "@/engine/tracking/tracking.types";
 import { calculateDistance } from "../utils/distance";
 
 interface Props {

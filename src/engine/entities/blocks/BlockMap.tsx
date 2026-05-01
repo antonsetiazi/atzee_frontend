@@ -17,13 +17,13 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import LoadingState from "@/shared/ui/LoadingState";
-import { button } from "@/core/ui/ui.class";
+import { button } from "@/core/ui/class/button.ui.class";
 import {
     fetchLocations,
     attachLocation,
     updateLocation,
     deleteLocation,
-} from "@/business/spatial/spatial.api";
+} from "@/engine/spatial/api/spatial.api";
 
 /* ===========================
    FIX MARKER ICON
