@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/forms/fields/BooleanField.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { BooleanFieldSchema } from "./field.types";
 

@@ -6,7 +6,7 @@ import { lazy } from "react";
 import PermissionGuard from "@/core/permissions/components/PermissionGuard";
 import PageMetaWrapper from "../wrappers/PageMetaWrapper";
 
-const EntityPage = lazy(() => import("@/business/entities/pages/EntityPage"));
+const EntityPage = lazy(() => import("@/engine/entities/pages/EntityPage"));
 
 function normalizeRoutePath(path: string) {
     if (!path) return path;

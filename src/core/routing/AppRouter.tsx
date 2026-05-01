@@ -33,7 +33,7 @@ import AddressCreatePage from "@/modules/account/address/pages/AddressCreatePage
 import AddressEditPage from "@/modules/account/address/pages/AddressEditPage";
 import BankAccountPage from "@/modules/account/bank/pages/BankAccountPage";
 
-import CartPage from "@/app/pages/cart/CartPage";
+import CartPage from "@/modules/cart/CartPage";
 import OrderPage from "@/modules/order/pages/OrderPage";
 import OrderDetailPage from "@/modules/order/pages/OrderDetailPage";
 import ListingPage from "@/modules/listing/pages/ListingPage";

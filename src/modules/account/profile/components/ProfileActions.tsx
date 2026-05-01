@@ -1,6 +1,6 @@
 // src/modules/account/profile/components/ProfileActions.tsx
 
-import { useAuthService } from "@/app/auth/auth.service";
+import { useAuthService } from "@/core/auth/services/auth.service";
 import { useConfirm } from "@/core/confirm/useConfirm";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 

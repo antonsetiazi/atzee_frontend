@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
-import { useAuthService } from "@/app/auth/auth.service";
+import { useAuthService } from "@/core/auth/services/auth.service";
 import { Button, EmailField, PasswordField } from "@/core/ui/components";
 import { useFormError } from "@/core/response";
 

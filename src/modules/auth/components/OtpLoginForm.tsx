@@ -1,7 +1,7 @@
 // src/modules/auth/components/OtpLoginForm.tsx
 
 import { useState } from "react";
-import { useAuthService } from "../../../app/auth/auth.service";
+import { useAuthService } from "@/core/auth/services/auth.service";
 import { Button, OtpInput, TelField } from "@/core/ui/components";
 import { runUserBootstrap } from "@/core/bootstrap/services/user.bootstrap";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";

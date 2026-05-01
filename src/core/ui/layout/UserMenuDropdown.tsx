@@ -1,7 +1,7 @@
 // src/core/ui/layout/UserMenuDropdown.tsx
 
 import { useState, useRef, useEffect } from "react";
-import { useAuthService } from "@/app/auth/auth.service";
+import { useAuthService } from "@/core/auth/services/auth.service";
 import Icon from "@/core/ui/icons/Icon";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 

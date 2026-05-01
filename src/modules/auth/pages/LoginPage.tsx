@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useDocumentTitle } from "@/core/ui/document/useDocumentTitle";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 
-import { useAuthService } from "@/app/auth/auth.service";
+import { useAuthService } from "@/core/auth/services/auth.service";
 
 import LoginMethodSwitcher from "../components/LoginMethodSwitcher";
 import { PasswordLoginForm } from "../components/PasswordLoginForm";

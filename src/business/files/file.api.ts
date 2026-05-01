@@ -1,7 +1,7 @@
 // src/business/files/file.api.ts
 
 import { httpPost, httpDelete, httpPostForm } from "@/core/http/http.client";
-import type { EntityListResponse } from "../entities/api/entity.api";
+import type { EntityListResponse } from "@/engine/entities/api/entity.api";
 
 interface FileListQuery {
     related_entity: string;

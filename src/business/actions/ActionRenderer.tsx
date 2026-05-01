@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/business/actions/ActionRenderer.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { EntityAction } from "./action.types";
 import { usePermission } from "@/core/permissions/hooks/usePermission";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { useConfirmStore } from "@/core/confirm/confirm.store";
 import { iconRegistry } from "@/core/ui/icons/icon.registry";
-import { clearEntityCacheByPrefix } from "../entities/cache/entity.cache";
+import { clearEntityCacheByPrefix } from "@/engine/entities/cache/entity.cache";
 import { submitForm } from "../forms/form.submit";
 
 interface Props<T> {
