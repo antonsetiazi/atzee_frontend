@@ -57,7 +57,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
-import { ReceiptText, UserRoundSearch } from "lucide-react";
+import { ReceiptText, ShieldCogCorner, UserRoundSearch } from "lucide-react";
 
 export const iconRegistry: Record<string, any> = {
     // Action Icons
@@ -121,4 +121,5 @@ export const iconRegistry: Record<string, any> = {
     login: LockClosedIcon,
     bell: BellIcon,
     order: ReceiptText,
+    policy: ShieldCogCorner,
 };

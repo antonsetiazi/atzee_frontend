@@ -55,6 +55,7 @@ import NotificationToastContainer from "@/modules/notification/components/Notifi
 
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import NativeBridgeTestPage from "@/modules/dev/pages/NativeBridgeTestPage";
+import PolicyPage from "@/modules/public/pages/PolicyPage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE =
@@ -97,6 +98,19 @@ export default function AppRouter() {
                     {buildPageRoutes(pages)}
 
                     <Route path="/account/profile" element={<ProfilePage />} />
+
+                    <Route
+                        path="/terms-of-service"
+                        element={<PolicyPage type="tos" />}
+                    />
+                    <Route
+                        path="/privacy-policy"
+                        element={<PolicyPage type="privacy" />}
+                    />
+                    <Route
+                        path="/terms-and-conditions"
+                        element={<PolicyPage type="terms" />}
+                    />
 
                     <Route
                         path="/account/address"

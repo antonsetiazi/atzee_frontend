@@ -1,6 +1,7 @@
 // src/core/ui/layout/Footer.tsx
 
 import { useBranding } from "@/core/branding/hooks/useBranding";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
     const { appName } = useBranding();
@@ -24,61 +25,103 @@ export default function Footer() {
             }}
         >
             <div
-                className="mx-auto w-full px-6 py-4"
+                className="mx-auto w-full px-6 py-5"
                 style={{ maxWidth: MAX_WIDTH }}
             >
-                <div className="flex items-center justify-between text-sm">
-                    {/* Left */}
-                    <div className="flex items-center gap-3">
-                        <span
-                            className="font-semibold tracking-wide"
-                            style={{ color: "#ffffff" }}
-                        >
-                            {appName}
-                        </span>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 text-sm">
+                    {/* LEFT */}
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-3">
+                            <span
+                                className="font-semibold tracking-wide"
+                                style={{ color: "#ffffff" }}
+                            >
+                                {appName}
+                            </span>
 
-                        <span style={{ color: "rgba(255,255,255,0.35)" }}>
-                            |
-                        </span>
+                            <span style={{ color: "rgba(255,255,255,0.35)" }}>
+                                |
+                            </span>
 
-                        <span
-                            style={{
-                                color: "rgba(255,255,255,0.75)",
-                            }}
-                        >
-                            © {new Date().getFullYear()} {COPYRIGHT}
-                        </span>
+                            <span
+                                style={{
+                                    color: "rgba(255,255,255,0.75)",
+                                }}
+                            >
+                                © {new Date().getFullYear()} {COPYRIGHT}
+                            </span>
+                        </div>
+
+                        {/* 🔥 POLICY LINKS */}
+                        <div className="flex flex-wrap items-center gap-4 text-xs">
+                            <Link
+                                to="/terms-of-service"
+                                className="hover:underline"
+                                style={{ color: "rgba(255,255,255,0.75)" }}
+                            >
+                                Terms of Service
+                            </Link>
+
+                            <Link
+                                to="/privacy-policy"
+                                className="hover:underline"
+                                style={{ color: "rgba(255,255,255,0.75)" }}
+                            >
+                                Privacy Policy
+                            </Link>
+
+                            <Link
+                                to="/terms-and-conditions"
+                                className="hover:underline"
+                                style={{ color: "rgba(255,255,255,0.75)" }}
+                            >
+                                Terms & Conditions
+                            </Link>
+                        </div>
                     </div>
 
-                    {/* Right */}
-                    <div className="flex items-center gap-4">
-                        <span
-                            className="px-3 py-1 text-xs font-medium tracking-wide"
+                    {/* RIGHT */}
+                    <div className="flex flex-col items-end gap-2">
+                        {/* ROW 1 */}
+                        <div className="flex items-center gap-3">
+                            <span
+                                className="px-3 py-1 text-xs font-medium tracking-wide"
+                                style={{
+                                    background: "rgba(255,255,255,0.12)",
+                                    color: "#ffffff",
+                                    borderRadius: "9999px",
+                                    border: "1px solid rgba(255,255,255,0.15)",
+                                    backdropFilter: "blur(8px)",
+                                }}
+                            >
+                                v{VERSION}
+                            </span>
+
+                            <span
+                                className="h-4 w-px"
+                                style={{
+                                    background: "rgba(255,255,255,0.35)",
+                                }}
+                            />
+
+                            <span
+                                style={{
+                                    color: "rgba(255,255,255,0.75)",
+                                }}
+                            >
+                                Powered by Atzee
+                            </span>
+                        </div>
+
+                        {/* ROW 2 (🔥 penyeimbang) */}
+                        <div
+                            className="text-xs"
                             style={{
-                                background: "rgba(255,255,255,0.12)",
-                                color: "#ffffff",
-                                borderRadius: "9999px",
-                                border: "1px solid rgba(255,255,255,0.15)",
-                                backdropFilter: "blur(8px)",
+                                color: "rgba(255,255,255,0.55)",
                             }}
                         >
-                            v{VERSION}
-                        </span>
-
-                        <span
-                            className="h-4 w-px"
-                            style={{
-                                background: "var(--color-border)",
-                            }}
-                        />
-
-                        <span
-                            style={{
-                                color: "rgba(255,255,255,0.65)",
-                            }}
-                        >
-                            Engineered with precision
-                        </span>
+                            Secure • Reliable • Scalable
+                        </div>
                     </div>
                 </div>
             </div>

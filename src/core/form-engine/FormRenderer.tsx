@@ -6,7 +6,6 @@ import FieldRenderer from "./fields/FieldRenderer";
 import { useEffect, useState, useCallback } from "react";
 import { submitForm } from "./form.submit";
 import type { TableContext } from "@/core/ui/context/UIContext";
-import { useFeedbackStore } from "@/core/feedback/feedback.store";
 import { clearEntityCacheByPrefix } from "@/engine/entities/cache/entity.cache";
 import type { FormContext } from "@/core/ui/context/UIContext";
 import { buildDefaultValues } from "./utils/buildDefaultValues";
@@ -37,7 +36,6 @@ export default function FormRenderer({
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const feedback = useFeedbackStore();
     // const pages = usePageStore.getState().pages;
     const isViewMode = schema.mode === "view";
 
@@ -74,11 +72,6 @@ export default function FormRenderer({
                 method: schema.method,
             });
 
-            feedback.push({
-                type: "success",
-                title: "Submit",
-                message: `Data berhasil disubmit`,
-            });
             // console.log(`table:${entity}`);
             // refresh table
             clearEntityCacheByPrefix(`table:${entity}`);

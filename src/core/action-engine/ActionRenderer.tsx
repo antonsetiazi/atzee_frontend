@@ -102,18 +102,9 @@ export function ActionRenderer<T>({
                                 id: row?.id,
                             };
 
-                            const res = await submitForm(payload, {
+                            await submitForm(payload, {
                                 submit_to: action.endpoint,
                                 method: "POST",
-                            });
-
-                            feedback.push({
-                                type: "success",
-                                title: action.success_title || "Deleted",
-                                message:
-                                    action.success_message ||
-                                    res?.message ||
-                                    "Data berhasil dihapus",
                             });
 
                             // ✅ DEFAULT refresh (WAJIB)
