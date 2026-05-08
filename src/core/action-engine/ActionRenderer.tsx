@@ -155,7 +155,7 @@ export function ActionRenderer<T>({
                         onClick={onClick}
                         title={action.label}
                         className="inline-flex items-center justify-center
-                               rounded-xl px-3 py-1.5 text-xs font-medium
+                               rounded-xl px-3 py-1.5 text-sm font-medium
                                transition-all duration-150"
                         style={{
                             color: isDanger
@@ -182,7 +182,7 @@ export function ActionRenderer<T>({
                                 : "var(--text-secondary)";
                         }}
                     >
-                        {Icon ? <Icon className="h-4 w-4" /> : action.label}
+                        {Icon ? <Icon className="h-5 w-5" /> : action.label}
                     </button>
                 );
             })}

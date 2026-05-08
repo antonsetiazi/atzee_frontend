@@ -4,13 +4,13 @@ export const inputBase = `
     w-full
     rounded-xl
     border
-    bg-[var(--color-surface)]
+    bg-white
     px-3.5
     py-2.5
     text-sm
     text-[var(--color-text-primary)]
     border-[var(--color-border)]
-    placeholder:text-[var(--color-text-muted)]
+    placeholder:text-gray-400
     transition-all
     duration-200
     focus:outline-none

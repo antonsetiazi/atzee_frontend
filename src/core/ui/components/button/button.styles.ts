@@ -4,6 +4,7 @@ export const base =
     "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 select-none";
 
 export const sizes = {
+    xs: "px-2 py-1.5 text-xs rounded-md",
     sm: "px-3 py-1.5 text-sm rounded-md",
     md: "px-4 py-2 text-sm rounded-lg",
     lg: "px-6 py-3 text-base rounded-xl",

@@ -7,3 +7,11 @@ password:   Partner123!
 
 email:      admin@ustadzku.com
 password:   Admin123!
+
+
+
+
+
+
+email:      admin@finance.com
+password:   Admin123!

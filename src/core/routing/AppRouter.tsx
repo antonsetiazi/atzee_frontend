@@ -1,13 +1,7 @@
 // src/core/routing/AppRouter.tsx
 
 import { useEffect } from "react";
-import {
-    BrowserRouter,
-    Route,
-    Routes,
-    Navigate,
-    useNavigate,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useNavigate } from "react-router-dom";
 
 import ToastRenderer from "@/core/feedback/ToastRenderer";
 import ConfirmDialog from "@/core/confirm/ConfirmDialog";
@@ -33,6 +27,7 @@ import AddressCreatePage from "@/modules/account/address/pages/AddressCreatePage
 import AddressEditPage from "@/modules/account/address/pages/AddressEditPage";
 import BankAccountPage from "@/modules/account/bank/pages/BankAccountPage";
 
+import JournalPage from "@/modules/finance/journal/JournalPage";
 import CartPage from "@/modules/cart/CartPage";
 import OrderPage from "@/modules/order/pages/OrderPage";
 import OrderDetailPage from "@/modules/order/pages/OrderDetailPage";
@@ -56,10 +51,21 @@ import NotificationToastContainer from "@/modules/notification/components/Notifi
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import NativeBridgeTestPage from "@/modules/dev/pages/NativeBridgeTestPage";
 import PolicyPage from "@/modules/public/pages/PolicyPage";
+import JournalDetailPage from "@/modules/finance/journal/JournalDetailPage";
+import TrialBalancePage from "@/modules/finance/reports/trial_balance/TrialBalancePage";
+import ProfitLossPage from "@/modules/finance/reports/profit_loss/ProfitLossPage";
+import BalanceSheetPage from "@/modules/finance/reports/balance_sheet/BalanceSheetPage";
+import CashFlowPage from "@/modules/finance/reports/cash_flow/CashFlowPage";
+import InvoiceListPage from "@/modules/finance/receivables/invoices/pages/InvoiceListPage";
+import InvoiceCreatePage from "@/modules/finance/receivables/invoices/pages/InvoiceCreatePage";
+import InvoiceDetailPage from "@/modules/finance/receivables/invoices/pages/InvoiceDetailPage";
+import PaymentListPage from "@/modules/finance/receivables/payments/pages/PaymentListPage";
+import PaymentCreatePage from "@/modules/finance/receivables/payments/pages/PaymentCreatePage";
+import PaymentDetailPage from "@/modules/finance/receivables/payments/pages/PaymentDetailPage";
+import ReceivableDashboardPage from "@/modules/finance/receivables/dashboard/pages/ReceivableDashboardPage";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
-const DEFAULT_DASHBOARD_ROUTE =
-    import.meta.env.VITE_DEFAULT_DASHBOARD_ROUTE || "/dashboard";
+const DEFAULT_DASHBOARD_ROUTE = import.meta.env.VITE_DEFAULT_DASHBOARD_ROUTE || "/dashboard";
 
 function NavigationRegistrar() {
     const navigate = useNavigate();
@@ -99,59 +105,26 @@ export default function AppRouter() {
 
                     <Route path="/account/profile" element={<ProfilePage />} />
 
-                    <Route
-                        path="/terms-of-service"
-                        element={<PolicyPage type="tos" />}
-                    />
-                    <Route
-                        path="/privacy-policy"
-                        element={<PolicyPage type="privacy" />}
-                    />
-                    <Route
-                        path="/terms-and-conditions"
-                        element={<PolicyPage type="terms" />}
-                    />
+                    <Route path="/terms-of-service" element={<PolicyPage type="tos" />} />
+                    <Route path="/privacy-policy" element={<PolicyPage type="privacy" />} />
+                    <Route path="/terms-and-conditions" element={<PolicyPage type="terms" />} />
 
-                    <Route
-                        path="/account/address"
-                        element={<AddressListPage />}
-                    />
-                    <Route
-                        path="/account/address/create"
-                        element={<AddressCreatePage />}
-                    />
-                    <Route
-                        path="/account/address/edit/:id"
-                        element={<AddressEditPage />}
-                    />
+                    <Route path="/account/address" element={<AddressListPage />} />
+                    <Route path="/account/address/create" element={<AddressCreatePage />} />
+                    <Route path="/account/address/edit/:id" element={<AddressEditPage />} />
 
                     <Route path="/account/bank" element={<BankAccountPage />} />
 
                     <Route path="/chat" element={<ChatPage />} />
                     <Route path="/chat/:roomId" element={<ChatPage />} />
 
-                    <Route
-                        path="/products"
-                        element={<ListingPage type="product" />}
-                    />
-                    <Route
-                        path="/services"
-                        element={<ListingPage type="service" />}
-                    />
+                    <Route path="/products" element={<ListingPage type="product" />} />
+                    <Route path="/services" element={<ListingPage type="service" />} />
 
-                    <Route
-                        path="/product/:id"
-                        element={<ProductDetailPage />}
-                    />
-                    <Route
-                        path="/service/:id"
-                        element={<ServiceDetailPage />}
-                    />
+                    <Route path="/product/:id" element={<ProductDetailPage />} />
+                    <Route path="/service/:id" element={<ServiceDetailPage />} />
 
-                    <Route
-                        path="/service/:id/booking"
-                        element={<ServiceBookingPage />}
-                    />
+                    <Route path="/service/:id/booking" element={<ServiceBookingPage />} />
 
                     <Route path="/cart" element={<CartPage />} />
 
@@ -199,10 +172,7 @@ export default function AppRouter() {
                         }
                     />
 
-                    <Route
-                        path="/partner/orders/:id"
-                        element={<PartnerOrderDetailPage />}
-                    />
+                    <Route path="/partner/orders/:id" element={<PartnerOrderDetailPage />} />
 
                     {/* =========================
                             🔥 PARTNER SCHEDULE
@@ -222,17 +192,48 @@ export default function AppRouter() {
 
                     <Route path="/wallet" element={<WalletPage />} />
                     <Route path="/wallet/topup" element={<WalletTopupPage />} />
-                    <Route
-                        path="/wallet/withdraw"
-                        element={<WalletWithdrawPage />}
-                    />
+                    <Route path="/wallet/withdraw" element={<WalletWithdrawPage />} />
                     <Route path="/tracking/:id" element={<TrackingPage />} />
+
+                    <Route path="/admin/finance/journal" element={<JournalPage />} />
+                    <Route path="/admin/finance/journals/:id" element={<JournalDetailPage />} />
+
+                    <Route
+                        path="/admin/finance/reports/trial-balance"
+                        element={<TrialBalancePage />}
+                    />
+                    <Route path="/admin/finance/reports/profit-loss" element={<ProfitLossPage />} />
+                    <Route
+                        path="/admin/finance/reports/balance-sheet"
+                        element={<BalanceSheetPage />}
+                    />
+                    <Route path="/admin/finance/reports/cash-flow" element={<CashFlowPage />} />
+
+                    <Route path="/finance/receivables/invoices" element={<InvoiceListPage />} />
+                    <Route
+                        path="/finance/receivables/invoices/create"
+                        element={<InvoiceCreatePage />}
+                    />
+                    <Route
+                        path="/finance/receivables/invoices/:invoiceId"
+                        element={<InvoiceDetailPage />}
+                    />
+                    <Route path="/finance/receivables/payments" element={<PaymentListPage />} />
+                    <Route
+                        path="/finance/receivables/payments/create"
+                        element={<PaymentCreatePage />}
+                    />
+                    <Route
+                        path="/finance/receivables/payments/:id"
+                        element={<PaymentDetailPage />}
+                    />
+                    <Route
+                        path="/finance/receivables/dashboard"
+                        element={<ReceivableDashboardPage />}
+                    />
                 </Route>
 
-                <Route
-                    path="/session-expired"
-                    element={<SessionExpiredPage />}
-                />
+                <Route path="/session-expired" element={<SessionExpiredPage />} />
 
                 {/* CATCH-ALL FALLBACK */}
                 <Route
