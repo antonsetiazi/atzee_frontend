@@ -5,11 +5,9 @@ import { useEffect, useState } from "react";
 import { fetchCashFlow } from "./cashFlow.api";
 
 import type { CashFlowResponse } from "./cashFlow.types";
-
-import SummaryCard from "./components/SummaryCard";
-import NetCashCard from "./components/NetCashCard";
 import CashFlowSection from "./components/CashFlowSection";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, SummaryCard } from "@/core/ui/components";
+import { formatValue } from "@/shared/utils/formatValue";
 
 export default function CashFlowPage() {
     const [data, setData] = useState<CashFlowResponse>({
@@ -35,33 +33,40 @@ export default function CashFlowPage() {
     if (loading) {
         return <div className="p-6">Loading cash flow...</div>;
     }
-
+    // console.log(data);
     return (
         <>
-            <HeaderPage
-                title="Cash Flow Statement"
-                subtitle="Financial Report"
-            />
-            <div className="p-6 space-y-6">
+            <HeaderPage title="Cash Flow Statement" subtitle="Financial Report" />
+            <div className="space-y-6 p-6">
                 {/* SUMMARY */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                     <SummaryCard
                         title="Operating"
-                        value={data.total_operating}
+                        value={formatValue(data.total_operating, {
+                            format: "currency",
+                        })}
                     />
-
                     <SummaryCard
                         title="Investing"
-                        value={data.total_investing}
+                        value={formatValue(data.total_investing, {
+                            format: "currency",
+                        })}
                     />
-
                     <SummaryCard
                         title="Financing"
-                        value={data.total_financing}
+                        value={formatValue(data.total_financing, {
+                            format: "currency",
+                        })}
                     />
                 </div>
 
-                <NetCashCard value={data.net_cash_flow} />
+                <SummaryCard
+                    title="Net Cash Flow"
+                    value={formatValue(data.net_cash_flow, {
+                        format: "currency",
+                    })}
+                    tone={data.net_cash_flow >= 0 ? "success" : "danger"}
+                />
 
                 <div className="space-y-6">
                     <CashFlowSection

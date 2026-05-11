@@ -38,6 +38,11 @@ export const variants: Record<string, ButtonStyle> = {
         color: "#fff",
     },
 
+    ghostDanger: {
+        background: "transparent",
+        color: "var(--color-error)",
+    },
+
     success: {
         background: "var(--color-success)",
         color: "#fff",

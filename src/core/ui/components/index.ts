@@ -29,6 +29,7 @@ export { default as StarRating } from "./star_rating/StarRating";
 export { default as StatCard } from "./stat_card/StatCard";
 export { default as StatusBadge } from "./status_badge/StatusBadge";
 export { default as Stepper } from "./stepper/Stepper";
+export { default as SummaryCard } from "./summary_card/SummaryCard";
 export { default as Surface } from "./surface/Surface";
 export { default as Switch } from "./switch/Switch";
 export { default as Tooltip } from "./tooltip/Tooltip";

@@ -36,17 +36,11 @@ export default function BalanceSheetPage() {
     }, [data.assets]);
 
     const totalLiabilities = useMemo(() => {
-        return data.liabilities.reduce(
-            (sum, item) => sum + Number(item.amount),
-            0,
-        );
+        return data.liabilities.reduce((sum, item) => sum + Number(item.amount), 0);
     }, [data.liabilities]);
 
     const totalEquity = useMemo(() => {
-        return data.equities.reduce(
-            (sum, item) => sum + Number(item.amount),
-            0,
-        );
+        return data.equities.reduce((sum, item) => sum + Number(item.amount), 0);
     }, [data.equities]);
 
     const totalRightSide = totalLiabilities + totalEquity;
@@ -55,12 +49,7 @@ export default function BalanceSheetPage() {
         return (
             <div className="p-6">
                 <div
-                    className="
-                        rounded-3xl
-                        border
-                        p-10
-                        animate-pulse
-                    "
+                    className="animate-pulse rounded-3xl border p-10"
                     style={{
                         background: "var(--color-surface)",
                         borderColor: "var(--color-border)",
@@ -76,24 +65,15 @@ export default function BalanceSheetPage() {
         <>
             <HeaderPage title="Balance Sheet" subtitle="Financial Report" />
 
-            <div className="p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="space-y-6 p-6">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
                     <SummaryCard title="Total Assets" value={totalAssets} />
-
-                    <SummaryCard
-                        title="Total Liabilities"
-                        value={totalLiabilities}
-                    />
-
+                    <SummaryCard title="Total Liabilities" value={totalLiabilities} />
                     <SummaryCard title="Total Equity" value={totalEquity} />
                 </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    <BalanceSection
-                        title="Assets"
-                        items={data.assets}
-                        total={totalAssets}
-                    />
+                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    <BalanceSection title="Assets" items={data.assets} total={totalAssets} />
 
                     <div className="space-y-6">
                         <BalanceSection
@@ -102,18 +82,11 @@ export default function BalanceSheetPage() {
                             total={totalLiabilities}
                         />
 
-                        <BalanceSection
-                            title="Equity"
-                            items={data.equities}
-                            total={totalEquity}
-                        />
+                        <BalanceSection title="Equity" items={data.equities} total={totalEquity} />
                     </div>
                 </div>
 
-                <ValidationCard
-                    totalAssets={totalAssets}
-                    totalRightSide={totalRightSide}
-                />
+                <ValidationCard totalAssets={totalAssets} totalRightSide={totalRightSide} />
             </div>
         </>
     );

@@ -1,8 +1,7 @@
 // src/modules/finance/reports/cash_flow/components/CashFlowSection.tsx
 
 import type { CashFlowItem } from "../cashFlow.types";
-
-import { formatCurrency } from "../cashFlow.utils";
+import { formatValue } from "@/shared/utils/formatValue";
 
 type Props = {
     title: string;
@@ -13,19 +12,14 @@ type Props = {
 export default function CashFlowSection({ title, items, total }: Props) {
     return (
         <div
-            className="
-                rounded-3xl
-                border
-                overflow-hidden
-                shadow-sm
-            "
+            className="overflow-hidden rounded-3xl border shadow-sm"
             style={{
                 background: "var(--color-surface)",
                 borderColor: "var(--color-border)",
             }}
         >
             <div
-                className="px-6 py-5 border-b"
+                className="border-b px-6 py-5"
                 style={{
                     borderColor: "var(--color-border)",
                 }}
@@ -40,9 +34,9 @@ export default function CashFlowSection({ title, items, total }: Props) {
                     }}
                 >
                     <tr>
-                        <th className="text-left px-6 py-4">Account</th>
+                        <th className="px-6 py-4 text-left">Account</th>
 
-                        <th className="text-right px-6 py-4">Amount</th>
+                        <th className="px-6 py-4 text-right">Amount</th>
                     </tr>
                 </thead>
 
@@ -56,12 +50,10 @@ export default function CashFlowSection({ title, items, total }: Props) {
                             }}
                         >
                             <td className="px-6 py-4">
-                                <div className="font-medium">
-                                    {item.account_name}
-                                </div>
+                                <div className="font-medium">{item.account_name}</div>
 
                                 <div
-                                    className="text-xs mt-1"
+                                    className="mt-1 text-xs"
                                     style={{
                                         color: "var(--text-muted)",
                                     }}
@@ -71,7 +63,9 @@ export default function CashFlowSection({ title, items, total }: Props) {
                             </td>
 
                             <td className="px-6 py-4 text-right font-semibold tabular-nums">
-                                {formatCurrency(item.amount)}
+                                {formatValue(item.amount, {
+                                    format: "currency",
+                                })}
                             </td>
                         </tr>
                     ))}
@@ -82,19 +76,15 @@ export default function CashFlowSection({ title, items, total }: Props) {
                         }}
                     >
                         <td className="px-6 py-5 font-bold">Total</td>
-
                         <td
-                            className="
-                                px-6
-                                py-5
-                                text-right
-                                font-bold
-                            "
+                            className="px-6 py-5 text-right font-bold"
                             style={{
                                 color: "var(--color-primary)",
                             }}
                         >
-                            {formatCurrency(total)}
+                            {formatValue(total, {
+                                format: "currency",
+                            })}
                         </td>
                     </tr>
                 </tbody>

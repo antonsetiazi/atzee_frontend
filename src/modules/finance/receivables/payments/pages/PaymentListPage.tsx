@@ -6,7 +6,8 @@ import { getReceivablePayments } from "../services/payment.service";
 import type { ReceivablePayment } from "../types/payment.types";
 import { formatValue } from "@/shared/utils/formatValue";
 import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from "@/core/config/format.config";
-import { HeaderPage } from "@/core/ui/components";
+import { Button, HeaderPage } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function PaymentListPage() {
     const navigate = useNavigate();
@@ -34,27 +35,18 @@ export default function PaymentListPage() {
             <HeaderPage
                 title="Receivable Payments"
                 subtitle="Manage customer cash inflows and allocations"
+                right={
+                    <Button
+                        onClick={() => SmartNavigate.go("/finance/receivables/payments/create")}
+                    >
+                        + Receive Payment
+                    </Button>
+                }
             />
-            <div
-                className="space-y-6 p-6"
-                style={{
-                    background: "var(--color-background)",
-                    color: "var(--text-primary)",
-                }}
-            >
+            <div className="space-y-4 p-4">
                 {/* =========================
                 TABLE WRAPPER
             ========================= */}
-                <button
-                    onClick={() => navigate("/finance/receivables/payments/create")}
-                    className="rounded-xl px-4 py-2 text-sm transition hover:opacity-80"
-                    style={{
-                        background: "var(--color-primary)",
-                        color: "#fff",
-                    }}
-                >
-                    + Receive Payment
-                </button>
                 <div
                     className="overflow-hidden rounded-2xl border"
                     style={{

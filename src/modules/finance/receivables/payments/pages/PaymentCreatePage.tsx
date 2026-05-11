@@ -63,13 +63,7 @@ export default function PaymentCreatePage() {
     return (
         <>
             <HeaderPage title="Receive Payment" subtitle="Record incoming customer cash receipt" />
-            <div
-                className="space-y-4 p-4"
-                style={{
-                    background: "var(--color-background)",
-                    color: "var(--text-primary)",
-                }}
-            >
+            <div className="space-y-4 p-4">
                 {/* =========================
                 FORM WRAPPER
             ========================= */}

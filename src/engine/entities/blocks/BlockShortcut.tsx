@@ -3,10 +3,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import type {
-    ShortcutBlock,
-    ShortcutItem,
-} from "@/engine/entities/types/shortcut.types";
+import type { ShortcutBlock, ShortcutItem } from "@/engine/entities/types/shortcut.types";
 
 import Icon from "@/core/ui/icons/Icon";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
@@ -36,6 +33,13 @@ export default function BlockShortcut({ block }: Props) {
 
     const [visible, setVisible] = useState(false);
 
+    const bordered = block.bordered ?? true;
+    const mobilePadding = block.padding_y_mobile || "py-4";
+    const desktopPadding = block.padding_y_desktop || "py-5";
+    const mobileMargin = block.margin_y_mobile || "my-0";
+    const desktopMargin = block.margin_y_desktop || "my-5";
+    const rounded = block.rounded || "";
+
     useEffect(() => {
         const t = setTimeout(() => setVisible(true), 60);
         return () => clearTimeout(t);
@@ -44,9 +48,7 @@ export default function BlockShortcut({ block }: Props) {
     if (!items.length) {
         return (
             <div
-                className="
-                    rounded-2xl border px-4 py-8 text-center text-sm
-                "
+                className="rounded-2xl border px-4 py-8 text-center text-sm"
                 style={{
                     borderColor: "var(--color-border)",
                     background: "var(--color-surface)",
@@ -62,12 +64,7 @@ export default function BlockShortcut({ block }: Props) {
         <div className="w-full">
             {/* Responsive Grid */}
             <div
-                className={`
-                    grid gap-4
-                    grid-cols-${items.length}
-                    border-t border-b border-[var(--color-border)]
-                    ${isMobile ? "py-4 my-0" : "py-5 my-5"}
-                `}
+                className={`grid gap-4 grid-cols-${items.length} ${bordered ? "border-t border-b border-[var(--color-border)]" : ""} ${isMobile ? mobilePadding : desktopPadding} ${isMobile ? mobileMargin : desktopMargin} ${rounded} `}
             >
                 {items.map((item: ShortcutItem, index: number) => {
                     const color = getColor(index);
@@ -76,22 +73,9 @@ export default function BlockShortcut({ block }: Props) {
                         <Link
                             key={item.key}
                             to={item.to || "#"}
-                            className={`
-                                group relative overflow-hidden
-                                rounded-2xl
-                                flex flex-col items-center justify-center
-                                text-center
-                                transition-all duration-500
-                                active:scale-95
-                                hover:-translate-y-1
-                                hover:shadow-lg
-                                ${
-                                    visible
-                                        ? "opacity-100 translate-y-0"
-                                        : "opacity-0 translate-y-4"
-                                }
-                                ${isMobile ? "px-2 py-3" : "px-3 py-4"}
-                            `}
+                            className={`group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl text-center transition-all duration-500 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${
+                                visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+                            } ${isMobile ? "px-2 py-3" : "px-3 py-4"} `}
                             style={{
                                 transitionDelay: `${index * 55}ms`,
                                 // borderColor: "var(--color-border)",
@@ -100,11 +84,7 @@ export default function BlockShortcut({ block }: Props) {
                         >
                             {/* Glow Hover Layer */}
                             <div
-                                className="
-                                    absolute inset-0 opacity-0
-                                    group-hover:opacity-100
-                                    transition-opacity duration-300
-                                "
+                                className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                                 style={{
                                     background: `linear-gradient(135deg, ${color}10, transparent 70%)`,
                                 }}
@@ -112,15 +92,7 @@ export default function BlockShortcut({ block }: Props) {
 
                             {/* Icon */}
                             <div
-                                className={`
-                                    relative z-10
-                                    flex items-center justify-center
-                                    rounded-2xl
-                                    transition-all duration-300
-                                    group-hover:scale-110
-                                    group-hover:-translate-y-0.5
-                                    ${isMobile ? "w-12 h-12" : "w-14 h-14"}
-                                `}
+                                className={`relative z-10 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:-translate-y-0.5 group-hover:scale-110 ${isMobile ? "h-12 w-12" : "h-14 w-14"} `}
                                 style={{
                                     background: `${color}18`,
                                     boxShadow: `0 8px 18px ${color}20`,
@@ -135,16 +107,9 @@ export default function BlockShortcut({ block }: Props) {
 
                             {/* Label */}
                             <span
-                                className={`
-                                    relative z-10 mt-2 font-medium leading-tight
-                                    transition-colors duration-300
-                                    group-hover:opacity-100                                    
-                                    ${
-                                        isMobile
-                                            ? "text-[11px]"
-                                            : "text-xs sm:text-sm"
-                                    }
-                                `}
+                                className={`relative z-10 mt-2 leading-tight font-medium transition-colors duration-300 group-hover:opacity-100 ${
+                                    isMobile ? "text-[11px]" : "text-xs sm:text-sm"
+                                } `}
                                 style={{
                                     color: "var(--color-primary)",
                                 }}
@@ -154,12 +119,7 @@ export default function BlockShortcut({ block }: Props) {
 
                             {/* Subtle Bottom Accent */}
                             <div
-                                className="
-                                    absolute bottom-0 left-0 right-0 h-[2px]
-                                    scale-x-0 group-hover:scale-x-100
-                                    transition-transform duration-300
-                                    origin-center
-                                "
+                                className="absolute right-0 bottom-0 left-0 h-[2px] origin-center scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
                                 style={{
                                     background: color,
                                 }}

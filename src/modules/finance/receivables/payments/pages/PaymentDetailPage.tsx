@@ -7,7 +7,7 @@ import { useParams } from "react-router-dom";
 import { getPaymentDetail } from "../services/payment.service";
 import type { PaymentDetail } from "../types/payment.types";
 import { formatValue } from "@/shared/utils/formatValue";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, SummaryCard } from "@/core/ui/components";
 
 export default function PaymentDetailPage() {
     const { id } = useParams();
@@ -82,14 +82,23 @@ export default function PaymentDetailPage() {
                 </div>
 
                 {/* =========================
-                SUMMARY
-            ========================= */}
+                        SUMMARY
+                    ========================= */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <SummaryCard label="Total Payment" value={payment.amount} primary />
-
-                    <SummaryCard label="Allocated" value={totalAllocated} />
-
-                    <SummaryCard label="Remaining" value={remaining} highlight />
+                    <SummaryCard
+                        title="Total Payment"
+                        value={formatValue(payment.amount, { format: "currency" })}
+                    />
+                    <SummaryCard
+                        title="Allocated"
+                        value={formatValue(totalAllocated, { format: "currency" })}
+                        tone="success"
+                    />
+                    <SummaryCard
+                        title="Remaining"
+                        value={formatValue(remaining, { format: "currency" })}
+                        tone="warning"
+                    />
                 </div>
 
                 {/* =========================
@@ -177,37 +186,6 @@ export default function PaymentDetailPage() {
 /* =========================
    COMPONENTS
 ========================= */
-
-function SummaryCard({ label, value, primary, highlight }: any) {
-    return (
-        <div
-            className="rounded-xl border p-4"
-            style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-border)",
-            }}
-        >
-            <div className="text-sm" style={{ color: "var(--text-muted)" }}>
-                {label}
-            </div>
-
-            <div
-                className={`mt-1 text-xl font-semibold tabular-nums`}
-                style={{
-                    color: primary
-                        ? "var(--color-primary)"
-                        : highlight
-                          ? "var(--color-success)"
-                          : "var(--text-primary)",
-                }}
-            >
-                {formatValue(value, {
-                    format: "currency",
-                })}
-            </div>
-        </div>
-    );
-}
 
 function MetaRow({ label, value }: any) {
     return (

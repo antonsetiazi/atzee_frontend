@@ -2,7 +2,13 @@
 
 import type { ReactNode } from "react";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "success";
+export type ButtonVariant =
+    | "primary"
+    | "secondary"
+    | "ghost"
+    | "danger"
+    | "success"
+    | "ghostDanger";
 
 export type ButtonSize = "xs" | "sm" | "md" | "lg";
 

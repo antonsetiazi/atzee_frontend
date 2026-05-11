@@ -12,20 +12,14 @@ type Props = {
 export default function BalanceSection({ title, items, total }: Props) {
     return (
         <div
-            className="
-                rounded-3xl
-                border
-                overflow-hidden
-                backdrop-blur-xl
-                shadow-sm
-            "
+            className="overflow-hidden rounded-3xl border shadow-sm backdrop-blur-xl"
             style={{
                 background: "var(--color-surface)",
                 borderColor: "var(--color-border)",
             }}
         >
             <div
-                className="px-6 py-5 border-b"
+                className="border-b px-6 py-5"
                 style={{
                     borderColor: "var(--color-border)",
                 }}
@@ -48,9 +42,9 @@ export default function BalanceSection({ title, items, total }: Props) {
                         }}
                     >
                         <tr>
-                            <th className="text-left px-6 py-4">Account</th>
+                            <th className="px-6 py-4 text-left">Account</th>
 
-                            <th className="text-right px-6 py-4">Balance</th>
+                            <th className="px-6 py-4 text-right">Balance</th>
                         </tr>
                     </thead>
 
@@ -64,12 +58,10 @@ export default function BalanceSection({ title, items, total }: Props) {
                                 }}
                             >
                                 <td className="px-6 py-4">
-                                    <div className="font-medium">
-                                        {item.account_name}
-                                    </div>
+                                    <div className="font-medium">{item.account_name}</div>
 
                                     <div
-                                        className="text-xs mt-1"
+                                        className="mt-1 text-xs"
                                         style={{
                                             color: "var(--text-muted)",
                                         }}
@@ -79,7 +71,7 @@ export default function BalanceSection({ title, items, total }: Props) {
                                 </td>
 
                                 <td className="px-6 py-4 text-right font-semibold tabular-nums">
-                                    {formatCurrency(item.balance)}
+                                    {formatCurrency(item.amount)}
                                 </td>
                             </tr>
                         ))}
@@ -89,18 +81,10 @@ export default function BalanceSection({ title, items, total }: Props) {
                                 background: "var(--color-surface-alt)",
                             }}
                         >
-                            <td className="px-6 py-5 font-bold">
-                                Total {title}
-                            </td>
+                            <td className="px-6 py-5 font-bold">Total {title}</td>
 
                             <td
-                                className="
-                                    px-6
-                                    py-5
-                                    text-right
-                                    font-bold
-                                    text-base
-                                "
+                                className="px-6 py-5 text-right text-base font-bold"
                                 style={{
                                     color: "var(--color-primary)",
                                 }}

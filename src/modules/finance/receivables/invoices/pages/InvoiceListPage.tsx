@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { getInvoices } from "../services/invoice.api";
 import type { ReceivableInvoice } from "../types/invoice.types";
 import { formatValue } from "@/shared/utils/formatValue";
-import { HeaderPage } from "@/core/ui/components";
+import { Button, HeaderPage } from "@/core/ui/components";
+import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 export default function InvoiceListPage() {
     const navigate = useNavigate();
@@ -32,25 +33,15 @@ export default function InvoiceListPage() {
             <HeaderPage
                 title="Receivable Invoices"
                 subtitle="Manage customer invoices and billing status"
+                right={
+                    <Button
+                        onClick={() => SmartNavigate.go("/finance/receivables/invoices/create")}
+                    >
+                        + Create Invoice
+                    </Button>
+                }
             />
-            <div
-                className="space-y-6 p-6"
-                style={{
-                    background: "var(--color-background)",
-                    color: "var(--text-primary)",
-                }}
-            >
-                <button
-                    onClick={() => navigate("/finance/receivables/invoices/create")}
-                    className="rounded-xl px-4 py-2 text-sm transition hover:opacity-80"
-                    style={{
-                        background: "var(--color-primary)",
-                        color: "#fff",
-                    }}
-                >
-                    + Create Invoice
-                </button>
-
+            <div className="space-y-4 p-4">
                 {/* TABLE WRAPPER */}
                 <div
                     className="overflow-hidden rounded-2xl border"

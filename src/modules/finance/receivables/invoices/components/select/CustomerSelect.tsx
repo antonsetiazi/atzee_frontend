@@ -1,7 +1,6 @@
 // src/modules/finance/receivables/invoices/components/select/CustomerSelect.tsx
 
 import { useEffect, useState } from "react";
-
 import { httpGet } from "@/core/http/http.client";
 import { inputBase } from "@/core/ui/class/field.ui.class";
 
@@ -17,7 +16,6 @@ type Props = {
 
 export default function CustomerSelect({ value, onChange }: Props) {
     const [options, setOptions] = useState<Customer[]>([]);
-
     const [loading, setLoading] = useState(true);
 
     async function load() {

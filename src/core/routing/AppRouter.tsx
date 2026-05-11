@@ -27,7 +27,6 @@ import AddressCreatePage from "@/modules/account/address/pages/AddressCreatePage
 import AddressEditPage from "@/modules/account/address/pages/AddressEditPage";
 import BankAccountPage from "@/modules/account/bank/pages/BankAccountPage";
 
-import JournalPage from "@/modules/finance/journal/JournalPage";
 import CartPage from "@/modules/cart/CartPage";
 import OrderPage from "@/modules/order/pages/OrderPage";
 import OrderDetailPage from "@/modules/order/pages/OrderDetailPage";
@@ -51,18 +50,7 @@ import NotificationToastContainer from "@/modules/notification/components/Notifi
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import NativeBridgeTestPage from "@/modules/dev/pages/NativeBridgeTestPage";
 import PolicyPage from "@/modules/public/pages/PolicyPage";
-import JournalDetailPage from "@/modules/finance/journal/JournalDetailPage";
-import TrialBalancePage from "@/modules/finance/reports/trial_balance/TrialBalancePage";
-import ProfitLossPage from "@/modules/finance/reports/profit_loss/ProfitLossPage";
-import BalanceSheetPage from "@/modules/finance/reports/balance_sheet/BalanceSheetPage";
-import CashFlowPage from "@/modules/finance/reports/cash_flow/CashFlowPage";
-import InvoiceListPage from "@/modules/finance/receivables/invoices/pages/InvoiceListPage";
-import InvoiceCreatePage from "@/modules/finance/receivables/invoices/pages/InvoiceCreatePage";
-import InvoiceDetailPage from "@/modules/finance/receivables/invoices/pages/InvoiceDetailPage";
-import PaymentListPage from "@/modules/finance/receivables/payments/pages/PaymentListPage";
-import PaymentCreatePage from "@/modules/finance/receivables/payments/pages/PaymentCreatePage";
-import PaymentDetailPage from "@/modules/finance/receivables/payments/pages/PaymentDetailPage";
-import ReceivableDashboardPage from "@/modules/finance/receivables/dashboard/pages/ReceivableDashboardPage";
+import { financeRoutes } from "@/modules/finance/finance.routes";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE = import.meta.env.VITE_DEFAULT_DASHBOARD_ROUTE || "/dashboard";
@@ -195,42 +183,7 @@ export default function AppRouter() {
                     <Route path="/wallet/withdraw" element={<WalletWithdrawPage />} />
                     <Route path="/tracking/:id" element={<TrackingPage />} />
 
-                    <Route path="/admin/finance/journal" element={<JournalPage />} />
-                    <Route path="/admin/finance/journals/:id" element={<JournalDetailPage />} />
-
-                    <Route
-                        path="/admin/finance/reports/trial-balance"
-                        element={<TrialBalancePage />}
-                    />
-                    <Route path="/admin/finance/reports/profit-loss" element={<ProfitLossPage />} />
-                    <Route
-                        path="/admin/finance/reports/balance-sheet"
-                        element={<BalanceSheetPage />}
-                    />
-                    <Route path="/admin/finance/reports/cash-flow" element={<CashFlowPage />} />
-
-                    <Route path="/finance/receivables/invoices" element={<InvoiceListPage />} />
-                    <Route
-                        path="/finance/receivables/invoices/create"
-                        element={<InvoiceCreatePage />}
-                    />
-                    <Route
-                        path="/finance/receivables/invoices/:invoiceId"
-                        element={<InvoiceDetailPage />}
-                    />
-                    <Route path="/finance/receivables/payments" element={<PaymentListPage />} />
-                    <Route
-                        path="/finance/receivables/payments/create"
-                        element={<PaymentCreatePage />}
-                    />
-                    <Route
-                        path="/finance/receivables/payments/:id"
-                        element={<PaymentDetailPage />}
-                    />
-                    <Route
-                        path="/finance/receivables/dashboard"
-                        element={<ReceivableDashboardPage />}
-                    />
+                    {financeRoutes}
                 </Route>
 
                 <Route path="/session-expired" element={<SessionExpiredPage />} />

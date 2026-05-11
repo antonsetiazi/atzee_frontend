@@ -17,4 +17,14 @@ export interface ShortcutBlock {
     items: ShortcutItem[];
     scrollable?: boolean;
     center?: boolean;
+
+    bordered?: boolean;
+
+    padding_y_mobile?: string;
+    padding_y_desktop?: string;
+
+    margin_y_mobile?: string;
+    margin_y_desktop?: string;
+
+    rounded?: string;
 }

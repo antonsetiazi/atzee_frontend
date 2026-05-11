@@ -9,22 +9,20 @@ interface Props {
 export default function DesktopHeader({ title, subtitle, right }: Props) {
     return (
         <div
-            className="w-full px-6 py-6"
+            className="flex w-full items-start justify-between gap-4 px-6 py-5"
             style={{
                 background: "var(--color-background)",
                 borderBottom: "1px solid var(--color-border)",
             }}
         >
-            <div className="space-y-1">
+            {/* LEFT */}
+            <div className="min-w-0 space-y-1">
                 {title && <h1 className="text-2xl font-bold">{title}</h1>}
-                {subtitle && (
-                    <p className="text-sm text-[var(--text-muted)]">
-                        {subtitle}
-                    </p>
-                )}
+                {subtitle && <p className="text-sm text-[var(--text-muted)]">{subtitle}</p>}
             </div>
 
-            {right && <div>{right}</div>}
+            {/* RIGHT */}
+            {right && <div className="flex flex-shrink-0 items-center gap-3">{right}</div>}
         </div>
     );
 }

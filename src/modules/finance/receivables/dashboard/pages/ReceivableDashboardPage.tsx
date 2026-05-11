@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { getReceivableDashboard } from "../services/dashboard.service";
 import { formatValue } from "@/shared/utils/formatValue";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, SummaryCard } from "@/core/ui/components";
 
 export default function ReceivableDashboardPage() {
     const [loading, setLoading] = useState(true);
@@ -61,38 +61,22 @@ export default function ReceivableDashboardPage() {
                 {/* SUMMARY CARDS */}
                 {!loading && data && (
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                        {/* Total Receivable */}
-                        <Card>
-                            <Label>Total Receivable</Label>
-                            <Value>{formatValue(s.total_receivable, { format: "currency" })}</Value>
-                        </Card>
-
-                        {/* Overdue */}
-                        <Card>
-                            <Label>Overdue</Label>
-
-                            <Value danger>
-                                {formatValue(s.overdue_amount, { format: "currency" })}
-                            </Value>
-
-                            <SubText>{s.overdue_count} invoices</SubText>
-                        </Card>
-
-                        {/* Paid */}
-                        <Card>
-                            <Label>Paid This Month</Label>
-
-                            <Value success>
-                                {formatValue(s.paid_this_month, { format: "currency" })}
-                            </Value>
-                        </Card>
-
-                        {/* Draft */}
-                        <Card>
-                            <Label>Draft Invoices</Label>
-
-                            <Value>{s.draft_count}</Value>
-                        </Card>
+                        <SummaryCard
+                            title="Total Receivable"
+                            value={formatValue(s.total_receivable, { format: "currency" })}
+                        />
+                        <SummaryCard
+                            title="Overdue"
+                            value={formatValue(s.overdue_amount, { format: "currency" })}
+                            subtitle={`${s.overdue_count} invoices`}
+                            tone="danger"
+                        />
+                        <SummaryCard
+                            title="Paid This Month"
+                            value={formatValue(s.paid_this_month, { format: "currency" })}
+                            tone="success"
+                        />
+                        <SummaryCard title="Draft Invoices" value={s.draft_count} />
                     </div>
                 )}
 
@@ -146,63 +130,6 @@ export default function ReceivableDashboardPage() {
 /* =========================
    UI COMPONENTS (LOCAL)
 ========================= */
-
-function Card({ children }: { children: React.ReactNode }) {
-    return (
-        <div
-            className="rounded-2xl border p-4 transition hover:shadow-sm"
-            style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-border)",
-                boxShadow: "var(--shadow)",
-            }}
-        >
-            {children}
-        </div>
-    );
-}
-
-function Label({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="text-sm" style={{ color: "var(--text-muted)" }}>
-            {children}
-        </div>
-    );
-}
-
-function Value({
-    children,
-    success,
-    danger,
-}: {
-    children: React.ReactNode;
-    success?: boolean;
-    danger?: boolean;
-}) {
-    return (
-        <div
-            className="mt-2 text-xl font-semibold"
-            style={{
-                color: danger
-                    ? "var(--color-error)"
-                    : success
-                      ? "var(--color-success)"
-                      : "var(--text-primary)",
-            }}
-        >
-            {children}
-        </div>
-    );
-}
-
-function SubText({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="mt-1 text-xs" style={{ color: "var(--text-muted)" }}>
-            {children}
-        </div>
-    );
-}
-
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
     return (
         <div

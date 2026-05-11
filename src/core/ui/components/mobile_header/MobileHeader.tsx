@@ -34,54 +34,33 @@ export default function MobileHeader({
     }
 
     return (
-        <div
-            className={`
-                z-40
-                ${sticky ? "sticky top-0" : ""}
-            `}
-        >
-            <div
-                className="
-                    flex items-center justify-between
-                    px-4 py-3
-                    backdrop-blur-md
-                    bg-white/70
-                    border-b border-[var(--color-border)]
-                "
-            >
+        <div className={`z-40 ${sticky ? "sticky top-0" : ""} `}>
+            <div className="flex items-center justify-between border-b border-[var(--color-border)] bg-white/70 px-4 py-3 backdrop-blur-md">
                 {/* LEFT */}
                 <div className="flex items-center gap-3">
                     {showBack && (
                         <button
                             onClick={handleBack}
-                            className="
-                            w-10 h-10 flex items-center justify-center
-                            rounded-full
-                            bg-white shadow-sm
-                            border border-[var(--color-border)]
-                            active:scale-95 transition
-                        "
+                            className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-white shadow-sm transition active:scale-95"
                         >
-                            <ArrowLeftIcon className="w-5 h-5 text-[var(--text-primary)]" />
+                            <ArrowLeftIcon className="h-5 w-5 text-[var(--text-primary)]" />
                         </button>
                     )}
 
                     {(title || subtitle) && (
                         <div className="leading-tight">
-                            {title && (
-                                <p className="text-sm font-semibold">{title}</p>
-                            )}
+                            {title && <p className="text-sm font-semibold">{title}</p>}
                             {subtitle && (
-                                <p className="text-xs text-[var(--text-muted)]">
-                                    {subtitle}
-                                </p>
+                                <p className="text-xs text-[var(--text-muted)]">{subtitle}</p>
                             )}
                         </div>
                     )}
                 </div>
 
                 {/* RIGHT */}
-                {right && <div>{right}</div>}
+                {right && (
+                    <div className="flex flex-wrap items-center justify-end gap-2">{right}</div>
+                )}
             </div>
         </div>
     );

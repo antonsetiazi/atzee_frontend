@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { getInvoiceDetail, postInvoice } from "../services/invoice.service";
 import type { InvoiceDetail } from "../types/invoice.types";
 import { formatValue } from "@/shared/utils/formatValue";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, SummaryCard } from "@/core/ui/components";
 
 export default function InvoiceDetailPage() {
     const { invoiceId } = useParams();
@@ -72,53 +72,46 @@ export default function InvoiceDetailPage() {
             <HeaderPage
                 title={`Invoice #${invoice.invoice_number}`}
                 subtitle={`Customer: ${invoice.customer_name}`}
+                right={
+                    <div className="flex gap-3">
+                        <StatusBadge status={invoice.status} />
+
+                        {invoice.status === "draft" && (
+                            <button
+                                onClick={handlePostInvoice}
+                                disabled={posting}
+                                className="rounded-xl px-4 py-2 text-sm transition hover:opacity-80"
+                                style={{
+                                    background: "var(--color-primary)",
+                                    color: "#fff",
+                                }}
+                            >
+                                {posting ? "Posting..." : "Post Invoice"}
+                            </button>
+                        )}
+                    </div>
+                }
             />
-            <div
-                className="space-y-4 p-4"
-                style={{
-                    background: "var(--color-background)",
-                    color: "var(--text-primary)",
-                }}
-            >
-                {/* HEADER */}
-                <div className="flex gap-3">
-                    <StatusBadge status={invoice.status} />
-
-                    {invoice.status === "draft" && (
-                        <button
-                            onClick={handlePostInvoice}
-                            disabled={posting}
-                            className="rounded-xl px-4 py-2 text-sm transition hover:opacity-80"
-                            style={{
-                                background: "var(--color-primary)",
-                                color: "#fff",
-                            }}
-                        >
-                            {posting ? "Posting..." : "Post Invoice"}
-                        </button>
-                    )}
-                </div>
-
+            <div className="space-y-4 p-4">
                 {/* INFO GRID */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <InfoCard
-                        label="Invoice Date"
+                    <SummaryCard
+                        title="Invoice Date"
                         value={formatValue(invoice.invoice_date, {
                             format: "date",
                         })}
                     />
-                    <InfoCard
-                        label="Due Date"
+                    <SummaryCard
+                        title="Due Date"
                         value={formatValue(invoice.due_date, {
                             format: "date",
                         })}
                     />
-                    <InfoCard
-                        label="Balance Due"
+                    <SummaryCard
+                        title="Balance Due"
                         value={formatValue(invoice.balance_due, {
                             format: "number",
                         })}
-                        highlight
                     />
                 </div>
 
@@ -220,39 +213,6 @@ export default function InvoiceDetailPage() {
 /* =========================
    UI COMPONENTS
 ========================= */
-
-function InfoCard({
-    label,
-    value,
-    highlight,
-}: {
-    label: string;
-    value: string | number;
-    highlight?: boolean;
-}) {
-    return (
-        <div
-            className="rounded-2xl border p-4"
-            style={{
-                background: "var(--color-surface)",
-                borderColor: "var(--color-border)",
-            }}
-        >
-            <div className="text-sm" style={{ color: "var(--text-muted)" }}>
-                {label}
-            </div>
-
-            <div
-                className="mt-1 font-medium"
-                style={{
-                    color: highlight ? "var(--color-primary)" : "var(--text-primary)",
-                }}
-            >
-                {value}
-            </div>
-        </div>
-    );
-}
 
 function TotalRow({ label, value }: { label: string; value: string | number }) {
     return (
