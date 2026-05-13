@@ -16,14 +16,15 @@ export default function FixedAssetForm({ initialValues, loading = false, onSubmi
         name: initialValues?.name || "",
         category_id: initialValues?.category_id || "",
         purchase_date: initialValues?.purchase_date || "",
-        acquisition_cost: initialValues?.acquisition_cost || 0,
+        capitalization_date: initialValues?.capitalization_date || "",
+        purchase_cost: initialValues?.purchase_cost || 0,
         salvage_value: initialValues?.salvage_value || 0,
         useful_life_months: initialValues?.useful_life_months || 12,
         depreciation_method: initialValues?.depreciation_method || "straight_line",
         depreciation_start_date: initialValues?.depreciation_start_date || "",
         serial_number: initialValues?.serial_number || "",
         location: initialValues?.location || "",
-        notes: initialValues?.notes || "",
+        description: initialValues?.description || "",
     });
 
     async function handleSubmit(e: React.FormEvent) {
@@ -81,11 +82,11 @@ export default function FixedAssetForm({ initialValues, loading = false, onSubmi
                 <Input
                     type="number"
                     label="Acquisition Cost"
-                    value={String(form.acquisition_cost)}
+                    value={String(form.purchase_cost)}
                     onChange={(value) =>
                         setForm({
                             ...form,
-                            acquisition_cost: Number(value),
+                            purchase_cost: Number(value),
                         })
                     }
                 />
@@ -110,6 +111,18 @@ export default function FixedAssetForm({ initialValues, loading = false, onSubmi
                         setForm({
                             ...form,
                             useful_life_months: Number(value),
+                        })
+                    }
+                />
+
+                <Input
+                    type="date"
+                    label="Capitalization  Date"
+                    value={form.capitalization_date}
+                    onChange={(value) =>
+                        setForm({
+                            ...form,
+                            capitalization_date: value,
                         })
                     }
                 />
@@ -151,11 +164,11 @@ export default function FixedAssetForm({ initialValues, loading = false, onSubmi
 
             <Textarea
                 label="Notes"
-                value={form.notes || ""}
+                value={form.description || ""}
                 onChange={(value) =>
                     setForm({
                         ...form,
-                        notes: value,
+                        description: value,
                     })
                 }
             />

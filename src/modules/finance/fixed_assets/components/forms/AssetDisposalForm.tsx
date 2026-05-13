@@ -1,19 +1,21 @@
 // src/modules/finance/fixed_assets/components/forms/AssetDisposalForm.tsx
 
 import { useState } from "react";
+
 import type { AssetDisposalFormData } from "../../types/disposal.types";
 
 type Props = {
+    assetId: string;
     loading?: boolean;
+
     onSubmit: (values: AssetDisposalFormData) => Promise<void> | void;
 };
 
-export default function AssetDisposalForm({ loading = false, onSubmit }: Props) {
+export default function AssetDisposalForm({ assetId, loading = false, onSubmit }: Props) {
     const [form, setForm] = useState<AssetDisposalFormData>({
-        asset_id: "",
+        asset_id: assetId,
         disposal_date: "",
-        disposal_type: "sale",
-        selling_price: 0,
+        disposal_value: 0,
         notes: "",
     });
 
@@ -23,19 +25,36 @@ export default function AssetDisposalForm({ loading = false, onSubmit }: Props) 
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                <Input
-                    label="Asset ID"
-                    value={form.asset_id}
-                    onChange={(value) =>
-                        setForm({
-                            ...form,
-                            asset_id: value,
-                        })
-                    }
-                />
+        <form onSubmit={handleSubmit} className="space-y-6">
+            {/* ================================================= */}
+            {/* HEADER */}
+            {/* ================================================= */}
 
+            <div>
+                <div
+                    className="text-lg font-semibold"
+                    style={{
+                        color: "var(--text-primary)",
+                    }}
+                >
+                    Dispose Asset
+                </div>
+
+                <div
+                    className="mt-1 text-sm"
+                    style={{
+                        color: "var(--text-secondary)",
+                    }}
+                >
+                    Record asset disposal and generate accounting journal automatically.
+                </div>
+            </div>
+
+            {/* ================================================= */}
+            {/* FORM */}
+            {/* ================================================= */}
+
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <Input
                     type="date"
                     label="Disposal Date"
@@ -49,24 +68,13 @@ export default function AssetDisposalForm({ loading = false, onSubmit }: Props) 
                 />
 
                 <Input
-                    label="Disposal Type"
-                    value={form.disposal_type}
-                    onChange={(value) =>
-                        setForm({
-                            ...form,
-                            disposal_type: value,
-                        })
-                    }
-                />
-
-                <Input
                     type="number"
-                    label="Selling Price"
-                    value={String(form.selling_price)}
+                    label="Disposal Value"
+                    value={String(form.disposal_value)}
                     onChange={(value) =>
                         setForm({
                             ...form,
-                            selling_price: Number(value),
+                            disposal_value: Number(value),
                         })
                     }
                 />
@@ -83,33 +91,38 @@ export default function AssetDisposalForm({ loading = false, onSubmit }: Props) 
                 }
             />
 
-            <button
-                type="submit"
-                disabled={loading}
-                className="h-11 rounded-xl px-6 text-sm font-medium"
-                style={{
-                    background: "var(--color-primary)",
+            {/* ================================================= */}
+            {/* ACTION */}
+            {/* ================================================= */}
 
-                    color: "#fff",
-                }}
-            >
-                {loading ? "Processing..." : "Submit Disposal"}
-            </button>
+            <div className="flex items-center justify-end">
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="h-11 rounded-xl px-6 text-sm font-medium text-white transition-all disabled:opacity-60"
+                    style={{
+                        background: "#dc2626",
+                    }}
+                >
+                    {loading ? "Processing..." : "Dispose Asset"}
+                </button>
+            </div>
         </form>
     );
 }
 
-function Input({
-    label,
-    value,
-    onChange,
-    type = "text",
-}: {
+/* =========================================================
+    INTERNAL COMPONENTS
+========================================================= */
+
+type InputProps = {
     label: string;
     value: string;
     onChange: (value: string) => void;
     type?: string;
-}) {
+};
+
+function Input({ label, value, onChange, type = "text" }: InputProps) {
     return (
         <div className="space-y-2">
             <label
@@ -128,7 +141,9 @@ function Input({
                 className="h-11 w-full rounded-xl border px-4 text-sm outline-none"
                 style={{
                     background: "var(--color-background)",
+
                     borderColor: "var(--color-border)",
+
                     color: "var(--text-primary)",
                 }}
             />
@@ -136,15 +151,13 @@ function Input({
     );
 }
 
-function Textarea({
-    label,
-    value,
-    onChange,
-}: {
+type TextareaProps = {
     label: string;
     value: string;
     onChange: (value: string) => void;
-}) {
+};
+
+function Textarea({ label, value, onChange }: TextareaProps) {
     return (
         <div className="space-y-2">
             <label
@@ -157,13 +170,15 @@ function Textarea({
             </label>
 
             <textarea
-                rows={5}
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-full rounded-xl border p-4 text-sm outline-none"
+                rows={5}
+                className="w-full resize-none rounded-xl border p-4 text-sm outline-none"
                 style={{
                     background: "var(--color-background)",
+
                     borderColor: "var(--color-border)",
+
                     color: "var(--text-primary)",
                 }}
             />

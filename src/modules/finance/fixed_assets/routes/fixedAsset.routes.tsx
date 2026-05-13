@@ -8,6 +8,8 @@ import AssetCategoryListPage from "../pages/AssetCategoryListPage";
 import AssetCategoryFormPage from "../pages/AssetCategoryFormPage";
 import DepreciationHistoryPage from "../pages/DepreciationHistoryPage";
 import AssetDisposalPage from "../pages/AssetDisposalPage";
+import FixedAssetEditPage from "../pages/FixedAssetEditPage";
+import FixedAssetDisposalFormPage from "../pages/FixedAssetDisposalFormPage";
 
 export const fixedAssetRoutes = (
     <>
@@ -23,6 +25,11 @@ export const fixedAssetRoutes = (
         <Route path="/finance/fixed-assets" element={<FixedAssetListPage />} />
         <Route path="/finance/fixed-assets/create" element={<FixedAssetFormPage />} />
         <Route path="/finance/fixed-assets/:assetId" element={<FixedAssetDetailPage />} />
+        <Route path="/finance/fixed-assets/:assetId/edit" element={<FixedAssetEditPage />} />
+        <Route
+            path="/finance/fixed-assets/:assetId/dispose"
+            element={<FixedAssetDisposalFormPage />}
+        />
 
         {/* =========================
             ASSET CATEGORIES

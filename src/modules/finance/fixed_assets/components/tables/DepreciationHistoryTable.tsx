@@ -1,5 +1,6 @@
 // src/modules/finance/fixed_assets/components/tables/DepreciationHistoryTable.tsx
 
+import { formatValue } from "@/shared/utils/formatValue";
 import type { DepreciationItem } from "../../types/depreciation.types";
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 export default function DepreciationHistoryTable({ items }: Props) {
     return (
         <div
-            className="overflow-x-auto rounded-2xl border"
+            className="overflow-x-auto rounded-xl border"
             style={{
                 borderColor: "var(--color-border)",
                 background: "var(--color-surface)",
@@ -41,8 +42,16 @@ export default function DepreciationHistoryTable({ items }: Props) {
                             }}
                         >
                             <Td>{item.asset_name}</Td>
-                            <Td>{item.period}</Td>
-                            <Td>{item.depreciation_date}</Td>
+                            <Td>
+                                {formatValue(item.period, {
+                                    format: "date",
+                                })}
+                            </Td>
+                            <Td>
+                                {formatValue(item.depreciation_date, {
+                                    format: "date",
+                                })}
+                            </Td>
                             <Td align="right">{formatCurrency(item.depreciation_amount)}</Td>
                             <Td align="right">{formatCurrency(item.accumulated_depreciation)}</Td>
                             <Td align="right">{formatCurrency(item.book_value)}</Td>

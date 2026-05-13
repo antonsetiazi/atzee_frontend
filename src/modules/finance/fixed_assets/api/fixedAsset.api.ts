@@ -15,12 +15,18 @@ export async function createFixedAsset(payload: FixedAssetFormData) {
     return httpPost("/accounting/fixed-assets/create/", payload);
 }
 
-export async function updateFixedAsset(assetId: string, payload: Partial<FixedAssetFormData>) {
-    return httpPut(`/accounting/fixed-assets/${assetId}/`, payload);
+export async function updateFixedAsset(assetId: string, payload: FixedAssetFormData) {
+    return httpPut<FixedAsset>(`/accounting/fixed-assets/${assetId}/update/`, payload);
 }
 
-export async function runAssetDepreciation(assetId: string) {
-    return httpPost(`/accounting/fixed-assets/${assetId}/depreciate/`);
+export async function activateFixedAsset(assetId: string) {
+    return httpPost<FixedAsset>(`/accounting/fixed-assets/${assetId}/activate/`);
+}
+
+export async function runDepreciation(assetId: string) {
+    return httpPost(`/accounting/fixed-assets/${assetId}/depreciate/`, {
+        period_date: new Date().toISOString().split("T")[0],
+    });
 }
 
 export async function disposeFixedAsset(

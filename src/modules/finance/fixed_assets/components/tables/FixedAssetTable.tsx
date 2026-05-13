@@ -58,9 +58,9 @@ export default function FixedAssetTable({ items }: Props) {
 
                             <Td>{item.category_name || "-"}</Td>
 
-                            <Td align="right">{formatCurrency(item.acquisition_cost)}</Td>
+                            <Td align="right">{formatCurrency(item.purchase_cost)}</Td>
 
-                            <Td align="right">{formatCurrency(item.current_book_value)}</Td>
+                            <Td align="right">{formatCurrency(item.book_value)}</Td>
 
                             <Td>
                                 <FixedAssetStatusBadge status={item.status} />

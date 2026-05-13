@@ -1,16 +1,16 @@
-// src/modules/finance/fixed_assets/hooks/useRunDepreciation.ts
+// src/modules/finance/fixed_assets/hooks/useActivateFixedAsset.ts
 
 import { useState } from "react";
-import { runDepreciation } from "../api/fixedAsset.api";
+import { activateFixedAsset } from "../api/fixedAsset.api";
 
-export function useRunDepreciation() {
+export function useActivateFixedAsset() {
     const [loading, setLoading] = useState(false);
 
     async function submit(assetId: string) {
         try {
             setLoading(true);
 
-            return await runDepreciation(assetId);
+            return await activateFixedAsset(assetId);
         } finally {
             setLoading(false);
         }

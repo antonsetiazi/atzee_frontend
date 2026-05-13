@@ -9,7 +9,7 @@ type Props = {
 export default function AssetDisposalTable({ items }: Props) {
     return (
         <div
-            className="overflow-x-auto rounded-2xl border"
+            className="overflow-x-auto rounded-xl border"
             style={{
                 borderColor: "var(--color-border)",
                 background: "var(--color-surface)",
@@ -24,8 +24,7 @@ export default function AssetDisposalTable({ items }: Props) {
                     <tr>
                         <Th>Asset</Th>
                         <Th>Disposal Date</Th>
-                        <Th>Type</Th>
-                        <Th align="right">Selling Price</Th>
+                        <Th align="right">Disposal Value</Th>
                         <Th align="right">Gain/Loss</Th>
                         <Th>Status</Th>
                     </tr>
@@ -42,8 +41,7 @@ export default function AssetDisposalTable({ items }: Props) {
                         >
                             <Td>{item.asset_name}</Td>
                             <Td>{item.disposal_date}</Td>
-                            <Td>{item.disposal_type}</Td>
-                            <Td align="right">{formatCurrency(item.selling_price)}</Td>
+                            <Td align="right">{formatCurrency(item.disposal_value)}</Td>
                             <Td align="right">{formatCurrency(item.gain_loss_amount)}</Td>
                             <Td>{item.status}</Td>
                         </tr>
