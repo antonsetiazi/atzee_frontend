@@ -28,6 +28,7 @@ import BlockTransactionSummary from "../blocks/BlockTransactionSummary";
 import BlockFiles from "../blocks/BlockFiles";
 import BlockListingSection from "../blocks/BlockListingSection";
 import BlockCategorySlider from "../blocks/BlockCategorySlider";
+import BlockDashboard from "../blocks/BlockDashboard";
 
 /**
  * 🔥 Helper: ambil data dari pageData
@@ -56,21 +57,14 @@ export default function BlockRenderer(props: Props): React.ReactNode {
      * =========================================
      */
     if (block.type === "container") {
-        const hasOnlyStats = block.blocks?.every(
-            (item: any) => item.type === "stat",
-        );
+        const hasOnlyStats = block.blocks?.every((item: any) => item.type === "stat");
 
-        const isColumn =
-            block.direction === "column" && !(isMobile && hasOnlyStats);
+        const isColumn = block.direction === "column" && !(isMobile && hasOnlyStats);
 
         return (
             <div
                 key={idx}
-                className={`
-                    w-full
-                    ${!isColumn ? "grid" : "flex flex-col"}
-                    ${isMobile ? "p-3" : "p-6"}
-                `}
+                className={`w-full ${!isColumn ? "grid" : "flex flex-col"} ${isMobile ? "p-3" : "p-6"} `}
                 style={
                     !isColumn
                         ? {
@@ -93,13 +87,11 @@ export default function BlockRenderer(props: Props): React.ReactNode {
                     const separatorStyle: React.CSSProperties = {};
 
                     if (block.column_line_separator && isColumn && !isLast) {
-                        separatorStyle.borderBottom =
-                            "1px solid var(--color-border)";
+                        separatorStyle.borderBottom = "1px solid var(--color-border)";
                     }
 
                     if (block.row_line_separator && !isColumn && !isLast) {
-                        separatorStyle.borderRight =
-                            "1px solid var(--color-border)";
+                        separatorStyle.borderRight = "1px solid var(--color-border)";
                     }
 
                     return (
@@ -149,6 +141,10 @@ export default function BlockRenderer(props: Props): React.ReactNode {
                 total={blockData?.total}
             />
         );
+    }
+
+    if (block.type === "dashboard") {
+        return <BlockDashboard {...props} />;
     }
 
     if (block.type === "list") {
@@ -247,9 +243,7 @@ export default function BlockRenderer(props: Props): React.ReactNode {
     }
 
     if (block.type === "transaction") {
-        return (
-            <TransactionWorkspace key={idx} block={block} pageData={pageData} />
-        );
+        return <TransactionWorkspace key={idx} block={block} pageData={pageData} />;
     }
 
     if (block.type === "listing_section") {
