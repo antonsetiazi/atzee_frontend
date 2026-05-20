@@ -51,6 +51,7 @@ import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import NativeBridgeTestPage from "@/modules/dev/pages/NativeBridgeTestPage";
 import PolicyPage from "@/modules/public/pages/PolicyPage";
 import { financeRoutes } from "@/modules/finance/finance.routes";
+import { hrmsRoutes } from "@/modules/hrms/hrms.routes";
 
 const DEFAULT_GUEST_ROUTE = import.meta.env.VITE_DEFAULT_GUEST_ROUTE || "/";
 const DEFAULT_DASHBOARD_ROUTE = import.meta.env.VITE_DEFAULT_DASHBOARD_ROUTE || "/dashboard";
@@ -184,6 +185,7 @@ export default function AppRouter() {
                     <Route path="/tracking/:id" element={<TrackingPage />} />
 
                     {financeRoutes}
+                    {hrmsRoutes}
                 </Route>
 
                 <Route path="/session-expired" element={<SessionExpiredPage />} />

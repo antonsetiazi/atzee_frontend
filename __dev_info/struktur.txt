@@ -1,0 +1,74 @@
+src/
+├── modules/
+│   └── hrms/
+│       │
+│       ├── pages/
+│       │   ├── dashboard/
+│       │   │   ├── HRMSDashboardPage.tsx
+│       │   │   ├── widgets/
+│       │   │   └── hooks/
+│       │   │
+│       │   ├── employees/
+│       │   │   ├── EmployeeListPage.tsx
+│       │   │   ├── EmployeeDetailPage.tsx
+│       │   │   ├── EmployeeFormPage.tsx
+│       │   │   ├── components/
+│       │   │   └── hooks/
+│       │   │
+│       │   ├── attendance/
+│       │   │   ├── AttendancePage.tsx
+│       │   │   ├── AttendanceRealtimePage.tsx
+│       │   │   ├── components/
+│       │   │   └── hooks/
+│       │   │
+│       │   ├── leave/
+│       │   │   ├── LeaveRequestPage.tsx
+│       │   │   ├── LeaveApprovalPage.tsx
+│       │   │   ├── components/
+│       │   │   └── hooks/
+│       │   │
+│       │   └── payroll/
+│       │       ├── PayrollPage.tsx
+│       │       ├── PayrollApprovalPage.tsx
+│       │       ├── PayslipPage.tsx
+│       │       ├── components/
+│       │       └── hooks/
+│       │
+│       ├── components/
+│       │   ├── employee/
+│       │   ├── attendance/
+│       │   ├── leave/
+│       │   └── payroll/
+│       │
+│       ├── schemas/
+│       │   ├── employeeSchemas.ts
+│       │   ├── attendanceSchemas.ts
+│       │   ├── leaveSchemas.ts
+│       │   └── payrollSchemas.ts
+│       │
+│       ├── services/
+│       │   ├── employee.service.ts
+│       │   ├── attendance.service.ts
+│       │   ├── leave.service.ts
+│       │   └── payroll.service.ts
+│       │
+│       ├── queries/
+│       │   ├── employee.query.ts
+│       │   ├── attendance.query.ts
+│       │   ├── leave.query.ts
+│       │   └── payroll.query.ts
+│       │
+│       ├── types/
+│       │   ├── employee.types.ts
+│       │   ├── attendance.types.ts
+│       │   ├── leave.types.ts
+│       │   └── payroll.types.ts
+│       │
+│       ├── hooks/
+│       │   ├── useEmployees.ts
+│       │   ├── useAttendance.ts
+│       │   ├── useLeave.ts
+│       │   └── usePayroll.ts
+│       │
+│       └── routes/
+│           └── hrms.routes.tsx

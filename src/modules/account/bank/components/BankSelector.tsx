@@ -5,6 +5,7 @@ import { useBanks } from "../hooks/useBanks";
 import BankCard from "./BankCard";
 import BankEmptyState from "./BankEmptyState";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
+import { LoadingState } from "@/core/ui/components";
 
 export default function BankSelector({
     value,
@@ -26,14 +27,10 @@ export default function BankSelector({
         }
     }, [data, value, onChange]);
 
-    if (loading) {
-        return <div className="text-sm text-gray-500">Memuat rekening...</div>;
-    }
+    if (loading) return <LoadingState />;
 
     if (data.length === 0) {
-        return (
-            <BankEmptyState onAdd={() => SmartNavigate.go("/account/bank")} />
-        );
+        return <BankEmptyState onAdd={() => SmartNavigate.go("/account/bank")} />;
     }
 
     return (

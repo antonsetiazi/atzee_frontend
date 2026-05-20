@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useParams, Navigate } from "react-router-dom";
-import LoadingState from "@/shared/ui/LoadingState";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import BlockRenderer from "../renderers/BlockRenderer";
 import { useEntityData } from "../hooks/useEntityData";
 import { useEntityContext } from "../hooks/useEntityContext";
 import { useEntitySchema } from "../hooks/useEntitySchema";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, LoadingState } from "@/core/ui/components";
 import { usePageStore } from "@/core/ui/page/page.store";
 import { useEffect, useState } from "react";
+import { mapBackendAction } from "../utils/mapBackendAction";
 
 interface Props {
     entityKey: string;
@@ -33,6 +33,10 @@ export default function CoreEntityPage({ entityKey }: Props) {
         context,
         id,
     });
+
+    const headerActions = Array.isArray(schema?.actions)
+        ? schema.actions.map(mapBackendAction)
+        : [];
 
     useEffect(() => {
         const el = document.getElementById("main-scroll");
@@ -69,7 +73,11 @@ export default function CoreEntityPage({ entityKey }: Props) {
         <>
             {/* DEFAULT HEADER */}
             {showHeader && headerMode === "default" && (
-                <HeaderPage title={schema.title} subtitle={schema.subtitle} />
+                <HeaderPage
+                    title={schema.title}
+                    subtitle={schema.subtitle}
+                    actions={headerActions}
+                />
             )}
 
             {/* OVERLAY HEADER (scroll-based) */}
@@ -84,11 +92,7 @@ export default function CoreEntityPage({ entityKey }: Props) {
             )}
 
             {/* 🔥 CONTENT WRAPPER (IMPROVED) */}
-            <div
-                className={`mx-auto w-full ${
-                    isMobile ? "space-y-0" : "px-6 py-6 space-y-4"
-                }`}
-            >
+            <div className={`mx-auto w-full ${isMobile ? "space-y-0" : "space-y-4 px-6 py-6"}`}>
                 {/* 🔥 BLOCK STACK (CENTRALIZED SPACING) */}
                 <div className="w-full">
                     {schema.blocks?.map((block: any, idx: number) => (

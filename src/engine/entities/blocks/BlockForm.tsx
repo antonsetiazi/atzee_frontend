@@ -4,8 +4,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import FormRenderer from "@/core/form-engine/FormRenderer";
-import LoadingState from "@/shared/ui/LoadingState";
 import type { FormContext } from "@/core/ui/context/UIContext";
+import { LoadingState } from "@/core/ui/components";
 
 interface Props {
     entityKey: string;
@@ -102,15 +102,7 @@ export default function BlockForm({
         }
 
         load();
-    }, [
-        entityKey,
-        isCreatePage,
-        isFilterMode,
-        location.state,
-        pageData,
-        context,
-        block,
-    ]);
+    }, [entityKey, isCreatePage, isFilterMode, location.state, pageData, context, block]);
 
     const formContext = useMemo<FormContext>(
         () => ({

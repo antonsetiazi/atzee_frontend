@@ -1,12 +1,12 @@
 // src/modules/finance/payables/payments/pages/PayablePaymentListPage.tsx
 
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
 import { formatValue } from "@/shared/utils/formatValue";
 import type { PayablePayment } from "../types/payment.types";
 import { getPayablePayments } from "../services/payment.service";
-import { Button, HeaderPage } from "@/core/ui/components";
+import { DataTable, HeaderPage } from "@/core/ui/components";
+import { Plus } from "lucide-react";
+import useDataTable from "@/core/ui/components/data_table/hooks/useDataTable";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 function StatusBadge({ status }: { status: string }) {
@@ -31,16 +31,23 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function PayablePaymentListPage() {
     const [loading, setLoading] = useState(true);
+    const [rows, setRows] = useState<PayablePayment[]>([]);
+    const table = useDataTable();
 
-    const [payments, setPayments] = useState<PayablePayment[]>([]);
+    const filteredRows = rows.filter((row) => {
+        const keyword = table.search.toLowerCase();
+
+        return (
+            row.payment_number?.toLowerCase().includes(keyword) ||
+            row.partner_name?.toLowerCase().includes(keyword)
+        );
+    });
 
     const loadData = useCallback(async () => {
         try {
             setLoading(true);
-
             const data = await getPayablePayments();
-
-            setPayments(data);
+            setRows(data);
         } catch (err) {
             console.error(err);
         } finally {
@@ -57,136 +64,71 @@ export default function PayablePaymentListPage() {
             <HeaderPage
                 title="Vendor Payments"
                 subtitle="Manage supplier payments and allocations"
-                right={
-                    <Button onClick={() => SmartNavigate.go("/finance/payables/payments/create")}>
-                        Create Payment
-                    </Button>
-                }
+                actions={[
+                    {
+                        label: "Create Payment",
+                        icon: Plus,
+                        href: "/finance/payables/payments/create",
+                    },
+                ]}
             />
             <div className="space-y-4 p-4">
-                {/* TABLE */}
-
-                <div
-                    className="overflow-hidden rounded-3xl border"
-                    style={{
-                        background: "var(--color-surface)",
-                        borderColor: "var(--color-border)",
-                        boxShadow: "var(--shadow)",
+                <DataTable
+                    searchable
+                    searchValue={table.search}
+                    onSearchChange={table.setSearch}
+                    loading={loading}
+                    data={filteredRows}
+                    onRowClick={(row) => SmartNavigate.go(`/finance/payables/payments/${row.id}`)}
+                    columns={[
+                        {
+                            key: "payment_number",
+                            title: "Reference",
+                            render: (row) => (
+                                <span className="font-semibold">{row.payment_number}</span>
+                            ),
+                        },
+                        {
+                            key: "partner_name",
+                            title: "Vendor",
+                        },
+                        {
+                            key: "payment_date",
+                            title: "Payment Date",
+                            render: (row) => (
+                                <span className="text-muted text-xs">
+                                    {formatValue(row.payment_date, {
+                                        format: "date",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "amount",
+                            title: "Amount",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-semibold">
+                                    {formatValue(row.amount, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "status",
+                            title: "Status",
+                            align: "center",
+                            render: (row) => <StatusBadge status={row.status} />,
+                        },
+                    ]}
+                    pagination={{
+                        page: table.page,
+                        totalPages: 1,
+                        totalItems: filteredRows.length,
+                        onPageChange: table.setPage,
                     }}
-                >
-                    <div className="overflow-x-auto">
-                        <table className="w-full min-w-[1100px] text-sm">
-                            <thead
-                                style={{
-                                    background: "var(--color-surface-alt)",
-                                }}
-                            >
-                                <tr>
-                                    <th className="px-6 py-4 text-left font-semibold">Reference</th>
-
-                                    <th className="px-6 py-4 text-left font-semibold">Vendor</th>
-
-                                    <th className="px-6 py-4 text-left font-semibold">
-                                        Payment Date
-                                    </th>
-
-                                    <th className="px-6 py-4 text-right font-semibold">Amount</th>
-
-                                    <th className="px-6 py-4 text-center font-semibold">Status</th>
-
-                                    <th className="px-6 py-4 text-right font-semibold">Actions</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td
-                                            colSpan={6}
-                                            className="px-6 py-10 text-center"
-                                            style={{
-                                                color: "var(--text-secondary)",
-                                            }}
-                                        >
-                                            Loading payments...
-                                        </td>
-                                    </tr>
-                                ) : payments.length === 0 ? (
-                                    <tr>
-                                        <td
-                                            colSpan={6}
-                                            className="px-6 py-10 text-center"
-                                            style={{
-                                                color: "var(--text-secondary)",
-                                            }}
-                                        >
-                                            No payments found
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    payments.map((payment) => (
-                                        <tr
-                                            key={payment.id}
-                                            style={{
-                                                borderTop: "1px solid var(--color-border)",
-                                            }}
-                                        >
-                                            <td className="px-6 py-4">
-                                                <div
-                                                    className="font-semibold"
-                                                    style={{
-                                                        color: "var(--text-primary)",
-                                                    }}
-                                                >
-                                                    {payment.payment_number}
-                                                </div>
-                                            </td>
-
-                                            <td className="px-6 py-4">
-                                                <div
-                                                    className="font-medium"
-                                                    style={{
-                                                        color: "var(--text-primary)",
-                                                    }}
-                                                >
-                                                    {payment.partner_name}
-                                                </div>
-                                            </td>
-
-                                            <td className="px-6 py-4">
-                                                {formatValue(payment.payment_date, {
-                                                    format: "date",
-                                                })}
-                                            </td>
-
-                                            <td className="px-6 py-4 text-right font-semibold">
-                                                {formatValue(payment.amount, {
-                                                    format: "currency",
-                                                })}
-                                            </td>
-
-                                            <td className="px-6 py-4 text-center">
-                                                <StatusBadge status={payment.status} />
-                                            </td>
-
-                                            <td className="px-6 py-4 text-right">
-                                                <Link
-                                                    to={`/finance/payables/payments/${payment.id}`}
-                                                    className="text-sm font-medium"
-                                                    style={{
-                                                        color: "var(--text-brand)",
-                                                    }}
-                                                >
-                                                    View Detail
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                />
             </div>
         </>
     );

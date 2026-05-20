@@ -7,6 +7,7 @@ import TableHeader from "../components/TableHeader";
 import TablePagination from "../components/TablePagination";
 import TableRow from "../components/TableRow";
 import type { TableContext } from "@/core/ui/context/UIContext";
+import { LoadingState } from "@/core/ui/components";
 
 interface Props {
     entity: string;
@@ -21,9 +22,7 @@ interface Props {
 
     onPageChange: (page: number) => void;
     onPageSizeChange: (size: number) => void;
-    onSortChange: (
-        sort: { field: string; direction: "asc" | "desc" }[],
-    ) => void;
+    onSortChange: (sort: { field: string; direction: "asc" | "desc" }[]) => void;
     onSearch: (value: string) => void;
     context: TableContext;
 }
@@ -43,9 +42,7 @@ export default function TableDesktop({
     context,
 }: Props) {
     const [searchValue, setSearchValue] = useState("");
-    const [sortState, setSortState] = useState<
-        { field: string; direction: "asc" | "desc" }[]
-    >([]);
+    const [sortState, setSortState] = useState<{ field: string; direction: "asc" | "desc" }[]>([]);
 
     function handleSort(field: string) {
         let next: typeof sortState;
@@ -72,26 +69,20 @@ export default function TableDesktop({
             schema.columns.some((col) => {
                 const value = row[col.key];
                 return value
-                    ? String(value)
-                          .toLowerCase()
-                          .includes(searchValue.toLowerCase())
+                    ? String(value).toLowerCase().includes(searchValue.toLowerCase())
                     : false;
             }),
         );
     }, [searchValue, data, schema.columns]);
 
-    if (loading) {
-        return <div className="p-6 text-sm text-gray-500">Loading...</div>;
-    }
+    if (loading) return <LoadingState />;
+
     // console.log(schema);
     // console.log(filteredData);
     return (
         <div className="w-full">
             {/* 🔎 Search */}
-            <div
-                className="pb-4"
-                style={{ borderBottom: "1px solid var(--color-border)" }}
-            >
+            <div className="pb-4" style={{ borderBottom: "1px solid var(--color-border)" }}>
                 <input
                     value={searchValue}
                     onChange={(e) => {
@@ -99,11 +90,7 @@ export default function TableDesktop({
                         onSearch(e.target.value);
                     }}
                     placeholder="Search data..."
-                    className="
-                        w-full rounded-xl
-                        px-4 py-2.5 text-sm
-                        transition-all duration-200
-                    "
+                    className="w-full rounded-xl px-4 py-2.5 text-sm transition-all duration-200"
                     style={{
                         background: "var(--color-surface-alt)",
                         border: "1px solid var(--color-border)",
@@ -116,16 +103,10 @@ export default function TableDesktop({
             {/* Table */}
             {!filteredData.length ? (
                 <div className="py-12 text-center">
-                    <div
-                        className="text-base font-medium"
-                        style={{ color: "var(--text-primary)" }}
-                    >
+                    <div className="text-base font-medium" style={{ color: "var(--text-primary)" }}>
                         No data available
                     </div>
-                    <div
-                        className="mt-2 text-sm"
-                        style={{ color: "var(--text-secondary)" }}
-                    >
+                    <div className="mt-2 text-sm" style={{ color: "var(--text-secondary)" }}>
                         Try adjusting your search or filters.
                     </div>
                 </div>
@@ -153,10 +134,7 @@ export default function TableDesktop({
             )}
 
             {/* Pagination */}
-            <div
-                className="pt-4"
-                style={{ borderTop: "1px solid var(--color-border)" }}
-            >
+            <div className="pt-4" style={{ borderTop: "1px solid var(--color-border)" }}>
                 <TablePagination
                     total={total}
                     page={page}

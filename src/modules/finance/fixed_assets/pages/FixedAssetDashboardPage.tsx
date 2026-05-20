@@ -1,9 +1,8 @@
 // src/modules/finance/fixed_assets/pages/FixedAssetDashboardPage.tsx
 
-import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import AssetMetricCard from "../components/cards/AssetMetricCard";
 import { useFixedAssetDashboard } from "../hooks/useFixedAssetDashboard";
-import { Button, HeaderPage } from "@/core/ui/components";
+import { HeaderPage } from "@/core/ui/components";
 
 import DepreciationTrendChart from "../components/dashboard/DepreciationTrendChart";
 import AssetCategoryChart from "../components/dashboard/AssetCategoryChart";
@@ -20,11 +19,12 @@ export default function FixedAssetDashboardPage() {
             <HeaderPage
                 title="Fixed Asset Dashboard"
                 subtitle="Monitor company assets, depreciation, and asset lifecycle."
-                right={
-                    <Button onClick={() => SmartNavigate.go("/finance/fixed-assets/create")}>
-                        Add Asset
-                    </Button>
-                }
+                actions={[
+                    {
+                        label: "Add Asset",
+                        href: "/finance/fixed-assets/create",
+                    },
+                ]}
             />
             <div className="space-y-4 p-4">
                 {loading && <div>Loading...</div>}

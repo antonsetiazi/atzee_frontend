@@ -2,9 +2,9 @@
 
 import ActivityEmpty from "./ActivityEmpty";
 import ActivityItem from "./ActivityItem";
-import ActivityLoading from "./ActivityLoading";
 
 import { useActivityTimeline } from "../hooks/useActivityTimeline";
+import { LoadingState } from "@/core/ui/components";
 
 interface Props {
     targetType: string;
@@ -17,9 +17,7 @@ export default function ActivityTimeline({ targetType, targetId }: Props) {
         target_id: targetId,
     });
 
-    if (loading) {
-        return <ActivityLoading />;
-    }
+    if (loading) return <LoadingState />;
 
     if (!activities.length) {
         return <ActivityEmpty />;

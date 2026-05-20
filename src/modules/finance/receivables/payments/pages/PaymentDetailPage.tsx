@@ -33,6 +33,7 @@ export default function PaymentDetailPage() {
     }, [loadData]);
 
     if (loading) return <Skeleton />;
+
     if (!payment) return <Empty />;
 
     const totalAllocated = payment.allocations.reduce(

@@ -2,13 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useCallback, useEffect, useState } from "react";
-import {
-    MapContainer,
-    TileLayer,
-    Marker,
-    Popup,
-    useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -16,7 +10,6 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-import LoadingState from "@/shared/ui/LoadingState";
 import { button } from "@/core/ui/class/button.ui.class";
 import {
     fetchLocations,
@@ -24,6 +17,7 @@ import {
     updateLocation,
     deleteLocation,
 } from "@/engine/spatial/api/spatial.api";
+import { LoadingState } from "@/core/ui/components";
 
 /* ===========================
    FIX MARKER ICON
@@ -47,11 +41,7 @@ interface Props {
    CLICK HANDLER COMPONENT
    =========================== */
 
-function MapClickHandler({
-    onClick,
-}: {
-    onClick: (lat: number, lng: number) => void;
-}) {
+function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
     useMapEvents({
         click(e) {
             onClick(e.latlng.lat, e.latlng.lng);
@@ -120,25 +110,16 @@ export default function BlockMap({ block, id }: Props) {
     if (loading) return <LoadingState />;
 
     const center =
-        locations.length > 0
-            ? [locations[0].latitude, locations[0].longitude]
-            : [-6.2, 106.816666]; // default Jakarta
+        locations.length > 0 ? [locations[0].latitude, locations[0].longitude] : [-6.2, 106.816666]; // default Jakarta
 
     return (
         <div>
             <div className="mb-4">
-                <h3 className="text-md font-semibold">
-                    {block.title ?? "Location"}
-                </h3>
-                {block.description && (
-                    <p className="text-sm text-gray-500">{block.description}</p>
-                )}
+                <h3 className="text-md font-semibold">{block.title ?? "Location"}</h3>
+                {block.description && <p className="text-sm text-gray-500">{block.description}</p>}
             </div>
 
-            <div
-                className="border rounded overflow-hidden"
-                style={{ height: block.height ?? 400 }}
-            >
+            <div className="overflow-hidden rounded border" style={{ height: block.height ?? 400 }}>
                 <MapContainer
                     center={center as any}
                     zoom={13}

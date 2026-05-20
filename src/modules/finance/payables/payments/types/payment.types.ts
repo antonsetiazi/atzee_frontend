@@ -5,6 +5,15 @@ export type PayableAllocationPayload = {
     allocated_amount: number;
 };
 
+export type PayablePaymentAllocation = {
+    id: string;
+    invoice_number: string;
+    invoice_status: string;
+    invoice_date: string;
+    invoice_total: number;
+    allocated_amount: number;
+};
+
 export type PayablePaymentCreatePayload = {
     partner_id: number;
     payment_date: string;
@@ -26,4 +35,5 @@ export type PayablePayment = {
     notes?: string;
     status: string;
     partner_name: string;
+    allocations: PayablePaymentAllocation[];
 };

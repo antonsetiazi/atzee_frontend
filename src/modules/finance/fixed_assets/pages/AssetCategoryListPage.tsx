@@ -1,12 +1,22 @@
 // src/modules/finance/fixed_assets/pages/AssetCategoryListPage.tsx
 
 import { useAssetCategories } from "../hooks/useAssetCategories";
-import { Button, HeaderPage } from "@/core/ui/components";
+import { Button, DataTable, HeaderPage } from "@/core/ui/components";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import { httpDelete } from "@/core/http/http.client";
+import useDataTable from "@/core/ui/components/data_table/hooks/useDataTable";
 
 export default function AssetCategoryListPage() {
     const { items, loading, reload } = useAssetCategories();
+    const table = useDataTable();
+
+    const filteredRows = items.filter((row) => {
+        const keyword = table.search.toLowerCase();
+
+        return (
+            row.code?.toLowerCase().includes(keyword) || row.name?.toLowerCase().includes(keyword)
+        );
+    });
 
     function handleEdit(id: string) {
         SmartNavigate.go(`/finance/fixed-assets/categories/${id}/edit`);
@@ -30,101 +40,73 @@ export default function AssetCategoryListPage() {
             <HeaderPage
                 title="Asset Categories"
                 subtitle="Manage asset classification and depreciation configuration."
-                right={
-                    <Button
-                        onClick={() => SmartNavigate.go("/finance/fixed-assets/categories/create")}
-                    >
-                        + Create Category
-                    </Button>
-                }
+                actions={[
+                    {
+                        label: "Create Category",
+                        href: "/finance/fixed-assets/categories/create",
+                    },
+                ]}
             />
 
             <div className="p-4">
-                {loading ? (
-                    <div className="p-6 text-sm" style={{ color: "var(--text-secondary)" }}>
-                        Loading categories...
-                    </div>
-                ) : (
-                    <div
-                        className="overflow-hidden rounded-2xl border shadow-sm"
-                        style={{
-                            borderColor: "var(--color-border)",
-                            backgroundColor: "var(--color-surface)",
-                        }}
-                    >
-                        <table className="w-full text-sm">
-                            <thead
-                                style={{
-                                    backgroundColor: "var(--color-surface-alt)",
-                                    color: "var(--text-secondary)",
-                                }}
-                            >
-                                <tr>
-                                    <th className="p-4 text-left font-medium">Code</th>
-                                    <th className="p-4 text-left font-medium">Name</th>
-                                    <th className="p-4 text-left font-medium">Useful Life</th>
-                                    <th className="text-center">Actions</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {items.map((item) => (
-                                    <tr
-                                        key={item.id}
-                                        className="cursor-pointer transition"
-                                        style={{
-                                            borderTop: "1px solid var(--color-border)",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                                "var(--color-surface-alt)";
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.backgroundColor = "transparent";
+                <DataTable
+                    searchable
+                    searchValue={table.search}
+                    onSearchChange={table.setSearch}
+                    loading={loading}
+                    data={filteredRows}
+                    onRowClick={(row) => SmartNavigate.go(`/finance/fixed-assets/${row.id}`)}
+                    columns={[
+                        {
+                            key: "code",
+                            title: "Code",
+                            render: (row) => <span className="font-semibold">{row.code}</span>,
+                        },
+                        {
+                            key: "name",
+                            title: "Name",
+                        },
+                        {
+                            key: "useful_life_months",
+                            title: "Useful Life",
+                            render: (row) => <span>{row.useful_life_months} months</span>,
+                        },
+                        {
+                            key: "actions",
+                            title: "Actions",
+                            align: "center",
+                            render: (row) => (
+                                <div>
+                                    <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        onClick={() => {
+                                            handleEdit(row.id);
                                         }}
                                     >
-                                        <td className="p-4 font-medium">{item.code}</td>
+                                        Edit
+                                    </Button>
 
-                                        <td className="p-4">
-                                            <div className="font-medium">{item.name}</div>
-                                            <div
-                                                className="text-xs"
-                                                style={{
-                                                    color: "var(--text-muted)",
-                                                }}
-                                            >
-                                                Click to view details
-                                            </div>
-                                        </td>
-
-                                        <td className="p-4">{item.useful_life_months} months</td>
-                                        <td className="space-x-2 p-4 text-center">
-                                            <Button
-                                                variant="secondary"
-                                                size="sm"
-                                                onClick={() => {
-                                                    handleEdit(item.id);
-                                                }}
-                                            >
-                                                Edit
-                                            </Button>
-
-                                            <Button
-                                                variant="ghostDanger"
-                                                size="sm"
-                                                onClick={() => {
-                                                    handleDelete(item.id);
-                                                }}
-                                            >
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                                    <Button
+                                        variant="ghostDanger"
+                                        size="sm"
+                                        onClick={() => {
+                                            handleDelete(row.id);
+                                        }}
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
+                            ),
+                        },
+                    ]}
+                    pagination={{
+                        page: table.page,
+                        totalPages: 1,
+                        totalItems: filteredRows.length,
+                        onPageChange: table.setPage,
+                    }}
+                />
             </div>
         </>
     );

@@ -8,7 +8,7 @@ import type { BalanceSheetResponse } from "./balanceSheet.types";
 import SummaryCard from "./components/SummaryCard";
 import ValidationCard from "./components/ValidationCard";
 import BalanceSection from "./components/BalanceSection";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, LoadingState } from "@/core/ui/components";
 
 export default function BalanceSheetPage() {
     const [data, setData] = useState<BalanceSheetResponse>({
@@ -45,21 +45,7 @@ export default function BalanceSheetPage() {
 
     const totalRightSide = totalLiabilities + totalEquity;
 
-    if (loading) {
-        return (
-            <div className="p-6">
-                <div
-                    className="animate-pulse rounded-3xl border p-10"
-                    style={{
-                        background: "var(--color-surface)",
-                        borderColor: "var(--color-border)",
-                    }}
-                >
-                    Loading balance sheet...
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <LoadingState />;
 
     return (
         <>

@@ -1,6 +1,7 @@
 // src/modules/dashboard/components/tables/RecentInvoiceTable.tsx
 
 import type { RecentInvoice } from "../../types/dashboard.types";
+import DashboardSectionCard from "../ui/DashboardSectionCard";
 
 interface Props {
     items: RecentInvoice[];
@@ -12,75 +13,77 @@ export default function RecentInvoiceTable({ items }: Props) {
     }
 
     return (
-        <div
-            className="mt-6 overflow-hidden rounded-2xl border"
-            style={{
-                borderColor: "var(--color-border)",
+        <DashboardSectionCard title="Recent Invoices" subtitle="Latest receivable transactions.">
+            <div
+                className="mt-6 overflow-hidden rounded-2xl border"
+                style={{
+                    borderColor: "var(--color-border)",
 
-                background: `
+                    background: `
                     linear-gradient(
                         180deg,
                         rgba(255,255,255,0.78),
                         rgba(255,255,255,0.62)
                     )
                 `,
-            }}
-        >
-            <table className="w-full">
-                <thead
-                    style={{
-                        background: "var(--color-surface-alt)",
-                    }}
-                >
-                    <tr>
-                        <Th>Customer</Th>
-                        <Th>Invoice</Th>
-                        <Th>Amount</Th>
-                        <Th>Status</Th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {items.map((item) => (
-                        <tr
-                            key={item.id}
-                            className="transition-colors duration-200"
-                            style={{
-                                borderTop: `1px solid var(--color-border)`,
-                            }}
-                        >
-                            <Td>{item.customer}</Td>
-
-                            <Td>
-                                <div
-                                    className="font-medium"
-                                    style={{
-                                        color: "var(--color-primary)",
-                                    }}
-                                >
-                                    {item.invoice}
-                                </div>
-                            </Td>
-
-                            <Td>
-                                <div
-                                    className="font-semibold"
-                                    style={{
-                                        color: "var(--text-primary)",
-                                    }}
-                                >
-                                    {item.amount}
-                                </div>
-                            </Td>
-
-                            <Td>
-                                <StatusBadge status={item.status} />
-                            </Td>
+                }}
+            >
+                <table className="w-full">
+                    <thead
+                        style={{
+                            background: "var(--color-surface-alt)",
+                        }}
+                    >
+                        <tr>
+                            <Th>Customer</Th>
+                            <Th>Invoice</Th>
+                            <Th>Amount</Th>
+                            <Th>Status</Th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+
+                    <tbody>
+                        {items.map((item) => (
+                            <tr
+                                key={item.id}
+                                className="transition-colors duration-200"
+                                style={{
+                                    borderTop: `1px solid var(--color-border)`,
+                                }}
+                            >
+                                <Td>{item.customer}</Td>
+
+                                <Td>
+                                    <div
+                                        className="font-medium"
+                                        style={{
+                                            color: "var(--color-primary)",
+                                        }}
+                                    >
+                                        {item.invoice}
+                                    </div>
+                                </Td>
+
+                                <Td>
+                                    <div
+                                        className="font-semibold"
+                                        style={{
+                                            color: "var(--text-primary)",
+                                        }}
+                                    >
+                                        {item.amount}
+                                    </div>
+                                </Td>
+
+                                <Td>
+                                    <StatusBadge status={item.status} />
+                                </Td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </DashboardSectionCard>
     );
 }
 

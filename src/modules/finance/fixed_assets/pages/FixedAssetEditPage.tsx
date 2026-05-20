@@ -1,7 +1,7 @@
 // src/modules/finance/fixed_assets/pages/FixedAssetEditPage.tsx
 
 import { useNavigate, useParams } from "react-router-dom";
-import { HeaderPage } from "@/core/ui/components";
+import { HeaderPage, LoadingState } from "@/core/ui/components";
 import FixedAssetForm from "../components/forms/FixedAssetForm";
 import { useFixedAssetDetail } from "../hooks/useFixedAssetDetail";
 import { useUpdateFixedAsset } from "../hooks/useUpdateFixedAsset";
@@ -22,9 +22,7 @@ export default function FixedAssetEditPage() {
         navigate(`/finance/fixed-assets/${assetId}`);
     }
 
-    if (loading) {
-        return <>Loading...</>;
-    }
+    if (loading) return <LoadingState />;
 
     if (!item) {
         return <>Asset not found</>;

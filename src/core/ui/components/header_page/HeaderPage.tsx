@@ -3,14 +3,17 @@
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import MobileHeader from "../mobile_header/MobileHeader";
 import DesktopHeader from "./DesktopHeader";
+import type { HeaderAction } from "./types";
 
 interface Props {
     title?: string;
     subtitle?: string;
 
+    meta?: React.ReactNode;
+
     onBack?: () => void;
     right?: React.ReactNode;
-
+    actions?: HeaderAction[];
     showBack?: boolean;
 }
 

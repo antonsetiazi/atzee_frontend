@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState, useCallback } from "react";
-import LoadingState from "@/shared/ui/LoadingState";
 import EmptyState from "@/shared/ui/EmptyState";
 import { button } from "@/core/ui/class/button.ui.class";
 import {
@@ -13,6 +12,7 @@ import {
     fetchTags,
 } from "@/engine/tags/api/tag.api";
 import { inputBase } from "@/core/ui/class/field.ui.class";
+import { LoadingState } from "@/core/ui/components";
 
 interface Props {
     block: any;
@@ -98,15 +98,11 @@ export default function BlockTags({ block, id }: Props) {
     return (
         <div>
             {/* HEADER */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between">
                 <div>
-                    <h3 className="text-md font-semibold">
-                        {block.title ?? "Tags"}
-                    </h3>
+                    <h3 className="text-md font-semibold">{block.title ?? "Tags"}</h3>
                     {block.description && (
-                        <p className="text-sm text-gray-500">
-                            {block.description}
-                        </p>
+                        <p className="text-sm text-gray-500">{block.description}</p>
                     )}
                 </div>
             </div>
@@ -120,15 +116,13 @@ export default function BlockTags({ block, id }: Props) {
                         {attached.map((tag) => (
                             <div
                                 key={tag.id}
-                                className="flex items-center gap-2 bg-blue-50 text-blue-800 px-3 py-1 rounded-full shadow-sm hover:shadow-md transition-shadow duration-150"
+                                className="flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-blue-800 shadow-sm transition-shadow duration-150 hover:shadow-md"
                             >
-                                <span className="text-sm font-medium">
-                                    {tag.name}
-                                </span>
+                                <span className="text-sm font-medium">{tag.name}</span>
                                 {block.allow_detach && (
                                     <button
                                         onClick={() => handleDetach(tag.id)}
-                                        className="flex items-center justify-center w-4 h-4 bg-blue-200 text-blue-700 rounded-full hover:bg-red-500 hover:text-white transition-colors duration-150"
+                                        className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-200 text-blue-700 transition-colors duration-150 hover:bg-red-500 hover:text-white"
                                         title="Remove tag"
                                     >
                                         ×
@@ -144,7 +138,7 @@ export default function BlockTags({ block, id }: Props) {
             {block.allow_attach && available.length > 0 && (
                 <div className="mb-4">
                     <select
-                        className="border rounded px-3 py-2 text-sm border-gray-300"
+                        className="rounded border border-gray-300 px-3 py-2 text-sm"
                         onChange={(e) => handleAttach(e.target.value)}
                         defaultValue=""
                     >
@@ -170,10 +164,7 @@ export default function BlockTags({ block, id }: Props) {
                         placeholder="New tag name"
                         className={inputBase}
                     />
-                    <button
-                        className={`${button.base} ${button.primary}`}
-                        onClick={handleCreate}
-                    >
+                    <button className={`${button.base} ${button.primary}`} onClick={handleCreate}>
                         Add
                     </button>
                 </div>

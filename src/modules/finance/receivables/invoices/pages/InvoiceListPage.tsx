@@ -5,13 +5,24 @@ import { useNavigate } from "react-router-dom";
 import { getInvoices } from "../services/invoice.api";
 import type { ReceivableInvoice } from "../types/invoice.types";
 import { formatValue } from "@/shared/utils/formatValue";
-import { Button, HeaderPage } from "@/core/ui/components";
-import { SmartNavigate } from "@/core/navigation/SmartNavigate";
+import { DataTable, HeaderPage } from "@/core/ui/components";
+import useDataTable from "@/core/ui/components/data_table/hooks/useDataTable";
+import { PlusCircle } from "lucide-react";
 
 export default function InvoiceListPage() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [rows, setRows] = useState<ReceivableInvoice[]>([]);
+    const table = useDataTable();
+
+    const filteredRows = rows.filter((row) => {
+        const keyword = table.search.toLowerCase();
+
+        return (
+            row.invoice_number?.toLowerCase().includes(keyword) ||
+            row.customer_name?.toLowerCase().includes(keyword)
+        );
+    });
 
     async function loadData() {
         try {
@@ -33,121 +44,73 @@ export default function InvoiceListPage() {
             <HeaderPage
                 title="Receivable Invoices"
                 subtitle="Manage customer invoices and billing status"
-                right={
-                    <Button
-                        onClick={() => SmartNavigate.go("/finance/receivables/invoices/create")}
-                    >
-                        + Create Invoice
-                    </Button>
-                }
+                actions={[
+                    {
+                        label: "Create Invoice",
+                        icon: PlusCircle,
+                        href: "/finance/receivables/invoices/create",
+                    },
+                ]}
             />
             <div className="space-y-4 p-4">
-                {/* TABLE WRAPPER */}
-                <div
-                    className="overflow-hidden rounded-2xl border"
-                    style={{
-                        background: "var(--color-surface)",
-                        borderColor: "var(--color-border)",
-                        boxShadow: "var(--shadow)",
+                <DataTable
+                    mobileVariant="card"
+                    searchable
+                    searchValue={table.search}
+                    onSearchChange={table.setSearch}
+                    loading={loading}
+                    data={filteredRows}
+                    onRowClick={(row) => navigate(`/finance/receivables/invoices/${row.id}`)}
+                    columns={[
+                        {
+                            key: "invoice_number",
+                            title: "Invoice",
+                            render: (row) => (
+                                <span className="font-semibold">{row.invoice_number}</span>
+                            ),
+                        },
+                        {
+                            key: "customer_name",
+                            title: "Customer",
+                            sortable: true,
+                        },
+                        {
+                            key: "invoice_date",
+                            title: "Date",
+                            render: (row) => (
+                                <span className="text-muted text-xs">
+                                    {formatValue(row.invoice_date, {
+                                        format: "date",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "total_amount",
+                            title: "Total",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-semibold">
+                                    {formatValue(row.total_amount, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "status",
+                            title: "Status",
+                            align: "center",
+                            render: (row) => <StatusBadge status={row.status} />,
+                        },
+                    ]}
+                    pagination={{
+                        page: table.page,
+                        totalPages: 1,
+                        totalItems: filteredRows.length,
+                        onPageChange: table.setPage,
                     }}
-                >
-                    {/* TABLE */}
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr
-                                style={{
-                                    background: "var(--color-surface-alt)",
-                                    color: "var(--text-muted)",
-                                }}
-                            >
-                                <th className="p-4 text-left font-medium">Invoice</th>
-                                <th className="p-4 text-left font-medium">Customer</th>
-                                <th className="p-4 text-left font-medium">Date</th>
-                                <th className="p-4 text-right font-medium">Total</th>
-                                <th className="p-4 text-center font-medium">Status</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {/* LOADING */}
-                            {loading && (
-                                <tr>
-                                    <td colSpan={5} className="p-6">
-                                        <div className="space-y-3">
-                                            {Array.from({ length: 5 }).map((_, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="h-10 animate-pulse rounded-lg"
-                                                    style={{
-                                                        background: "var(--color-surface-alt)",
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
-
-                            {/* EMPTY STATE */}
-                            {!loading && rows.length === 0 && (
-                                <tr>
-                                    <td
-                                        colSpan={5}
-                                        className="p-10 text-center"
-                                        style={{ color: "var(--text-muted)" }}
-                                    >
-                                        No invoices found
-                                    </td>
-                                </tr>
-                            )}
-
-                            {/* ROWS */}
-                            {!loading &&
-                                rows.map((row) => (
-                                    <tr
-                                        key={row.id}
-                                        onClick={() =>
-                                            navigate(`/finance/receivables/invoices/${row.id}`)
-                                        }
-                                        className="cursor-pointer transition"
-                                        style={{
-                                            borderTop: "1px solid var(--color-border)",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.background =
-                                                "var(--color-surface-alt)";
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.background = "transparent";
-                                        }}
-                                    >
-                                        <td className="p-4 font-medium">{row.invoice_number}</td>
-
-                                        <td className="p-4">{row.customer_name}</td>
-
-                                        <td
-                                            className="p-4"
-                                            style={{
-                                                color: "var(--text-muted)",
-                                            }}
-                                        >
-                                            {formatValue(row.invoice_date, {
-                                                format: "date",
-                                            })}
-                                        </td>
-
-                                        <td className="p-4 text-right font-medium">
-                                            {formatValue(row.total_amount, { format: "currency" })}
-                                        </td>
-
-                                        <td className="p-4 text-center">
-                                            <StatusBadge status={row.status} />
-                                        </td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </table>
-                </div>
+                />
             </div>
         </>
     );

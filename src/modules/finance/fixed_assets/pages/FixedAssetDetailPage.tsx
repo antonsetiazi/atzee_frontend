@@ -3,10 +3,9 @@
 import { useParams } from "react-router-dom";
 import FixedAssetStatusBadge from "../components/badges/FixedAssetStatusBadge";
 import { useFixedAssetDetail } from "../hooks/useFixedAssetDetail";
-import { Button, HeaderPage } from "@/core/ui/components";
+import { HeaderPage, LoadingState } from "@/core/ui/components";
 import AssetDepreciationProgress from "../components/detail/AssetDepreciationProgress";
 import { ActivityTimeline } from "@/core/activity";
-import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 import { useActivateFixedAsset } from "../hooks/useActivateFixedAsset";
 import { useRunDepreciation } from "../hooks/useRunDepreciation";
 
@@ -36,9 +35,7 @@ export default function FixedAssetDetailPage() {
         await reload();
     }
 
-    if (loading) {
-        return <>Loading...</>;
-    }
+    if (loading) return <LoadingState />;
 
     if (!item) {
         return <>Asset not found</>;
@@ -49,43 +46,39 @@ export default function FixedAssetDetailPage() {
             <HeaderPage
                 title={item.name}
                 subtitle={item.asset_number}
-                right={
-                    <div className="flex items-center gap-3">
-                        <FixedAssetStatusBadge status={item.status} />
+                meta={<FixedAssetStatusBadge status={item.status} />}
+                actions={[
+                    {
+                        label: "Edit Asset",
+                        href: `/finance/fixed-assets/${item.id}/edit`,
+                        variant: "secondary",
+                    },
+                    ...(item.status === "draft"
+                        ? [
+                              {
+                                  label: "Activate Asset",
+                                  onClick: handleActivate,
+                                  variant: "primary" as const,
+                              },
+                          ]
+                        : []),
 
-                        <Button
-                            variant="secondary"
-                            onClick={() =>
-                                SmartNavigate.go(`/finance/fixed-assets/${item.id}/edit`)
-                            }
-                        >
-                            Edit Asset
-                        </Button>
-
-                        {item.status === "draft" && (
-                            <Button onClick={handleActivate}>Activate Asset</Button>
-                        )}
-
-                        {item.status === "active" && (
-                            <>
-                                <Button
-                                    onClick={handleRunDepreciation}
-                                    disabled={depreciationLoading}
-                                >
-                                    {depreciationLoading ? "Running..." : "Run Depreciation"}
-                                </Button>
-                                <Button
-                                    onClick={() =>
-                                        SmartNavigate.go(`/finance/fixed-assets/${item.id}/dispose`)
-                                    }
-                                    variant="danger"
-                                >
-                                    Dispose Asset
-                                </Button>
-                            </>
-                        )}
-                    </div>
-                }
+                    ...(item.status === "active"
+                        ? [
+                              {
+                                  label: depreciationLoading ? "Running..." : "Run Depreciation",
+                                  onClick: handleRunDepreciation,
+                                  disabled: depreciationLoading,
+                                  variant: "primary" as const,
+                              },
+                              {
+                                  label: "Dispose Asset",
+                                  href: `/finance/fixed-assets/${item.id}/dispose`,
+                                  variant: "ghost" as const,
+                              },
+                          ]
+                        : []),
+                ]}
             />
 
             <div className="space-y-4 p-4">

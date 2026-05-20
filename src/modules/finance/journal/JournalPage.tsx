@@ -67,19 +67,14 @@ export default function JournalPage() {
 
     return (
         <>
-            <HeaderPage
-                title="Manual Journal"
-                subtitle="Catat transaksi keuangan secara manual"
-            />
+            <HeaderPage title="Manual Journal" subtitle="Catat transaksi keuangan secara manual" />
 
-            <div className="mt-4 bg-[var(--color-surface)] rounded-2xl shadow-[var(--shadow)] p-6 border border-[var(--color-border)] space-y-4">
+            <div className="mt-4 space-y-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-[var(--shadow)]">
                 <div className="grid grid-cols-3 gap-4">
                     <input
                         type="date"
                         value={form.date}
-                        onChange={(e) =>
-                            setForm({ ...form, date: e.target.value })
-                        }
+                        onChange={(e) => setForm({ ...form, date: e.target.value })}
                         className={`${inputBase}`}
                     />
 
@@ -87,9 +82,7 @@ export default function JournalPage() {
                         type="text"
                         placeholder="Reference"
                         value={form.reference}
-                        onChange={(e) =>
-                            setForm({ ...form, reference: e.target.value })
-                        }
+                        onChange={(e) => setForm({ ...form, reference: e.target.value })}
                         className={`${inputBase}`}
                     />
 
@@ -97,9 +90,7 @@ export default function JournalPage() {
                         type="text"
                         placeholder="Description"
                         value={form.description}
-                        onChange={(e) =>
-                            setForm({ ...form, description: e.target.value })
-                        }
+                        onChange={(e) => setForm({ ...form, description: e.target.value })}
                         className={`${inputBase} col-span-3`}
                     />
                 </div>
@@ -114,7 +105,7 @@ export default function JournalPage() {
 
                 {/* TOTAL */}
                 <div className="flex justify-end">
-                    <div className="bg-[var(--color-surface-alt)] rounded-xl p-4 w-72 border border-[var(--color-border)]">
+                    <div className="w-72 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-alt)] p-4">
                         <div className="flex justify-between text-sm">
                             <span>Total Debit</span>
                             <span>{totals.totalDebit}</span>
@@ -126,13 +117,9 @@ export default function JournalPage() {
 
                         <div className="mt-2 font-medium">
                             {totals.isBalanced ? (
-                                <span className="text-[var(--color-success)]">
-                                    ✔ Balanced
-                                </span>
+                                <span className="text-[var(--color-success)]">✔ Balanced</span>
                             ) : (
-                                <span className="text-[var(--color-error)]">
-                                    ✖ Not Balanced
-                                </span>
+                                <span className="text-[var(--color-error)]">✖ Not Balanced</span>
                             )}
                         </div>
                     </div>
@@ -140,7 +127,7 @@ export default function JournalPage() {
 
                 {/* ERROR */}
                 {errors.length > 0 && (
-                    <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg text-sm">
+                    <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
                         {errors.map((e, i) => (
                             <div key={i}>{e}</div>
                         ))}

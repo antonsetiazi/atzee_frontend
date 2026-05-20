@@ -6,7 +6,7 @@ import { fetchCashFlow } from "./cashFlow.api";
 
 import type { CashFlowResponse } from "./cashFlow.types";
 import CashFlowSection from "./components/CashFlowSection";
-import { HeaderPage, SummaryCard } from "@/core/ui/components";
+import { HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
 import { formatValue } from "@/shared/utils/formatValue";
 
 export default function CashFlowPage() {
@@ -30,9 +30,7 @@ export default function CashFlowPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) {
-        return <div className="p-6">Loading cash flow...</div>;
-    }
+    if (loading) return <LoadingState />;
     // console.log(data);
     return (
         <>

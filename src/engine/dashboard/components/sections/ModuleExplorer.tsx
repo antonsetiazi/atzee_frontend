@@ -4,11 +4,15 @@ import {
     BarChart3,
     Building2,
     Calculator,
+    CalendarX,
+    CircleGauge,
     CreditCard,
     FileBarChart2,
     FileSpreadsheet,
     Landmark,
+    LayoutDashboard,
     Package,
+    PersonStanding,
     Receipt,
     Wallet,
 } from "lucide-react";
@@ -22,6 +26,9 @@ interface Props {
 
 function getIcon(icon: string) {
     switch (icon) {
+        case "dashboard":
+            return <LayoutDashboard size={28} strokeWidth={2.2} />;
+
         case "journal":
             return <Receipt size={28} strokeWidth={2.2} />;
 
@@ -51,6 +58,15 @@ function getIcon(icon: string) {
 
         case "banking":
             return <Landmark size={28} strokeWidth={2.2} />;
+
+        case "person-standing":
+            return <PersonStanding size={28} strokeWidth={2.2} />;
+
+        case "calendar-x":
+            return <CalendarX size={28} strokeWidth={2.2} />;
+
+        case "circle-gauge":
+            return <CircleGauge size={28} strokeWidth={2.2} />;
 
         default:
             return <Receipt size={28} strokeWidth={2.2} />;

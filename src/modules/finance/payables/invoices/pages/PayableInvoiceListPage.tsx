@@ -1,13 +1,11 @@
 // src/modules/finance/payables/invoices/pages/PayableInvoiceListPage.tsx
 
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 import { formatValue } from "@/shared/utils/formatValue";
-
 import { getPayableInvoices } from "../services/payableInvoice.service";
 import type { PayableInvoice } from "../types/payableInvoice.types";
-import { Button, HeaderPage, SummaryCard } from "@/core/ui/components";
+import { DataTable, HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
+import useDataTable from "@/core/ui/components/data_table/hooks/useDataTable";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 function StatusBadge({ status }: { status: string }) {
@@ -31,9 +29,18 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function PayableInvoiceListPage() {
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [rows, setRows] = useState<PayableInvoice[]>([]);
+    const table = useDataTable();
+
+    const filteredRows = rows.filter((row) => {
+        const keyword = table.search.toLowerCase();
+
+        return (
+            row.invoice_number?.toLowerCase().includes(keyword) ||
+            row.partner_name?.toLowerCase().includes(keyword)
+        );
+    });
 
     async function loadData() {
         try {
@@ -75,37 +82,19 @@ export default function PayableInvoiceListPage() {
         };
     }, [rows]);
 
-    if (loading) {
-        return (
-            <div
-                className="flex h-64 items-center justify-center rounded-3xl border"
-                style={{
-                    background: "var(--color-surface)",
-                    borderColor: "var(--color-border)",
-                }}
-            >
-                <div
-                    className="text-sm"
-                    style={{
-                        color: "var(--text-secondary)",
-                    }}
-                >
-                    Loading payable invoices...
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <LoadingState />;
 
     return (
         <>
             <HeaderPage
                 title="Accounts Payable"
                 subtitle="Manage vendor invoices and outstanding liabilities"
-                right={
-                    <Button onClick={() => SmartNavigate.go("/finance/payables/invoices/create")}>
-                        + Create Vendor Bill
-                    </Button>
-                }
+                actions={[
+                    {
+                        label: "Create Vendor Bill",
+                        href: "/finance/payables/invoices/create",
+                    },
+                ]}
             />
             <div className="space-y-4 p-4">
                 {/* SUMMARY */}
@@ -129,163 +118,86 @@ export default function PayableInvoiceListPage() {
                 </div>
 
                 {/* TABLE */}
-
-                <div
-                    className="overflow-hidden rounded-3xl border"
-                    style={{
-                        background: "var(--color-surface)",
-                        borderColor: "var(--color-border)",
-                        boxShadow: "var(--shadow)",
+                <DataTable
+                    searchable
+                    searchValue={table.search}
+                    onSearchChange={table.setSearch}
+                    loading={loading}
+                    data={filteredRows}
+                    onRowClick={(row) => SmartNavigate.go(`/finance/payables/invoices/${row.id}`)}
+                    columns={[
+                        {
+                            key: "invoice_number",
+                            title: "Invoice",
+                            render: (row) => (
+                                <span className="font-semibold">{row.invoice_number}</span>
+                            ),
+                        },
+                        {
+                            key: "partner_name",
+                            title: "Vendor",
+                            sortable: true,
+                        },
+                        {
+                            key: "invoice_date",
+                            title: "Invoice Date",
+                            render: (row) => (
+                                <span className="text-muted text-xs">
+                                    {formatValue(row.invoice_date, {
+                                        format: "date",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "due_date",
+                            title: "Due Date",
+                            render: (row) => (
+                                <span className="text-muted text-xs">
+                                    {formatValue(row.due_date, {
+                                        format: "date",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "total_amount",
+                            title: "Total",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-semibold">
+                                    {formatValue(row.total_amount, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "balance_due",
+                            title: "Balance",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-semibold">
+                                    {formatValue(row.balance_due, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "status",
+                            title: "Status",
+                            align: "center",
+                            render: (row) => <StatusBadge status={row.status} />,
+                        },
+                    ]}
+                    pagination={{
+                        page: table.page,
+                        totalPages: 1,
+                        totalItems: filteredRows.length,
+                        onPageChange: table.setPage,
                     }}
-                >
-                    <div
-                        className="border-b px-6 py-4"
-                        style={{
-                            borderColor: "var(--color-border)",
-                        }}
-                    >
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h2
-                                    className="font-semibold"
-                                    style={{
-                                        color: "var(--text-primary)",
-                                    }}
-                                >
-                                    Vendor Bills
-                                </h2>
-
-                                <div
-                                    className="mt-1 text-sm"
-                                    style={{
-                                        color: "var(--text-secondary)",
-                                    }}
-                                >
-                                    All payable invoices across vendors
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full min-w-[900px] text-sm">
-                            <thead
-                                style={{
-                                    background: "var(--color-surface-alt)",
-                                }}
-                            >
-                                <tr>
-                                    <th className="px-6 py-4 text-left font-semibold">Invoice</th>
-
-                                    <th className="px-6 py-4 text-left font-semibold">Vendor</th>
-
-                                    <th className="px-6 py-4 text-left font-semibold">
-                                        Invoice Date
-                                    </th>
-
-                                    <th className="px-6 py-4 text-left font-semibold">Due Date</th>
-
-                                    <th className="px-6 py-4 text-right font-semibold">Total</th>
-
-                                    <th className="px-6 py-4 text-right font-semibold">Balance</th>
-
-                                    <th className="px-6 py-4 text-center font-semibold">Status</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {rows.length === 0 && (
-                                    <tr>
-                                        <td colSpan={7} className="px-6 py-16 text-center">
-                                            <div
-                                                className="text-sm"
-                                                style={{
-                                                    color: "var(--text-secondary)",
-                                                }}
-                                            >
-                                                No payable invoices found
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
-
-                                {rows.map((row) => (
-                                    <tr
-                                        key={row.id}
-                                        onClick={() =>
-                                            navigate(`/finance/payables/invoices/${row.id}`)
-                                        }
-                                        className="cursor-pointer transition-all hover:bg-black/5"
-                                        style={{
-                                            borderTop: "1px solid var(--color-border)",
-                                        }}
-                                    >
-                                        <td className="px-6 py-4">
-                                            <div
-                                                className="font-semibold"
-                                                style={{
-                                                    color: "var(--text-primary)",
-                                                }}
-                                            >
-                                                {row.invoice_number}
-                                            </div>
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            <div
-                                                style={{
-                                                    color: "var(--text-primary)",
-                                                }}
-                                            >
-                                                {row.partner_name}
-                                            </div>
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            <div
-                                                style={{
-                                                    color: "var(--text-secondary)",
-                                                }}
-                                            >
-                                                {formatValue(row.invoice_date, {
-                                                    format: "date",
-                                                })}
-                                            </div>
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            <div
-                                                style={{
-                                                    color: "var(--text-secondary)",
-                                                }}
-                                            >
-                                                {formatValue(row.due_date, {
-                                                    format: "date",
-                                                })}
-                                            </div>
-                                        </td>
-
-                                        <td className="px-6 py-4 text-right font-medium">
-                                            {formatValue(row.total_amount, {
-                                                format: "currency",
-                                            })}
-                                        </td>
-
-                                        <td className="px-6 py-4 text-right font-semibold">
-                                            {formatValue(row.balance_due, {
-                                                format: "currency",
-                                            })}
-                                        </td>
-
-                                        <td className="px-6 py-4 text-center">
-                                            <StatusBadge status={row.status} />
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                />
             </div>
         </>
     );

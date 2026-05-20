@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { getInvoiceDetail, postInvoice } from "../services/invoice.service";
 import type { InvoiceDetail } from "../types/invoice.types";
 import { formatValue } from "@/shared/utils/formatValue";
-import { HeaderPage, SummaryCard } from "@/core/ui/components";
+import { DataTable, HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
 
 export default function InvoiceDetailPage() {
     const { invoiceId } = useParams();
@@ -44,20 +44,7 @@ export default function InvoiceDetailPage() {
         loadData();
     }, [loadData]);
 
-    if (loading) {
-        return (
-            <div className="space-y-4 p-6">
-                <div
-                    className="h-6 w-1/3 animate-pulse rounded"
-                    style={{ background: "var(--color-surface-alt)" }}
-                />
-                <div
-                    className="h-40 animate-pulse rounded-2xl"
-                    style={{ background: "var(--color-surface-alt)" }}
-                />
-            </div>
-        );
-    }
+    if (loading) return <LoadingState />;
 
     if (!invoice) {
         return (
@@ -72,25 +59,18 @@ export default function InvoiceDetailPage() {
             <HeaderPage
                 title={`Invoice #${invoice.invoice_number}`}
                 subtitle={`Customer: ${invoice.customer_name}`}
-                right={
-                    <div className="flex gap-3">
-                        <StatusBadge status={invoice.status} />
-
-                        {invoice.status === "draft" && (
-                            <button
-                                onClick={handlePostInvoice}
-                                disabled={posting}
-                                className="rounded-xl px-4 py-2 text-sm transition hover:opacity-80"
-                                style={{
-                                    background: "var(--color-primary)",
-                                    color: "#fff",
-                                }}
-                            >
-                                {posting ? "Posting..." : "Post Invoice"}
-                            </button>
-                        )}
-                    </div>
-                }
+                meta={<StatusBadge status={invoice.status} />}
+                actions={[
+                    ...(invoice.status === "draft"
+                        ? [
+                              {
+                                  label: posting ? "Posting..." : "Post Invoice",
+                                  onClick: handlePostInvoice,
+                                  disabled: posting,
+                              },
+                          ]
+                        : []),
+                ]}
             />
             <div className="space-y-4 p-4">
                 {/* INFO GRID */}
@@ -116,56 +96,48 @@ export default function InvoiceDetailPage() {
                 </div>
 
                 {/* ITEMS TABLE */}
-                <div
-                    className="overflow-hidden rounded-2xl border"
-                    style={{
-                        background: "var(--color-surface)",
-                        borderColor: "var(--color-border)",
-                    }}
-                >
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr
-                                style={{
-                                    background: "var(--color-surface-alt)",
-                                    color: "var(--text-muted)",
-                                }}
-                            >
-                                <th className="p-4 text-left font-medium">Description</th>
-                                <th className="w-32 p-4 text-right font-medium">Qty</th>
-                                <th className="w-40 p-4 text-right font-medium">Unit Price</th>
-                                <th className="w-40 p-4 text-right font-medium">Total</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {invoice.items.map((item) => (
-                                <tr
-                                    key={item.id}
-                                    style={{
-                                        borderTop: "1px solid var(--color-border)",
-                                    }}
-                                >
-                                    <td className="p-4">{item.description}</td>
-
-                                    <td className="p-4 text-right">{item.qty}</td>
-
-                                    <td className="p-4 text-right">
-                                        {formatValue(item.unit_price, {
-                                            format: "number",
-                                        })}
-                                    </td>
-
-                                    <td className="p-4 text-right font-medium">
-                                        {formatValue(item.total, {
-                                            format: "number",
-                                        })}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <DataTable
+                    loading={loading}
+                    data={invoice.items}
+                    columns={[
+                        {
+                            key: "description",
+                            title: "Description",
+                            render: (row) => (
+                                <span className="font-semibold">{row.description}</span>
+                            ),
+                        },
+                        {
+                            key: "qty",
+                            title: "Qty",
+                            align: "right",
+                        },
+                        {
+                            key: "unit_price",
+                            title: "Unit Price",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-normal">
+                                    {formatValue(row.unit_price, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "total",
+                            title: "Total",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-semibold">
+                                    {formatValue(row.total, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                    ]}
+                />
 
                 {/* TOTALS */}
                 <div className="flex justify-end">

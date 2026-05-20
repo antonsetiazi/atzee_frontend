@@ -6,7 +6,9 @@ import { useParams } from "react-router-dom";
 
 import { formatValue } from "@/shared/utils/formatValue";
 import { getPayablePaymentDetail, postPayablePayment } from "../services/payment.service";
-import { HeaderPage, SummaryCard } from "@/core/ui/components";
+import { DataTable, HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
+import useDataTable from "@/core/ui/components/data_table/hooks/useDataTable";
+import type { PayablePayment, PayablePaymentAllocation } from "../types/payment.types";
 
 function StatusBadge({ status }: { status: string }) {
     const styles: Record<string, string> = {
@@ -31,7 +33,9 @@ function StatusBadge({ status }: { status: string }) {
 export default function PayablePaymentDetailPage() {
     const { paymentId } = useParams();
     const [loading, setLoading] = useState(true);
-    const [payment, setPayment] = useState<any>(null);
+    const [payment, setPayment] = useState<PayablePayment>();
+    const [rows, setRows] = useState<PayablePaymentAllocation[]>([]);
+    const table = useDataTable();
 
     const loadData = useCallback(async () => {
         if (!paymentId) {
@@ -40,10 +44,9 @@ export default function PayablePaymentDetailPage() {
 
         try {
             setLoading(true);
-
             const data = await getPayablePaymentDetail(paymentId);
-
             setPayment(data);
+            setRows(data.allocations);
         } catch (err) {
             console.error(err);
         } finally {
@@ -80,26 +83,7 @@ export default function PayablePaymentDetailPage() {
         );
     }, [payment]);
 
-    if (loading) {
-        return (
-            <div
-                className="flex h-64 items-center justify-center rounded-3xl border"
-                style={{
-                    background: "var(--color-surface)",
-                    borderColor: "var(--color-border)",
-                }}
-            >
-                <div
-                    className="text-sm"
-                    style={{
-                        color: "var(--text-secondary)",
-                    }}
-                >
-                    Loading payment...
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <LoadingState />;
 
     if (!payment) {
         return (
@@ -127,28 +111,21 @@ export default function PayablePaymentDetailPage() {
             <HeaderPage
                 title={`Vendor Payment #${payment.payment_number}`}
                 subtitle={payment.partner_name}
-                right={
-                    <div>
-                        <StatusBadge status={payment.status} />
-
-                        {payment.status === "draft" && (
-                            <button
-                                type="button"
-                                onClick={handlePostPayment}
-                                className="rounded-2xl px-5 py-3 font-semibold text-white"
-                                style={{
-                                    background: "var(--color-primary)",
-                                }}
-                            >
-                                Post Payment
-                            </button>
-                        )}
-                    </div>
-                }
+                meta={<StatusBadge status={payment.status} />}
+                actions={[
+                    ...(payment.status === "draft"
+                        ? [
+                              {
+                                  label: "Post Payment",
+                                  onClick: handlePostPayment,
+                                  variant: "primary" as const,
+                              },
+                          ]
+                        : []),
+                ]}
             />
             <div className="space-y-4 p-4">
                 {/* SUMMARY */}
-
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                     <SummaryCard
                         title="Payment Date"
@@ -172,113 +149,67 @@ export default function PayablePaymentDetailPage() {
                 </div>
 
                 {/* ALLOCATIONS */}
-
-                <div
-                    className="overflow-hidden rounded-3xl border"
-                    style={{
-                        background: "var(--color-surface)",
-                        borderColor: "var(--color-border)",
-                        boxShadow: "var(--shadow)",
+                <DataTable
+                    title="Invoice Allocations"
+                    subtitle="Payment allocation details"
+                    loading={loading}
+                    data={rows}
+                    columns={[
+                        {
+                            key: "invoice_number",
+                            title: "Invoice",
+                            render: (row) => (
+                                <div className="flex gap-2">
+                                    <span className="font-semibold">{row.invoice_number}</span>
+                                    <StatusBadge status={row.invoice_status} />
+                                </div>
+                            ),
+                        },
+                        {
+                            key: "invoice_date",
+                            title: "Invoice Date",
+                            render: (row) => (
+                                <span className="text-muted text-xs">
+                                    {formatValue(row.invoice_date, {
+                                        format: "date",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "invoice_total",
+                            title: "Invoice Total",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-semibold">
+                                    {formatValue(row.invoice_total, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                        {
+                            key: "allocated_amount",
+                            title: "Allocated Amount",
+                            align: "right",
+                            render: (row) => (
+                                <span className="font-semibold">
+                                    {formatValue(row.allocated_amount, {
+                                        format: "currency",
+                                    })}
+                                </span>
+                            ),
+                        },
+                    ]}
+                    pagination={{
+                        page: table.page,
+                        totalPages: 1,
+                        totalItems: rows.length,
+                        onPageChange: table.setPage,
                     }}
-                >
-                    <div
-                        className="border-b px-6 py-4"
-                        style={{
-                            borderColor: "var(--color-border)",
-                        }}
-                    >
-                        <h2
-                            className="font-semibold"
-                            style={{
-                                color: "var(--text-primary)",
-                            }}
-                        >
-                            Invoice Allocations
-                        </h2>
-
-                        <div
-                            className="mt-1 text-sm"
-                            style={{
-                                color: "var(--text-secondary)",
-                            }}
-                        >
-                            Payment allocation details
-                        </div>
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full min-w-[900px] text-sm">
-                            <thead
-                                style={{
-                                    background: "var(--color-surface-alt)",
-                                }}
-                            >
-                                <tr>
-                                    <th className="px-6 py-4 text-left font-semibold">Invoice</th>
-
-                                    <th className="px-6 py-4 text-left font-semibold">
-                                        Invoice Date
-                                    </th>
-
-                                    <th className="px-6 py-4 text-right font-semibold">
-                                        Invoice Total
-                                    </th>
-
-                                    <th className="px-6 py-4 text-right font-semibold">
-                                        Allocated Amount
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {payment.allocations?.map((allocation: any) => (
-                                    <tr
-                                        key={allocation.id}
-                                        style={{
-                                            borderTop: "1px solid var(--color-border)",
-                                        }}
-                                    >
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-2">
-                                                <div
-                                                    className="font-medium"
-                                                    style={{
-                                                        color: "var(--text-primary)",
-                                                    }}
-                                                >
-                                                    {allocation.invoice_number}
-                                                </div>
-
-                                                <StatusBadge status={allocation.invoice_status} />
-                                            </div>
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            {formatValue(allocation.invoice_date, {
-                                                format: "date",
-                                            })}
-                                        </td>
-
-                                        <td className="px-6 py-4 text-right font-medium">
-                                            {formatValue(allocation.invoice_total, {
-                                                format: "currency",
-                                            })}
-                                        </td>
-
-                                        <td className="px-6 py-4 text-right font-semibold">
-                                            {formatValue(allocation.allocated_amount, {
-                                                format: "currency",
-                                            })}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                />
 
                 {/* NOTES */}
-
                 {payment.notes && (
                     <div
                         className="rounded-3xl border p-6"

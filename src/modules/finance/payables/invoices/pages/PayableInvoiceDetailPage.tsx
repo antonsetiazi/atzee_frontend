@@ -6,7 +6,7 @@ import { formatValue } from "@/shared/utils/formatValue";
 import { getPayableInvoiceDetail } from "../services/payableInvoice.service";
 import type { PayableInvoice } from "../types/payableInvoice.types";
 import { postPayableInvoice } from "../services/payableInvoice.service";
-import { HeaderPage, SummaryCard } from "@/core/ui/components";
+import { DataTable, HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
 
 function StatusBadge({ status }: { status: string }) {
     const styles: Record<string, string> = {
@@ -41,9 +41,7 @@ export default function PayableInvoiceDetailPage() {
 
         try {
             setLoading(true);
-
             const data = await getPayableInvoiceDetail(invoiceId);
-
             setInvoice(data);
         } catch (err) {
             console.error(err);
@@ -84,26 +82,7 @@ export default function PayableInvoiceDetailPage() {
         return new Date(invoice.due_date) < new Date();
     }, [invoice]);
 
-    if (loading) {
-        return (
-            <div
-                className="flex h-64 items-center justify-center rounded-3xl border"
-                style={{
-                    background: "var(--color-surface)",
-                    borderColor: "var(--color-border)",
-                }}
-            >
-                <div
-                    className="text-sm"
-                    style={{
-                        color: "var(--text-secondary)",
-                    }}
-                >
-                    Loading invoice...
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <LoadingState />;
 
     if (!invoice) {
         return (
@@ -131,31 +110,29 @@ export default function PayableInvoiceDetailPage() {
             <HeaderPage
                 title={`Vendor Bill #${invoice.invoice_number}`}
                 subtitle={invoice.partner_name}
-                right={
-                    <div className="flex items-center gap-3">
+                meta={
+                    <div className="flex items-center gap-2">
+                        <StatusBadge status={invoice.status} />
+
                         {isOverdue && (
                             <div className="rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-600">
                                 Overdue
                             </div>
                         )}
-
-                        <StatusBadge status={invoice.status} />
-
-                        {invoice.status === "draft" && (
-                            <button
-                                type="button"
-                                onClick={handlePostInvoice}
-                                disabled={posting}
-                                className="rounded-2xl px-4 py-2 text-sm font-semibold text-white"
-                                style={{
-                                    background: "var(--color-primary)",
-                                }}
-                            >
-                                {posting ? "Posting..." : "Post Invoice"}
-                            </button>
-                        )}
                     </div>
                 }
+                actions={[
+                    ...(invoice.status === "draft"
+                        ? [
+                              {
+                                  label: posting ? "Posting..." : "Post Invoice",
+                                  onClick: handlePostInvoice,
+                                  disabled: posting,
+                                  variant: "primary" as const,
+                              },
+                          ]
+                        : []),
+                ]}
             />
             <div className="space-y-4 p-4">
                 {/* SUMMARY */}
@@ -192,109 +169,51 @@ export default function PayableInvoiceDetailPage() {
 
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
                     {/* ITEMS */}
-
                     <div className="xl:col-span-2">
-                        <div
-                            className="overflow-hidden rounded-3xl border"
-                            style={{
-                                background: "var(--color-surface)",
-                                borderColor: "var(--color-border)",
-                                boxShadow: "var(--shadow)",
-                            }}
-                        >
-                            <div
-                                className="border-b px-6 py-4"
-                                style={{
-                                    borderColor: "var(--color-border)",
-                                }}
-                            >
-                                <h2
-                                    className="font-semibold"
-                                    style={{
-                                        color: "var(--text-primary)",
-                                    }}
-                                >
-                                    Invoice Items
-                                </h2>
-
-                                <div
-                                    className="mt-1 text-sm"
-                                    style={{
-                                        color: "var(--text-secondary)",
-                                    }}
-                                >
-                                    Detailed breakdown of vendor charges
-                                </div>
-                            </div>
-
-                            <div className="overflow-x-auto">
-                                <table className="w-full min-w-[700px] text-sm">
-                                    <thead
-                                        style={{
-                                            background: "var(--color-surface-alt)",
-                                        }}
-                                    >
-                                        <tr>
-                                            <th className="px-6 py-4 text-left font-semibold">
-                                                Description
-                                            </th>
-
-                                            <th className="w-32 px-6 py-4 text-right font-semibold">
-                                                Qty
-                                            </th>
-
-                                            <th className="w-40 px-6 py-4 text-right font-semibold">
-                                                Unit Price
-                                            </th>
-
-                                            <th className="w-40 px-6 py-4 text-right font-semibold">
-                                                Total
-                                            </th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {invoice.items.map((item) => (
-                                            <tr
-                                                key={item.id}
-                                                style={{
-                                                    borderTop: "1px solid var(--color-border)",
-                                                }}
-                                            >
-                                                <td className="px-6 py-4">
-                                                    <div
-                                                        className="font-medium"
-                                                        style={{
-                                                            color: "var(--text-primary)",
-                                                        }}
-                                                    >
-                                                        {item.description}
-                                                    </div>
-                                                </td>
-
-                                                <td className="px-6 py-4 text-right">
-                                                    {formatValue(item.qty, {
-                                                        format: "number",
-                                                    })}
-                                                </td>
-
-                                                <td className="px-6 py-4 text-right">
-                                                    {formatValue(item.unit_price, {
-                                                        format: "currency",
-                                                    })}
-                                                </td>
-
-                                                <td className="px-6 py-4 text-right font-semibold">
-                                                    {formatValue(item.total, {
-                                                        format: "currency",
-                                                    })}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <DataTable
+                            title="Invoice Items"
+                            subtitle="Detailed breakdown of vendor charges"
+                            loading={loading}
+                            data={invoice.items}
+                            columns={[
+                                {
+                                    key: "description",
+                                    title: "Description",
+                                    render: (row) => (
+                                        <span className="font-semibold">{row.description}</span>
+                                    ),
+                                },
+                                {
+                                    key: "qty",
+                                    title: "Qty",
+                                    align: "right",
+                                },
+                                {
+                                    key: "unit_price",
+                                    title: "Unit Price",
+                                    align: "right",
+                                    render: (row) => (
+                                        <span className="font-normal">
+                                            {formatValue(row.unit_price, {
+                                                format: "currency",
+                                            })}
+                                        </span>
+                                    ),
+                                },
+                                {
+                                    key: "total",
+                                    title: "Total",
+                                    align: "right",
+                                    render: (row) => (
+                                        <span className="font-semibold">
+                                            {formatValue(row.total, {
+                                                format: "currency",
+                                            })}
+                                        </span>
+                                    ),
+                                },
+                            ]}
+                        />
                     </div>
 
                     {/* SIDEBAR */}

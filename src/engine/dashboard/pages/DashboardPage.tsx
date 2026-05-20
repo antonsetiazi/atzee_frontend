@@ -7,7 +7,6 @@ import ModuleExplorer from "../components/sections/ModuleExplorer";
 import QuickActionBar from "../components/sections/QuickActionBar";
 import RecentInvoiceTable from "../components/tables/RecentInvoiceTable";
 import ActivityTimeline from "../components/timeline/ActivityTimeline";
-import DashboardSectionCard from "../components/ui/DashboardSectionCard";
 
 interface Props {
     data: any;
@@ -48,28 +47,13 @@ export default function DashboardPage({ data }: Props) {
             <div className="mt-8 grid grid-cols-1 gap-6 2xl:grid-cols-[1.45fr_0.85fr]">
                 {/* LEFT */}
                 <div className="space-y-6">
-                    <DashboardSectionCard
-                        title="Cash Flow Analytics"
-                        subtitle="Financial movement and liquidity overview."
-                    >
-                        <CashFlowChart items={cashFlow} />
-                    </DashboardSectionCard>
+                    <CashFlowChart items={cashFlow} />
 
-                    <DashboardSectionCard
-                        title="Recent Invoices"
-                        subtitle="Latest receivable transactions."
-                    >
-                        <RecentInvoiceTable items={invoices} />
-                    </DashboardSectionCard>
+                    <RecentInvoiceTable items={invoices} />
                 </div>
 
                 {/* RIGHT */}
-                <DashboardSectionCard
-                    title="Finance Activity"
-                    subtitle="Live accounting and operational activities."
-                >
-                    <ActivityTimeline items={activities} />
-                </DashboardSectionCard>
+                <ActivityTimeline items={activities} />
             </div>
         </div>
     );

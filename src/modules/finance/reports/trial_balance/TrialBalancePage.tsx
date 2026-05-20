@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchTrialBalance } from "./trialBalance.api";
 import type { TrialBalanceResponse } from "./trialBalance.types";
 import TrialBalanceTable from "./TrialBalanceTable";
-import { HeaderPage, SummaryCard } from "@/core/ui/components";
+import { Badge, HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
 import { formatValue } from "@/shared/utils/formatValue";
 
 export default function TrialBalancePage() {
@@ -18,9 +18,7 @@ export default function TrialBalancePage() {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) {
-        return <div className="p-6">Loading...</div>;
-    }
+    if (loading) return <LoadingState />;
 
     if (!data) {
         return <div className="p-6">Failed to load trial balance</div>;
@@ -31,16 +29,10 @@ export default function TrialBalancePage() {
             <HeaderPage
                 title="Trial Balance"
                 subtitle="Ringkasan saldo seluruh akun"
-                right={
-                    <div
-                        className={`rounded-xl px-4 py-2 text-center text-sm font-medium ${
-                            data.is_balanced
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                        } `}
-                    >
+                meta={
+                    <Badge color={data.is_balanced ? "success" : "error"}>
                         {data.is_balanced ? "Balanced" : "Unbalanced"}
-                    </div>
+                    </Badge>
                 }
             />
             <div className="space-y-6 p-6">

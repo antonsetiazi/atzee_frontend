@@ -9,8 +9,8 @@ import { useFormError } from "@/core/response";
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
 
 export function PasswordLoginForm() {
-    const [email, setEmail] = useState("admin@finance.com"); // default untuk dev
-    const [password, setPassword] = useState("Admin123!");
+    const [email, setEmail] = useState(""); // default untuk dev
+    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const { error, clearError, handleError, getFieldError } = useFormError();
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchProfitLoss } from "./profitLoss.api";
 import type { ProfitLossResponse } from "./profitLoss.types";
 import ProfitLossSection from "./ProfitLossSection";
-import { HeaderPage, SummaryCard } from "@/core/ui/components";
+import { Badge, HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
 import { formatValue } from "@/shared/utils/formatValue";
 
 export default function ProfitLossPage() {
@@ -17,9 +17,7 @@ export default function ProfitLossPage() {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) {
-        return <div className="p-6">Loading...</div>;
-    }
+    if (loading) return <LoadingState />;
 
     if (!data) {
         return <div className="p-6">Failed to load profit & loss</div>;
@@ -32,14 +30,10 @@ export default function ProfitLossPage() {
             <HeaderPage
                 title="Profit & Loss"
                 subtitle="Ringkasan pendapatan dan beban perusahaan"
-                right={
-                    <div
-                        className={`rounded-xl px-4 py-2 text-center text-sm font-semibold ${
-                            isProfit ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                        } `}
-                    >
+                meta={
+                    <Badge color={isProfit ? "success" : "error"}>
                         {isProfit ? "PROFIT" : "LOSS"}
-                    </div>
+                    </Badge>
                 }
             />
             <div className="space-y-6 p-6">

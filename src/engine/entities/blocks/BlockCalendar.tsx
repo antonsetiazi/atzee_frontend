@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchEntityDetail } from "@/engine/entities/api/entity.api";
-import LoadingState from "@/shared/ui/LoadingState";
+import { LoadingState } from "@/core/ui/components";
 
 interface Props {
     block: any;
@@ -32,15 +32,9 @@ export default function BlockCalendar({ block, context = {} }: Props) {
             try {
                 const baseUrl = resolvePath(block.data_source, context);
 
-                const queryString = resolveQueryParams(
-                    block.query_params,
-                    context,
-                    selectedDate,
-                );
+                const queryString = resolveQueryParams(block.query_params, context, selectedDate);
 
-                const finalUrl = queryString
-                    ? `${baseUrl}?${queryString}`
-                    : baseUrl;
+                const finalUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
 
                 const res = await fetchEntityDetail(finalUrl);
 
@@ -78,46 +72,40 @@ export default function BlockCalendar({ block, context = {} }: Props) {
     // console.log(block);
 
     return (
-        <div className="w-full bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             {/* Header */}
             <div className="mb-6">
                 <h3 className="text-xl font-semibold text-gray-800">
                     {block.title ?? "Select Schedule"}
                 </h3>
                 {block.description && (
-                    <p className="text-sm text-gray-500 mt-1">
-                        {block.description}
-                    </p>
+                    <p className="mt-1 text-sm text-gray-500">{block.description}</p>
                 )}
             </div>
 
             {/* Date Picker */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6 flex items-center justify-between">
                 <div className="flex flex-col">
-                    <label className="text-xs text-gray-500 mb-1">
-                        Select Date
-                    </label>
+                    <label className="mb-1 text-xs text-gray-500">Select Date</label>
                     <input
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                        className="rounded-xl border border-gray-300 px-4 py-2 text-sm transition focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     />
                 </div>
 
-                <div className="text-sm text-gray-500">
-                    {availableCount} available slots
-                </div>
+                <div className="text-sm text-gray-500">{availableCount} available slots</div>
             </div>
 
             {/* Slots */}
             {slots.length === 0 ? (
-                <div className="text-center py-12 text-gray-400 text-sm">
+                <div className="py-12 text-center text-sm text-gray-400">
                     No schedule available for this date
                 </div>
             ) : (
                 <div
-                    className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"
+                    className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5"
                     style={{
                         maxHeight: block.height ?? 600,
                         overflowY: "auto",
@@ -132,30 +120,25 @@ export default function BlockCalendar({ block, context = {} }: Props) {
                                 key={idx}
                                 disabled={disabled}
                                 onClick={() => handleSelect(slot.datetime)}
-                                className={`
-                                    relative rounded-xl border px-4 py-3 text-sm font-medium
-                                    transition-all duration-200
-                                    ${
-                                        isSelected
-                                            ? "bg-blue-600 text-white border-blue-600 shadow-lg scale-105"
-                                            : "bg-white border-gray-200"
-                                    }
-                                    ${
-                                        disabled
-                                            ? "opacity-40 cursor-not-allowed"
-                                            : "hover:border-blue-400 hover:shadow-md"
-                                    }
-                                `}
+                                className={`relative rounded-xl border px-4 py-3 text-sm font-medium transition-all duration-200 ${
+                                    isSelected
+                                        ? "scale-105 border-blue-600 bg-blue-600 text-white shadow-lg"
+                                        : "border-gray-200 bg-white"
+                                } ${
+                                    disabled
+                                        ? "cursor-not-allowed opacity-40"
+                                        : "hover:border-blue-400 hover:shadow-md"
+                                } `}
                             >
                                 <div className="flex items-center justify-center">
-                                    {new Date(slot.datetime).toLocaleTimeString(
-                                        [],
-                                        { hour: "2-digit", minute: "2-digit" },
-                                    )}
+                                    {new Date(slot.datetime).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })}
                                 </div>
 
                                 {!disabled && !isSelected && (
-                                    <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-green-500"></span>
+                                    <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-green-500"></span>
                                 )}
                             </button>
                         );

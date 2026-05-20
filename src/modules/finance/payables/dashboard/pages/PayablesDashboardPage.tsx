@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { getPayablesDashboard } from "../services/dashboard.service";
 
 import { formatValue } from "@/shared/utils/formatValue";
-import { Button, HeaderPage, SummaryCard } from "@/core/ui/components";
-import { SmartNavigate } from "@/core/navigation/SmartNavigate";
+import { HeaderPage, LoadingState, SummaryCard } from "@/core/ui/components";
+import { Plus } from "lucide-react";
 
 type DashboardData = {
     summary: {
@@ -45,21 +45,7 @@ export default function PayablesDashboardPage() {
         load();
     }, []);
 
-    if (loading) {
-        return (
-            <div
-                className="flex h-[300px] items-center justify-center rounded-3xl border"
-                style={{
-                    background: "var(--color-surface)",
-                    borderColor: "var(--color-border)",
-                }}
-            >
-                <div className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                    Loading dashboard...
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <LoadingState />;
 
     if (!data) {
         return (
@@ -83,21 +69,18 @@ export default function PayablesDashboardPage() {
             <HeaderPage
                 title="Accounts Payable"
                 subtitle="Overview of vendor liabilities and outgoing payments"
-                right={
-                    <div className="flex gap-2">
-                        <Button
-                            onClick={() => SmartNavigate.go("/finance/payables/invoices/create")}
-                        >
-                            + Create Bill
-                        </Button>
-
-                        <Button
-                            onClick={() => SmartNavigate.go("/finance/payables/payments/create")}
-                        >
-                            Record Payment
-                        </Button>
-                    </div>
-                }
+                actions={[
+                    {
+                        label: "Create Bill",
+                        icon: Plus,
+                        href: "/finance/payables/invoices/create",
+                    },
+                    {
+                        label: "Record Payment",
+                        icon: Plus,
+                        href: "/finance/payables/payments/create",
+                    },
+                ]}
             />
             <div className="space-y-4 p-4">
                 {/* SUMMARY */}

@@ -2,15 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useEffect, useState, useCallback } from "react";
-import LoadingState from "@/shared/ui/LoadingState";
-import {
-    deleteFile,
-    fetchFiles,
-    uploadFile,
-} from "@/engine/files/api/file.api";
+import { deleteFile, fetchFiles, uploadFile } from "@/engine/files/api/file.api";
 import { useSessionStore } from "@/core/session/session.store";
 import { handleCoreAffects } from "@/core/utils/coreAffects";
 import { useConfirm } from "@/core/confirm/useConfirm";
+import { LoadingState } from "@/core/ui/components";
 
 interface Props {
     block: any;
@@ -41,10 +37,7 @@ export default function BlockFiles({ block, id, pageData }: Props) {
 
     const entityType = block.entity_type;
     const entityId =
-        id ??
-        (block.entity_id_from === "self"
-            ? user?.id
-            : pageData?.[block.entity_id_from]);
+        id ?? (block.entity_id_from === "self" ? user?.id : pageData?.[block.entity_id_from]);
 
     const loadFiles = useCallback(async () => {
         if (!entityId) return; // ✅ guard DI DALAM
@@ -56,18 +49,12 @@ export default function BlockFiles({ block, id, pageData }: Props) {
                 related_id: entityId,
             });
             const items =
-                block.multiple === false
-                    ? (res.items?.slice(0, 1) ?? [])
-                    : (res.items ?? []);
+                block.multiple === false ? (res.items?.slice(0, 1) ?? []) : (res.items ?? []);
 
             const filesWithPreview = await Promise.all(
                 items.map(async (f: FileItem) => {
                     // Hanya untuk image
-                    if (
-                        f.mime_type.startsWith("image/") &&
-                        !f.is_public &&
-                        accessToken
-                    ) {
+                    if (f.mime_type.startsWith("image/") && !f.is_public && accessToken) {
                         const r = await fetch(f.url, {
                             headers: { Authorization: `Bearer ${accessToken}` },
                         });
@@ -135,6 +122,7 @@ export default function BlockFiles({ block, id, pageData }: Props) {
 
     if (!entityId) return null;
     if (loading) return <LoadingState />;
+
     return (
         <section
             className="rounded-[var(--radius)] p-5"
@@ -145,26 +133,19 @@ export default function BlockFiles({ block, id, pageData }: Props) {
             }}
         >
             {/* Header */}
-            <div className="flex items-start justify-between gap-4 mb-5">
+            <div className="mb-5 flex items-start justify-between gap-4">
                 <div>
-                    <h3
-                        className="text-lg font-semibold"
-                        style={{ color: "var(--text-primary)" }}
-                    >
+                    <h3 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
                         {block.title ?? "Photos"}
                     </h3>
 
-                    <p
-                        className="text-sm mt-1"
-                        style={{ color: "var(--text-secondary)" }}
-                    >
-                        {block.description ??
-                            "Upload high quality images to build trust."}
+                    <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+                        {block.description ?? "Upload high quality images to build trust."}
                     </p>
                 </div>
 
                 <label
-                    className="px-4 py-2 text-sm font-medium cursor-pointer transition rounded-xl"
+                    className="cursor-pointer rounded-xl px-4 py-2 text-sm font-medium transition"
                     style={{
                         background: "var(--color-primary)",
                         color: "#fff",
@@ -189,13 +170,11 @@ export default function BlockFiles({ block, id, pageData }: Props) {
                         border: "1px dashed var(--color-border)",
                     }}
                 >
-                    <div className="text-4xl mb-2">🖼️</div>
-                    <p style={{ color: "var(--text-secondary)" }}>
-                        No photos uploaded yet
-                    </p>
+                    <div className="mb-2 text-4xl">🖼️</div>
+                    <p style={{ color: "var(--text-secondary)" }}>No photos uploaded yet</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                     {files.map((f, index) => (
                         <div
                             key={f.id}
@@ -209,17 +188,17 @@ export default function BlockFiles({ block, id, pageData }: Props) {
                                 <img
                                     src={f.previewUrl ?? f.url}
                                     alt={f.name}
-                                    className="w-full aspect-square object-cover transition duration-300 group-hover:scale-105"
+                                    className="aspect-square w-full object-cover transition duration-300 group-hover:scale-105"
                                 />
                             ) : (
-                                <div className="aspect-square flex items-center justify-center text-sm">
+                                <div className="flex aspect-square items-center justify-center text-sm">
                                     {f.name}
                                 </div>
                             )}
 
                             {/* badge main */}
                             {index === 0 && (
-                                <div className="absolute top-2 left-2 px-2 py-1 text-xs rounded-full bg-black/70 text-white">
+                                <div className="absolute top-2 left-2 rounded-full bg-black/70 px-2 py-1 text-xs text-white">
                                     Main
                                 </div>
                             )}
@@ -227,7 +206,7 @@ export default function BlockFiles({ block, id, pageData }: Props) {
                             {/* delete */}
                             <button
                                 onClick={() => handleDelete(f.id)}
-                                className="absolute top-2 right-2 w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition"
+                                className="absolute top-2 right-2 h-8 w-8 rounded-full opacity-0 transition group-hover:opacity-100"
                                 style={{
                                     background: "rgba(255,255,255,.95)",
                                 }}
