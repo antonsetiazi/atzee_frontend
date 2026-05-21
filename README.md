@@ -3,6 +3,7 @@
 Enterprise frontend system built with React, TypeScript, and Vite for the Atzee ERP ecosystem.
 
 ---
+![Atzee Dashboard](./assets/enterprise-dashboard.png)
 
 ## Overview
 
@@ -105,6 +106,16 @@ https://github.com/antonsetiazi/atzee_backend
 ## Status
 Currently under active development.
 
+## Screenshots
+
+### Enterprise Dashboard
+![Atzee Dashboard](./assets/enterprise-dashboard.png)
+
+### Reusable DataTable
+![DataTable](./assets/datatable.png)
+
+### Reusable Forms
+![RBAC](./assets/forms.png)
 
 ## Author
 Anton Setiazi
