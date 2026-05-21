@@ -1,73 +1,112 @@
-# React + TypeScript + Vite
+# Atzee Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Enterprise frontend system built with React, TypeScript, and Vite for the Atzee ERP ecosystem.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## React Compiler
+Atzee Frontend is the main frontend application powering the Atzee ecosystem — a modular ERP and business platform designed around scalable architecture, reusable systems, and enterprise workflows.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The project focuses on building modern business applications with strong emphasis on:
 
-## Expanding the ESLint configuration
+- Enterprise dashboard systems
+- Reusable frontend architecture
+- RBAC & permission-based interfaces
+- Workflow & activity systems
+- Scalable component systems
+- Data-intensive UI experiences
+- Product-oriented business applications
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Main Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Authentication & authorization system
+- Role-based access control (RBAC)
+- Enterprise dashboard UI
+- Reusable DataTable system
+- Modular application structure
+- Workflow & activity timeline systems
+- Responsive enterprise layout
+- API-driven architecture
+- Multi-module business application support
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Tech Stack
+
+### Frontend
+- React
+- TypeScript
+- Vite
+- React Hook Form
+- React Router
+
+### UI & Architecture
+- Modular frontend architecture
+- Reusable component system
+- Enterprise UI patterns
+- Responsive layouts
+
+---
+
+## Project Structure
+
+```bash
+src/
+├── core/
+├── apps/
+├── modules/
+├── shared/
+├── pages/
+├── layouts/
+└── services/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Engineering Focus
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This project is built with long-term scalability and maintainability in mind.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Key engineering goals:
+
+- Clean and reusable frontend systems
+- Separation of concerns
+- Enterprise-grade UI architecture
+- Business workflow alignment
+- Modular application growth
+- Consistent developer experience
+
+
+
+## Getting Started
+Installation
+``` 
+npm install 
 ```
+
+Development Server
+``` 
+npm run dev
+``` 
+
+Build
+``` 
+npm run build
+``` 
+
+## Backend Repository
+
+The backend service for this project is available here:
+
+https://github.com/antonsetiazi/atzee_backend
+
+
+## Status
+Currently under active development.
+
+
+## Author
+Anton Setiazi
+
+Frontend Engineer with Strong Backend Understanding
