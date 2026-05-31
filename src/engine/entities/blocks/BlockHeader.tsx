@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useBreakpoint } from "@/core/ui/layout/hooks/useBreakpoint";
 import NotificationMobileButton from "@/modules/notification/components/NotificationMobileButton";
+import { useProfile } from "@/modules/account/profile/hooks/useProfile";
 
 interface Props {
     block: any;
@@ -11,7 +12,8 @@ interface Props {
 
 export default function BlockHeader({ block }: Props) {
     const { isMobile } = useBreakpoint();
-
+    const { data } = useProfile();
+    const fullName = data?.full_name ?? "Guest";
     const [isScrolled, setIsScrolled] = useState(false);
 
     // 🔥 Bleed hanya desktop
@@ -31,69 +33,47 @@ export default function BlockHeader({ block }: Props) {
     }, []);
 
     return (
-        <div className={`relative w-full ${bleedClass}`}>
-            {/* =============================== */}
-            {/* 🔥 BACKGROUND (BRANDING AWARE) */}
-            {/* =============================== */}
-            <div
-                className="absolute inset-0 rounded-b-[12px]"
-                style={{
-                    background: `
-                        linear-gradient(
-                            135deg,
-                            var(--header-gradient-start, var(--color-primary)),
-                            var(--header-gradient-mid, var(--color-secondary)),
-                            var(--header-gradient-end, var(--color-accent))
-                        )
-                    `,
-                }}
-            />
-
-            {/* 🔥 Soft overlay (depth effect) */}
-            <div className="absolute inset-0 rounded-b-[12px] bg-black/10" />
-
-            {/* 🔥 Blur glow (premium effect) */}
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white/10 blur-3xl rounded-full" />
-            <div className="absolute top-10 right-0 w-32 h-32 bg-white/10 blur-2xl rounded-full" />
-
+        <div
+            className={`relative w-full ${bleedClass}`}
+            style={{
+                background: `var(--color-secondary)`,
+            }}
+        >
             {/* =============================== */}
             {/* 🔥 CONTENT */}
             {/* =============================== */}
             <div
-                className={` 
-                    relative px-4
-                    mb-4
-                    transition-all duration-300
-                    ${isScrolled ? "pt-4 pb-4" : "pt-6 pb-7"}
-                `}
+                className={`relative px-4 pb-3 transition-all duration-300 ${
+                    isScrolled ? "pt-4 pb-4" : "pt-6 pb-4"
+                }`}
+                style={{
+                    textShadow: "0 2px 10px rgba(0,0,0,0.18)",
+                }}
             >
                 {/* 🔥 TOP ROW */}
                 <div className="flex items-start justify-between gap-4">
                     <div className="flex flex-col">
-                        <span className="text-white text-lg font-semibold">
-                            {block.title}
+                        <span className="text-[11px] tracking-[0.18em] text-white/70 uppercase">
+                            Assalamu'alaikum
                         </span>
-                        <p
-                            className="
-                            text-white
-                                    text-[12px]
-                                    font-medium
-                                    uppercase
-                                    tracking-[0.12em]
-                                "
-                            style={{
-                                // color: "var(--color-text-muted)",
-                                opacity: 0.9,
-                            }}
-                        >
-                            {block.subtitle}
-                        </p>
+
+                        <span className="text-xl font-bold tracking-wide text-white">
+                            {fullName}
+                        </span>
                     </div>
 
                     <div className="flex items-center">
                         <NotificationMobileButton />
                     </div>
                 </div>
+            </div>
+            <div
+                className="text-center text-[11px] font-medium tracking-[0.18em] text-white/80 uppercase"
+                style={{
+                    opacity: 0.9,
+                }}
+            >
+                {block.title} - {block.subtitle}
             </div>
         </div>
     );

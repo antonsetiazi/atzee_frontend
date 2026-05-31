@@ -1,9 +1,8 @@
 // src/modules/notification/components/NotificationDropdown.tsx
 
 import clsx from "clsx";
-import NotificationItem from "./NotificationItem";
 import type { Notification } from "../types/notification.types";
-import { notificationService } from "../services/notification.service";
+import NotificationContent from "./NotificationContent";
 
 interface Props {
     open: boolean;
@@ -14,11 +13,11 @@ export default function NotificationDropdown({ open, items }: Props) {
     return (
         <div
             className={clsx(
-                "absolute right-0 mt-3 w-80 rounded-xl overflow-hidden z-50",
-                "transition-all duration-200 origin-top-right",
+                "absolute right-0 z-50 mt-3 w-80 overflow-hidden rounded-xl",
+                "origin-top-right transition-all duration-200",
                 open
-                    ? "opacity-100 scale-100 translate-y-0"
-                    : "opacity-0 scale-95 -translate-y-1 pointer-events-none",
+                    ? "translate-y-0 scale-100 opacity-100"
+                    : "pointer-events-none -translate-y-1 scale-95 opacity-0",
             )}
             style={{
                 background: "var(--color-surface)",
@@ -26,66 +25,7 @@ export default function NotificationDropdown({ open, items }: Props) {
                 boxShadow: "var(--shadow)",
             }}
         >
-            {/* Header */}
-            <div
-                className="px-4 py-3 flex items-center justify-between border-b"
-                style={{
-                    borderColor: "var(--color-border)",
-                }}
-            >
-                <div
-                    className="text-sm font-semibold"
-                    style={{
-                        color: "var(--text-primary)",
-                    }}
-                >
-                    Notifications
-                </div>
-
-                {items.length > 0 && (
-                    <div className="flex gap-3 text-xs">
-                        <button
-                            onClick={() =>
-                                notificationService.inbox.markAllAsRead()
-                            }
-                            className="hover:underline"
-                            style={{
-                                color: "var(--text-muted)",
-                            }}
-                        >
-                            Mark read
-                        </button>
-
-                        <button
-                            onClick={() => notificationService.inbox.clearAll()}
-                            className="hover:underline"
-                            style={{
-                                color: "var(--text-muted)",
-                            }}
-                        >
-                            Clear all
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* Body */}
-            <div className="max-h-96 overflow-auto">
-                {items.length === 0 ? (
-                    <div
-                        className="p-6 text-sm text-center"
-                        style={{
-                            color: "var(--text-muted)",
-                        }}
-                    >
-                        No notifications
-                    </div>
-                ) : (
-                    items.map((item) => (
-                        <NotificationItem key={item.id} item={item} />
-                    ))
-                )}
-            </div>
+            <NotificationContent items={items} />
         </div>
     );
 }

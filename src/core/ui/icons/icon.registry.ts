@@ -57,6 +57,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { BellIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/solid";
 import {
     BookOpenText,
     CircleChevronRight,
@@ -140,4 +141,5 @@ export const iconRegistry: Record<string, any> = {
     invoice: ScrollText,
     payment: CircleDollarSign,
     dashboard: LayoutDashboard,
+    chat: ChatBubbleLeftRightIcon,
 };

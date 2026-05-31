@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useNotifications } from "../hooks/useNotifications";
-import NotificationItem from "./NotificationItem";
+import NotificationContent from "./NotificationContent";
 
 interface Props {
     open: boolean;
@@ -18,15 +18,15 @@ export default function NotificationMobileSheet({ open, onClose }: Props) {
             <div
                 onClick={onClose}
                 className={clsx(
-                    "fixed inset-0 bg-black/40 z-50 transition-opacity duration-200",
-                    open ? "opacity-100" : "opacity-0 pointer-events-none",
+                    "fixed inset-0 z-50 bg-black/40 transition-opacity duration-200",
+                    open ? "opacity-100" : "pointer-events-none opacity-0",
                 )}
             />
 
             {/* Bottom Sheet */}
             <div
                 className={clsx(
-                    "fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl overflow-hidden transition-transform duration-300",
+                    "fixed right-0 bottom-0 left-0 z-50 overflow-hidden rounded-t-3xl transition-transform duration-300",
                     open ? "translate-y-0" : "translate-y-full",
                 )}
                 style={{
@@ -34,23 +34,14 @@ export default function NotificationMobileSheet({ open, onClose }: Props) {
                     maxHeight: "80vh",
                 }}
             >
-                {/* Header */}
-                <div className="p-4 border-b border-[var(--color-border)] font-semibold">
-                    Notifications
-                </div>
-
-                {/* Body */}
-                <div className="overflow-y-auto max-h-[70vh]">
-                    {items.length === 0 ? (
-                        <div className="p-6 text-center text-sm opacity-70">
-                            No notifications
-                        </div>
-                    ) : (
-                        items.map((item) => (
-                            <NotificationItem key={item.id} item={item} />
-                        ))
-                    )}
-                </div>
+                <div
+                    className="mx-auto mt-3 mb-2 h-1.5 w-12 rounded-full"
+                    style={{
+                        background: "var(--color-border)",
+                    }}
+                    onClick={onClose}
+                />
+                <NotificationContent items={items} mobile onClose={onClose} />
             </div>
         </>
     );

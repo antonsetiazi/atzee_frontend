@@ -92,7 +92,18 @@ export default function AppRouter() {
                     {usersRoutes.map(renderRoute)}
                     {buildPageRoutes(pages)}
 
-                    <Route path="/account/profile" element={<ProfilePage />} />
+                    <Route
+                        path="/account/profile"
+                        element={
+                            <PageMetaWrapper
+                                meta={{
+                                    showBottomNav: true,
+                                }}
+                            >
+                                <ProfilePage />
+                            </PageMetaWrapper>
+                        }
+                    />
 
                     <Route path="/terms-of-service" element={<PolicyPage type="tos" />} />
                     <Route path="/privacy-policy" element={<PolicyPage type="privacy" />} />
@@ -104,11 +115,33 @@ export default function AppRouter() {
 
                     <Route path="/account/bank" element={<BankAccountPage />} />
 
-                    <Route path="/chat" element={<ChatPage />} />
+                    <Route
+                        path="/chat"
+                        element={
+                            <PageMetaWrapper
+                                meta={{
+                                    showBottomNav: true,
+                                }}
+                            >
+                                <ChatPage />
+                            </PageMetaWrapper>
+                        }
+                    />
                     <Route path="/chat/:roomId" element={<ChatPage />} />
 
                     <Route path="/products" element={<ListingPage type="product" />} />
-                    <Route path="/services" element={<ListingPage type="service" />} />
+                    <Route
+                        path="/services"
+                        element={
+                            <PageMetaWrapper
+                                meta={{
+                                    showBottomNav: true,
+                                }}
+                            >
+                                <ListingPage type="service" />
+                            </PageMetaWrapper>
+                        }
+                    />
 
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/service/:id" element={<ServiceDetailPage />} />

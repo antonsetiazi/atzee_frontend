@@ -69,7 +69,7 @@ export default function BlockRenderer(props: Props): React.ReactNode {
                     !isColumn
                         ? {
                               gridTemplateColumns: isMobile
-                                  ? "repeat(2, 1fr)"
+                                  ? "repeat(3, 1fr)"
                                   : block.columns
                                     ? `repeat(${block.columns}, 1fr)`
                                     : "repeat(auto-fit, minmax(250px,1fr))",
@@ -172,7 +172,7 @@ export default function BlockRenderer(props: Props): React.ReactNode {
 
     if (block.type === "stat") {
         const blockData = resolveBlockData(block, pageData);
-        return <BlockStat {...props} data={blockData} />;
+        return <BlockStat {...props} data={blockData} isMobile={isMobile} />;
     }
 
     if (block.type === "info") {

@@ -23,13 +23,7 @@ export default function ProfileActions() {
 
     return (
         <div
-            className="
-                rounded-2xl
-                p-5
-                space-y-3
-                border
-                shadow-sm
-            "
+            className="space-y-3 rounded-2xl border p-5 shadow-sm"
             style={{
                 background: "var(--color-surface)",
                 borderColor: "var(--color-border)",
@@ -39,24 +33,15 @@ export default function ProfileActions() {
             {/* CHANGE PASSWORD */}
             <button
                 onClick={() => SmartNavigate.go("/account/password")}
-                className="
-                    w-full
-                    rounded-xl
-                    py-3
-                    text-sm
-                    transition
-                "
+                className="w-full rounded-xl py-3 text-sm transition"
                 style={{
                     border: "1px solid var(--color-border)",
                     color: "var(--text-primary)",
                     background: "var(--color-surface-alt)",
                 }}
-                onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "var(--color-surface)")
-                }
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
                 onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                        "var(--color-surface-alt)")
+                    (e.currentTarget.style.background = "var(--color-surface-alt)")
                 }
             >
                 Change Password
@@ -65,24 +50,15 @@ export default function ProfileActions() {
             {/* ADDRESS */}
             <button
                 onClick={() => SmartNavigate.go("/account/address")}
-                className="
-                    w-full
-                    rounded-xl
-                    py-3
-                    text-sm
-                    transition
-                "
+                className="w-full rounded-xl py-3 text-sm transition"
                 style={{
                     border: "1px solid var(--color-border)",
                     color: "var(--text-primary)",
                     background: "var(--color-surface-alt)",
                 }}
-                onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "var(--color-surface)")
-                }
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
                 onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                        "var(--color-surface-alt)")
+                    (e.currentTarget.style.background = "var(--color-surface-alt)")
                 }
             >
                 Manage Address
@@ -91,52 +67,48 @@ export default function ProfileActions() {
             {/* BANK */}
             <button
                 onClick={() => SmartNavigate.go("/account/bank")}
-                className="
-                    w-full
-                    rounded-xl
-                    py-3
-                    text-sm
-                    transition
-                "
+                className="w-full rounded-xl py-3 text-sm transition"
                 style={{
                     border: "1px solid var(--color-border)",
                     color: "var(--text-primary)",
                     background: "var(--color-surface-alt)",
                 }}
-                onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "var(--color-surface)")
-                }
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
                 onMouseLeave={(e) =>
-                    (e.currentTarget.style.background =
-                        "var(--color-surface-alt)")
+                    (e.currentTarget.style.background = "var(--color-surface-alt)")
                 }
             >
                 Manage Bank Account
             </button>
 
+            {/* WALLET */}
+            <button
+                onClick={() => SmartNavigate.go("/wallet")}
+                className="w-full rounded-xl py-3 text-sm transition"
+                style={{
+                    border: "1px solid var(--color-border)",
+                    color: "var(--text-primary)",
+                    background: "var(--color-surface-alt)",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
+                onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "var(--color-surface-alt)")
+                }
+            >
+                Wallet
+            </button>
+
             {/* LOGOUT */}
             <button
                 onClick={handleLogout}
-                className="
-                    w-full
-                    rounded-xl
-                    py-3
-                    text-sm
-                    font-semibold
-                    transition
-                    active:scale-[0.98]
-                "
+                className="w-full rounded-xl py-3 text-sm font-semibold transition active:scale-[0.98]"
                 style={{
                     border: "1px solid var(--color-error)",
                     color: "var(--color-error)",
                     background: "transparent",
                 }}
-                onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "rgba(255,0,0,0.05)")
-                }
-                onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "transparent")
-                }
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,0,0,0.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
                 Logout
             </button>

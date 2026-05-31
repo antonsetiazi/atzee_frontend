@@ -5,9 +5,10 @@ interface Props {
     value: string;
     subtitle?: string;
     tone?: "default" | "success" | "danger" | "warning";
+    isMobile?: boolean;
 }
 
-export default function SummaryCard({ title, value, subtitle, tone = "default" }: Props) {
+export default function SummaryCard({ title, value, subtitle, tone = "default", isMobile }: Props) {
     const toneColor = {
         default: "var(--text-primary)",
         success: "var(--color-success)",
@@ -17,7 +18,7 @@ export default function SummaryCard({ title, value, subtitle, tone = "default" }
 
     return (
         <div
-            className="rounded-2xl border p-5 transition-all"
+            className={`rounded-2xl border transition-all ${isMobile ? "p-3" : "p-5"} `}
             style={{
                 background: "var(--color-surface)",
                 borderColor: "var(--color-border)",
@@ -25,7 +26,9 @@ export default function SummaryCard({ title, value, subtitle, tone = "default" }
             }}
         >
             <div
-                className="text-sm font-medium"
+                className={`flex items-center font-medium ${
+                    isMobile ? "min-h-[32px] text-[11px]" : "min-h-[40px] text-sm"
+                } `}
                 style={{
                     color: "var(--text-secondary)",
                 }}
@@ -34,7 +37,7 @@ export default function SummaryCard({ title, value, subtitle, tone = "default" }
             </div>
 
             <div
-                className="mt-3 text-2xl font-bold tracking-tight"
+                className={`font-bold tracking-tight ${isMobile ? "mt-2 text-lg" : "mt-3 text-2xl"} `}
                 style={{
                     color: toneColor,
                 }}
@@ -44,7 +47,7 @@ export default function SummaryCard({ title, value, subtitle, tone = "default" }
 
             {subtitle && (
                 <div
-                    className="mt-2 text-xs"
+                    className={` ${isMobile ? "mt-1 text-[10px]" : "mt-2 text-xs"} `}
                     style={{
                         color: "var(--text-muted)",
                     }}

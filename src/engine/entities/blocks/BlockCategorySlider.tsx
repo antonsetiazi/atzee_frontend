@@ -13,11 +13,7 @@ interface Props {
 export default function BlockCategorySlider({ block }: Props) {
     const { isMobile } = useBreakpoint();
     return (
-        <div
-            className={`
-                ${isMobile ? "px-4 py-0" : "px-4 py-4"}
-            `}
-        >
+        <div className={` ${isMobile ? "px-2 py-0" : "px-4 py-4"} `}>
             <CategorySlider title={block.title} scope={block.scope} />
         </div>
     );

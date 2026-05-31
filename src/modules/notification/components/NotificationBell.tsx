@@ -6,11 +6,8 @@ import Icon from "@/core/ui/icons/Icon";
 import NotificationDropdown from "./NotificationDropdown";
 import { useClickOutside } from "@/core/ui/hooks/useClickOutside";
 import { useNotifications } from "../hooks/useNotifications";
-// import { notificationService } from "../services/notification.service";
-import { useNotificationSync } from "../hooks/useNotificationSync";
 
 export default function NotificationBell() {
-    useNotificationSync();
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -36,7 +33,7 @@ export default function NotificationBell() {
         <div ref={ref} className="relative">
             <button
                 onClick={handleToggle}
-                className="relative flex items-center justify-center w-9 h-9 rounded-md transition-all duration-200 hover:scale-105"
+                className="relative flex h-9 w-9 items-center justify-center rounded-md transition-all duration-200 hover:scale-105"
                 style={{
                     color: "#ffffff",
                 }}
@@ -51,7 +48,7 @@ export default function NotificationBell() {
 
                 {unread > 0 && (
                     <span
-                        className="absolute -top-1 -right-1 text-[10px] px-1.5 py-[1px] rounded-full"
+                        className="absolute -top-1 -right-1 rounded-full px-1.5 py-[1px] text-[10px]"
                         style={{
                             background: "var(--color-error)",
                             color: "white",

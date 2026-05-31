@@ -1,6 +1,6 @@
 // src/modules/category/components/CategoryCard.tsx
 
-import { getCategoryIcon } from "../utils/categoryIcons";
+// import { getCategoryIcon } from "../utils/categoryIcons";
 import type { CategoryItem } from "../types/category.types";
 import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
@@ -17,35 +17,33 @@ export default function CategoryCard({ item, isMobile = true }: Props) {
     return (
         <button
             onClick={handleClick}
-            className={`
-                bg-white rounded-2xl border border-gray-100
-                shadow-sm hover:shadow-md transition
-                flex flex-col items-center justify-center shrink-0
-
-                ${
-                    isMobile
-                        ? "min-w-[92px] p-3 gap-2"
-                        : "min-w-[150px] p-5 gap-3"
-                }
-            `}
+            className={`flex shrink-0 flex-col items-center rounded-2xl border bg-white shadow-sm ${
+                isMobile ? "h-[120px] w-[92px] p-3" : "h-[160px] w-[160px] p-5"
+            } `}
+            style={{
+                borderColor: `${item.color ?? "#10B981"}30`,
+            }}
         >
             <div
-                className={`
-                    rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600
-                    ${isMobile ? "w-12 h-12 text-xl" : "w-16 h-16 text-2xl"}
-                `}
+                className="flex items-center justify-center rounded-full"
+                style={{
+                    backgroundColor: `${item.color ?? "#10B981"}15`,
+                }}
             >
-                {getCategoryIcon(item.code)}
+                <img
+                    src={item.icon_url || "/images/category-default.png"}
+                    alt={item.name}
+                    className={isMobile ? "h-16 w-16" : "h-24 w-24"}
+                    onError={(e) => {
+                        e.currentTarget.src = "/images/category-default.png";
+                    }}
+                />
             </div>
-
-            <span
-                className={`
-                    font-medium text-center leading-tight
-                    ${isMobile ? "text-xs" : "text-sm"}
-                `}
-            >
-                {item.name}
-            </span>
+            <div className="flex min-h-[36px] items-center justify-center text-center leading-tight">
+                <span className={`font-medium ${isMobile ? "text-xs" : "text-sm"} `}>
+                    {item.name}
+                </span>
+            </div>
         </button>
     );
 }

@@ -7,9 +7,10 @@ import { SmartNavigate } from "@/core/navigation/SmartNavigate";
 
 interface Props {
     item: Notification;
+    mobile?: boolean;
 }
 
-export default function NotificationItem({ item }: Props) {
+export default function NotificationItem({ item, mobile = false }: Props) {
     const handleClick = () => {
         if (!item.read) {
             notificationService.inbox.markAsRead(item.id);
@@ -25,17 +26,15 @@ export default function NotificationItem({ item }: Props) {
     return (
         <div
             onClick={handleClick}
-            className="px-4 py-3 cursor-pointer transition-colors border-b"
+            className={`cursor-pointer border-b transition-colors hover:bg-[var(--color-surface-alt)] active:opacity-80 ${mobile ? "px-4 py-4" : "px-4 py-3"} `}
             style={{
-                background: item.read
-                    ? "transparent"
-                    : "var(--color-surface-alt)",
+                background: item.read ? "transparent" : "var(--color-surface-alt)",
                 borderColor: "var(--color-border)",
             }}
         >
             {/* Title */}
             <div
-                className="text-sm font-medium"
+                className={`font-medium ${mobile ? "text-[15px]" : "text-sm"} `}
                 style={{
                     color: "var(--text-primary)",
                 }}
@@ -46,7 +45,7 @@ export default function NotificationItem({ item }: Props) {
             {/* Message */}
             {item.message && (
                 <div
-                    className="text-xs mt-1"
+                    className={`mt-1 ${mobile ? "text-sm" : "text-xs"} `}
                     style={{
                         color: "var(--text-muted)",
                     }}
@@ -57,7 +56,7 @@ export default function NotificationItem({ item }: Props) {
 
             {/* Timestamp */}
             <div
-                className="text-[11px] mt-2"
+                className={`mt-2 ${mobile ? "text-xs" : "text-[11px]"} `}
                 style={{
                     color: "var(--text-muted)",
                     opacity: 0.7,

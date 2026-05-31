@@ -6,4 +6,6 @@ export interface CategoryItem {
     name: string;
     scope: string;
     parent: number | null;
+    icon_url?: string | null;
+    color?: string | null;
 }

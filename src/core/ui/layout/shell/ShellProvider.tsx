@@ -7,10 +7,13 @@ import { ShellContext } from "./ShellContext";
 import DesktopShell from "./DesktopShell";
 import MobileShell from "./MobileShell";
 import PageTransition from "@/core/ui/layout/transitions/PageTransition";
+import { useNotificationSync } from "@/modules/notification/hooks/useNotificationSync";
 
 export default function ShellProvider() {
     const { isMobile } = useBreakpoint();
     const [drawerOpen, setDrawerOpen] = useState(false);
+
+    useNotificationSync();
 
     const value = {
         isMobile,
